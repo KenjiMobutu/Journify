@@ -47,7 +47,7 @@ const HotelSchema = new Schema({
   },
   photos:{
     type: [String],
-    
+
   },
   featured:{
     type: Boolean,
@@ -60,7 +60,8 @@ const HotelSchema = new Schema({
   // rooms: [{
   //   type: Schema.Types.ObjectId,
   //   ref: 'Room'
-  // }]
+  // }],
+  rooms: [String]
 
 });
 

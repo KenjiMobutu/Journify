@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { errorResponse} from "../utils/error.js";
 
 
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
   try {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
@@ -23,7 +23,7 @@ export const register = async (req, res) => {
   }
 }
 
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
   try {
     const user = await User.findOne({
       userName: req.body.userName
@@ -43,7 +43,6 @@ export const login = async (req, res) => {
     const { password, isAdmin, ...others } = user._doc;
 
     res.cookie("access_token",token,{httpOnly: true}).status(200).json({ ...others });
-    res.status(200).json({ ...others});
   } catch (error) {
     next(error);
   }
