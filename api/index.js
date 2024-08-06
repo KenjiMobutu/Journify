@@ -33,6 +33,7 @@ mongoose.connection.on('connected', () => {
 // Middlewares
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // verifier si je l'ai déjà ajouté ailleurs
 
 app.use("/api/auth", authRouter);
 app.use("/api/register", registerRouter);
