@@ -164,6 +164,7 @@ __metadata:
     cookie-parser: ^1.4.6
     dotenv: ^16.4.1
     express: ^4.18.2
+    express-validator: ^7.1.0
     jsonwebtoken: ^9.0.2
     mongodb: ^6.3.0
     mongoose: ^8.1.1
@@ -551,6 +552,16 @@ __metadata:
   version: 3.1.1
   resolution: "exponential-backoff@npm:3.1.1"
   checksum: 3d21519a4f8207c99f7457287291316306255a328770d320b401114ec8481986e4e467e854cb9914dd965e0a1ca810a23ccb559c642c88f4c7f55c55778a9b48
+  languageName: node
+  linkType: hard
+
+"express-validator@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "express-validator@npm:7.1.0"
+  dependencies:
+    lodash: ^4.17.21
+    validator: ~13.12.0
+  checksum: 9b081a1f1f0c5a42f4ad71a9cd3162b50940a4d713b23f9bd5d60a07aa1bd2b768cbeb5ee18745371a412546fd19e37b3cbde7465bcdf20fb7914a5f1f26384c
   languageName: node
   linkType: hard
 
@@ -1041,6 +1052,13 @@ __metadata:
   version: 4.1.1
   resolution: "lodash.once@npm:4.1.1"
   checksum: d768fa9f9b4e1dc6453be99b753906f58990e0c45e7b2ca5a3b40a33111e5d17f6edf2f768786e2716af90a8e78f8f91431ab8435f761fef00f9b0c256f6d245
+  languageName: node
+  linkType: hard
+
+"lodash@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
   languageName: node
   linkType: hard
 
@@ -1898,6 +1916,13 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: c81095493225ecfc28add49c106ca4f09cdf56bc66731aa8dabc2edbbccb1e1bfe2de6a115e5c6a380d3ea166d1636410b62ef216bb07b3feb1cfde1d95d5080
+  languageName: node
+  linkType: hard
+
+"validator@npm:~13.12.0":
+  version: 13.12.0
+  resolution: "validator@npm:13.12.0"
+  checksum: fb8f070724770b1449ea1a968605823fdb112dbd10507b2802f8841cda3e7b5c376c40f18c84e6a7b59de320a06177e471554101a85f1fa8a70bac1a84e48adf
   languageName: node
   linkType: hard
 

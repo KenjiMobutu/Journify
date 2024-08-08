@@ -1,0 +1,38 @@
+.email{
+    width: 100%;
+    margin-top: 50px;
+    background-color: #1f60ba;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    gap: 20px;
+}
+.emailTitle{
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.emailInput>input{
+    width: 50%;
+    height: 40px;
+    border: none;
+    outline: none;
+    padding: 15px;
+    margin-right: 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+    color: black;
+}
+.emailInput>button{
+    width: 100px;
+    height: 40px;
+    border: none;
+    background-color: #febb02;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}

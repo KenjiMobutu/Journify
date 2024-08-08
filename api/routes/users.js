@@ -1,5 +1,5 @@
 import express from 'express';
-import { updateUser, deleteUser, getUser, getAllUsers } from '../controllers/userController.js';
+import { createUser, updateUser, deleteUser, getUser, getAllUsers } from '../controllers/userController.js';
 import { verifyAdmin, verifyToken, verifyUser } from '../utils/verifyToken.js';
 
 const router = express.Router();
@@ -16,6 +16,9 @@ router.get("/checkUser/:id", verifyUser, (req, res, next) => {
 // router.get("/checkAdmin/:id", verifyAdmin, (req, res, next) => {
 //   res.send("Admin is verified");
 // });
+
+//CREATE
+//Voir authController.js
 
 //UPDATE
 router.put('/:id', verifyUser, updateUser);

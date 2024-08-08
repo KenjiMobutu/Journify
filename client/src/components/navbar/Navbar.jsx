@@ -1,5 +1,5 @@
 import "./navbar.css"
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
@@ -13,7 +13,11 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="navContainer">
-        <span className="logo">JOURNIFY</span>
+        <div>
+          <span className="text-3xl text-pink font-bold tracking-tight">
+            <Link to="/">JOURNIFY</Link>
+          </span>
+        </div>
         <div className="navItems">
           <button className="navButton">Register</button>
           <button className="navButton" onClick={handleLoginClick}>Login</button>
