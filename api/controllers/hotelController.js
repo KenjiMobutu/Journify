@@ -1,5 +1,6 @@
 import e from 'express';
 import Hotel from '../models/Hotel.js';
+import Room from '../models/Room.js';
 import router from '../routes/auth.js';
 
 // Create Hotel
@@ -39,7 +40,6 @@ export const deleteHotel = async (req, res, next) => {
 
 // Get Hotel
 export const getHotel = async (req, res, next) => {
-
     try{
         const hotel = await Hotel.findById(req.params.id);
         res.status(200).json(hotel);
@@ -106,6 +106,18 @@ export const countByType = async (req, res, next) => {
         ]);
     }catch(err){
         next(err);
+    }
+}
+
+export const getHotelRooms = async (req, res, next) => {
+    try {
+        const hotel = await Hotel.findById(req.params.id);
+        const listRooms = await Promise.all(hotel.rooms.map((room )=> {
+            return Room.findById(room);
+        }));
+        res.status(200).json(listRooms);
+    } catch (error) {
+        next(error);
     }
 }
 

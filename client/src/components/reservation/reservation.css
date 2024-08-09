@@ -1,0 +1,91 @@
+.chooseRoomText {
+  font-size: 25px;
+  font-weight: 550;
+  margin: 20px;
+}
+.reservation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  margin-top: 50px;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.712);
+}
+
+.reservationContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 50%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+}
+
+.reservClose {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 60px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.roomItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid rgb(134, 130, 130);
+  border-radius: 10px;
+  gap: 40px;
+}
+
+.roomInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.roomType {
+  font-size: 20px;
+}
+
+.roomDesc {
+  font-size: 15px;
+  font-weight: 350;
+}
+
+.roomMaxPeop {
+  font-size: 15px;
+  font-weight: 350;
+}
+
+.roomPrice {
+  font-size: 15px;
+  font-weight: 550;
+}
+
+.bookButtonModal {
+  background-color: rgb(9, 29, 140);
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  top: 10px;
+  width: 100%;
+  display: flex;
+  margin-left: 20px;
+  justify-content: center;
+  align-items: center;
+}

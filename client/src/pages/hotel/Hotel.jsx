@@ -10,6 +10,9 @@ import { useLocation } from "react-router-dom"
 import useFetch from "../../hooks/useFetch"
 import { useContext } from "react"
 import { SearchContext } from "../../context/SearchContext.jsx"
+import { AuthenticationContext } from "../../context/AuthenticationContext.jsx"
+import { useNavigate } from "react-router-dom"
+import Reservation from "../../components/reservation/Reservation.jsx"
 
 const Hotel = () => {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -29,16 +32,19 @@ const Hotel = () => {
     }
   };
   const [open, setOpen] = useState(false);
+  const [openPayment, setOpenPayment] = useState(false);
   const handleOpen = (index) => {
     setOpen(true);
     setSlideIndex(index);
   };
+  const navigate = useNavigate();
+  const { user } = useContext(AuthenticationContext);
   const location = useLocation();
-  const id = location.pathname.split("/")[2];
-  console.log(id);
+  const hotelId = location.pathname.split("/")[2];
+  console.log(hotelId);
 
   // eslint-disable-next-line
-  const { data, loading, error } = useFetch(`/api/hotels/find/${id}`);
+  const { data, loading, error } = useFetch(`/api/hotels/find/${hotelId}`);
   console.log(data);
 
   const { dates, options } = useContext(SearchContext);
@@ -51,7 +57,13 @@ const Hotel = () => {
     return Math.floor((utc2 - utc1) / mmsPerDay);
   }
   const days = (dateDiffInDays(dates[0].startDate, dates[0].endDate));
-
+  const handleClick = () => {
+    if (user) {
+      setOpenPayment(true);
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <div>
@@ -101,13 +113,14 @@ const Hotel = () => {
                   <h1>Perfect for a {days} night stay</h1>
                   <span>Good location: highly rated by recent travelers (9.5)</span>
                   <span className="hotelDescPriceAmount">{data.price * days * options.room}€ ({days} Nights)</span>
-                  <button className="hotelDescPriceBook">Book now</button>
+                  <button onClick={handleClick} className="hotelDescPriceBook">Book now</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       )}
+      {openPayment && <Reservation setOpen={setOpenPayment} hotelId={hotelId} />}
       <Newsletter />
       <Footer />
     </div>

@@ -61,7 +61,9 @@ const HotelSchema = new Schema({
   //   type: Schema.Types.ObjectId,
   //   ref: 'Room'
   // }],
-  rooms: [String]
+  rooms:{
+    type:[String],
+  },
 
 });
 

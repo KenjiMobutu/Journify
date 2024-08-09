@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, register } from '../controllers/authController.js';
+import { login, register, logout } from '../controllers/authController.js';
 import { check } from 'express-validator';
 const router = express.Router();
 
@@ -22,7 +22,9 @@ router.post('/register', [
     min: 3
   })
 ], register);
+
 router.post('/login', login);
+router.post('/logout', logout);
 
 
 

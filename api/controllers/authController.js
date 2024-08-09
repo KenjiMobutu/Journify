@@ -48,4 +48,14 @@ export const login = async (req, res, next) => {
   }
 }
 
+export const logout = async (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).send('Failed to logout.');
+    }
+    res.send('Logged out successfully');
+  });
+}
+
+
 
