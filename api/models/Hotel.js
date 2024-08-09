@@ -10,7 +10,7 @@ const HotelSchema = new Schema({
   type:{
     type: String,
     required: true,
-    enum: ['Hotel', 'Hostel', 'Guest House', 'Resort', 'Motel', 'Bed & Breakfast']
+    enum: ['Hotel', 'Hostel', 'Guest House', 'Resort', 'Motels', 'Bed & Breakfast']
   },
   price: {
     type: Number,

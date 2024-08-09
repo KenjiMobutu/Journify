@@ -8,6 +8,7 @@ import hotelsRouter from './routes/hotels.js';
 import roomsRouter from './routes/rooms.js';
 import destinationsRouter from './routes/destinations.js';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 const app = express();
 dotenv.config();
@@ -31,6 +32,13 @@ mongoose.connection.on('connected', () => {
 });
 
 // Middlewares
+app.use(cors()); // Autorise toutes les origines
+
+// Ou pour une origine spécifique :
+app.use(cors({
+  origin: 'http://localhost:5000'
+}));
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // verifier si je l'ai déjà ajouté ailleurs

@@ -1,7 +1,8 @@
 
 .navbar {
   height: 50px;
-  background-color: #003580;
+  background: linear-gradient(to right, #15c5bc, #872687ae, #129f98d1);
+
   display: flex;
   justify-content: center;
   width: auto;
