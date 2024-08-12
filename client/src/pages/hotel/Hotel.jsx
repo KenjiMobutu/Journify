@@ -50,6 +50,7 @@ const Hotel = () => {
   const { dates, options } = useContext(SearchContext);
   console.log(dates);
 
+
   const mmsPerDay = 1000 * 60 * 60 * 24;
   function dateDiffInDays(a, b) {
     const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());

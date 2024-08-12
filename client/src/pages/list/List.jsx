@@ -15,10 +15,11 @@ const List = () => {
   const [dates, setDates] = useState(research.state.dates);
   const [openDate, setOpenDate] = useState(false);
   const [options, setOptions] = useState(research.state.options);
+  const [hotels, setHotels] = useState(research.state.hotels);
   const [min, setMin] = useState(undefined);
   const [max, setMax] = useState(undefined);
   const handleClick = () => { reFetch() };
-
+  console.log(hotels.data); //resultat de la recherche
   const { data, loading, error, reFetch } = useFetch(`/api/hotels?city=${destination}&min=${min || 0}&max=${max || 999}`);
 
   return (
@@ -81,7 +82,7 @@ const List = () => {
           </div>
           <div className="listResults">
             {loading ? ("Loading...") : <>
-              {data.map(item => (
+              {hotels.data.map(item => (
                 <SearchList item={item} key={item._id} />
               ))
               }

@@ -16,11 +16,15 @@ import { format } from "date-fns";
 import { useNavigate } from 'react-router-dom';
 import { SearchContext } from '../../context/SearchContext.jsx';
 import { AuthenticationContext } from '../../context/AuthenticationContext.jsx';
+import axios from 'axios';
+import { useEffect } from 'react';
+
 
 // eslint-disable-next-line react/prop-types
 function Header({ type }) {
   const [openDate, setOpenDate] = useState(false);
   const [destination, setDestination] = useState("");
+  const [hotels, setHotels] = useState([]);
   const [dates, setDates] = useState([
     {
       startDate: new Date(),
@@ -49,10 +53,32 @@ function Header({ type }) {
   const { dispatch } = useContext(SearchContext);
   const { user } = useContext(AuthenticationContext);
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     dispatch({ type: "NEW_SEARCH", payload: { destination, dates, options } });
     console.log("Handle search button clicked");
-    navigate('/hotels', { state: { destination, dates, options } });
+
+    const params = {
+      method: 'GET',
+      url: 'https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination',
+      params: { query: destination },
+      headers: {
+        //process.env.RAPIDAPI_KEY
+        'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+        'x-rapidapi-host': 'booking-com15.p.rapidapi.com'
+      }
+    };
+
+    try {
+      const response = await axios.request(params);
+      console.log(response.data);  // Utilisez les données comme nécessaire dans votre application
+      // Vous pouvez stocker les données dans l'état ou naviguer vers une page avec les résultats
+      setHotels(response.data); // Stockez les données dans l'état
+      navigate('/hotels', { state: { destination, dates, options, hotels: response.data } });
+    } catch (error) {
+      console.error('Error fetching hotels:', error);
+    }
+
+    // navigate('/hotels', { state: { destination, dates, options, hotels } });
   }
 
 

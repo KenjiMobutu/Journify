@@ -14,6 +14,9 @@ const Navbar = () => {
   const handleLoginClick = () => {
     navigate('/login'); // Redirige vers la route login
   }
+  const handleRegisterClick = () => {
+    navigate('/register');
+  }
 
   const handleLogout = async () => {
     try {
@@ -44,7 +47,7 @@ const Navbar = () => {
           </div>
         ) : (
           <div className="navItems">
-            <button className="navButton">Register</button>
+            <button className="navButton" onClick={handleRegisterClick}>Register</button>
             <button className="navButton" onClick={handleLoginClick}>Login</button>
           </div>
         )}

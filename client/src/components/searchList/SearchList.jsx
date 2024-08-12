@@ -1,14 +1,20 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './SearchList.css';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export const SearchList = ({ item }) => {
+  const research = useLocation();
+  const [hotels, setHotels] = useState(research.state.hotels);
+  console.log("Hotels DE RAPID API ==> :" , hotels.data);
+
   return (
     <div className='searchItem'>
-      <img src={item.photos[0]} alt="" className="searchItemImage" />
+      <img src={item.image_url} alt="" className="searchItemImage" />
       <div className="searchItemDesc">
         <h1 className="searchItemName">{item.name}</h1>
-        <span className="searchItemDist">{item.distance}m from beach</span>
+        <span className="searchItemDist">{item.label}</span>
         <span className="searchItemTrans">Free airport transport</span>
         <span className="searchItemSub">Luxury kingsize</span>
         <span className="searchItemFeat"> {item.description}</span>

@@ -1,27 +1,33 @@
 import express from 'express';
 import { login, register, logout } from '../controllers/authController.js';
-import { check } from 'express-validator';
+import { check, validationResult } from 'express-validator';
 const router = express.Router();
 
 router.get('/', (req, res) => {
   res.send('Auth route');
 });
 
-router.post('/register', [
-  check('userName', 'Please enter a valid name').not().isEmpty(),
-  check('userName', 'Please enter a valid name').isAlphanumeric,
-  check('userName', 'Please enter a valid name').isString,
-  check('userName', 'Please enter a name with min. 3 characters').isLength({
-    min: 3}),
-  check('userName', 'Please enter a name with max. 15 characters').isLength({
-    max: 15}),
-
-  check('email', 'Please enter a valid email').not().isEmpty(),
-  check('email', 'Please enter a valid email').isEmail(),
-  check('password', 'Please enter a valid password').isLength({
-    min: 3
-  })
-], register);
+router.post('/register',
+  [
+    check('userName', 'Username is required').not().isEmpty(),
+    check('email', 'Please include a valid email').isEmail(),
+    check('password', 'Please enter a password with 3 or more characters').isLength({ min: 3 }),
+    check('confirmPassword', 'Please enter a password with 3 or more characters').isLength({ min: 3 })
+    .custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error('Password confirmation does not match password');
+      }
+      return true;
+    })
+  ],
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    register(req, res);
+  }
+);
 
 router.post('/login', login);
 router.post('/logout', logout);

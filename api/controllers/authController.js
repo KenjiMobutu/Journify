@@ -6,17 +6,15 @@ import { errorResponse} from "../utils/error.js";
 
 export const register = async (req, res, next) => {
   try {
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(req.body.password, salt);
+    const salt =  bcrypt.genSaltSync(10);
+    const hash =  bcrypt.hashSync(req.body.password, salt);
 
     const newUser = new User({
-      userName: req.body.userName,
-      email: req.body.email,
+      ...req.body,
       password: hash,
-      isAdmin: req.body.isAdmin,
-    });
 
-    const user = await newUser.save();
+    });
+    await newUser.save();
     res.status(200).json("User has been registered...");
   } catch (error) {
     next(error);
