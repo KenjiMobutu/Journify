@@ -1,0 +1,91 @@
+.single {
+  display: flex;
+  width: 100%;
+  .singleContainer {
+    flex:6;
+
+    .top{
+      padding: 50px;
+      display: flex;
+      gap: 20px;
+
+      .left{
+        position: relative;
+        padding: 20px;
+        box-shadow: 4px 13px 19px 0px rgba(0,0,0,0.5);
+        -webkit-box-shadow: 4px 13px 19px 0px rgba(0,0,0,0.5);
+        border-radius: 10px;
+
+        .title{
+          font-size: 1.5rem;
+          font-weight: 300;
+          margin-bottom: 20px;
+          color: rgba(142, 141, 141, 0.614);
+        }
+
+        .editButton{
+          position: absolute;
+          top: 0;
+          right: 0;
+          padding: 20px;
+          background-color: #f70476;
+          color: white;
+          border-radius: 5px;
+          margin-top: 10px;
+          margin-right: 10px;
+          height: 1px;
+          letter-spacing: 2px;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+        }
+
+        .item{
+          display: flex;
+          gap: 0px;
+
+          .itemImg{
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+          }
+        }
+
+        .details{
+          margin-top: -50px;
+          margin-left: 20px;
+          padding: 30px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+
+          .itemTitle{
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+          }
+
+          .detailItem{
+            display: flex;
+            gap: 20px;
+            align-items: center;
+
+            .detailKey{
+              font-size: 1rem;
+              font-weight: 300;
+              color: gray;
+            }
+
+            .detailValue{
+              font-size: 1rem;
+              font-weight: 300;
+            }
+          }
+
+        }
+
+      }
+    }
+  }
+}
