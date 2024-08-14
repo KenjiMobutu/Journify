@@ -1,12 +1,17 @@
 .datatable {
-  height: 650px;
+  height: 750px;
   padding: 20px;
   box-shadow: 4px 13px 19px 0px rgba(0,0,0,0.5);
   -webkit-box-shadow: 4px 13px 19px 0px rgba(0,0,0,0.5);
-  margin: 20px;
+  margin: 40px;
   border-radius: 5px;
+  width: 70em;
+  .datagrid{
+    height: 80%;
+    width: 100%;
+  }
 
-  .datatabletitle {
+  .datatableTitle {
     font-size: 20px;
     font-weight: 300;
     margin-bottom: 20px;
@@ -37,7 +42,7 @@
     width: 100px;
     margin-top: 5px;
 
-    &.active{
+    &.user{
       background-color: #d4edda;
       color: #155724;
     }
@@ -47,7 +52,7 @@
       color: #856404;
     }
 
-    &.passive{
+    &.admin{
       background-color: #f8d7da;
       color: #721c24;
     }
@@ -94,9 +99,10 @@
   }
 
   .createUser{
+
     border: none;
     border-radius: 5px;
-    margin-top: 30px;
+    margin-top: 50px;
     background-color: #f70476;
     color: white;
     cursor: pointer;

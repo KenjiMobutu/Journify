@@ -10,7 +10,7 @@ const HotelSchema = new Schema({
   type:{
     type: String,
     required: true,
-    enum: ['Hotel', 'Hostel', 'Guest House', 'Resort', 'Motels', 'Bed & Breakfast']
+    enum: ['Hotel', 'Hostel', 'Guest House', 'Resort', 'Motel', 'Bed & Breakfast']
   },
   price: {
     type: Number,
@@ -43,11 +43,9 @@ const HotelSchema = new Schema({
   },
   distance: {
     type: Number,
-    required: true
   },
   photos:{
     type: [String],
-
   },
   featured:{
     type: Boolean,

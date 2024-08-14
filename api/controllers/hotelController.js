@@ -55,7 +55,7 @@ export const getAllHotels = async (req, res, next) => {
     try {
         // Convertir les valeurs min et max en nombres entiers
         const minPrice = min ? parseInt(min, 10) : 1;
-        const maxPrice = max ? parseInt(max, 10) : 999;
+        const maxPrice = max ? parseInt(max, 10) : 9999999;
 
         // Convertir la limite en nombre entier
         const limitValue = limit ? parseInt(limit, 10) : undefined;

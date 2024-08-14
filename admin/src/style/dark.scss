@@ -1,0 +1,128 @@
+.app.dark{
+  background-color: rgb(43, 41, 41);
+  color: rgb(202, 194, 194);
+
+  .chartGrid{
+    stroke: rgba(166, 210, 192, 0.283) ;
+  }
+
+  .datatable{
+    background-color: rgb(43, 41, 42);
+    color: rgb(202, 194, 194);
+
+    .datagrid{
+      background-color: rgb(43, 41, 42);
+      color: rgb(163, 161, 161);
+      border: 1px solid rgb(157, 198, 181);
+
+      .datatableEdit{
+        margin: 0 5px;
+        padding: 2px 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: rgb(119, 119, 165);
+        border: 1px solid rgb(119, 119, 165);
+        height: 30px;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        margin-top: 7px;
+      }
+
+      .datatableDelete{
+        margin: 0 5px;
+        margin-top: 7px;
+        padding: 2px 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: rgb(165, 119, 119);
+        border: 1px solid rgb(165, 119, 119);
+        height: 30px;
+        width: 50px;
+        display: flex;
+        align-items: center;
+
+      }
+
+      .MuiDataGrid-row--borderBottom{
+        background-color: rgb(43, 41, 42);
+        color: rgb(202, 194, 194);
+      }
+      .MuiTablePagination-selectLabel{
+        color: rgb(202, 194, 194);
+      }
+      .MuiSelect-select{
+        color: rgb(202, 194, 194);
+      }
+      .MuiSvgIcon-root{
+        color: rgb(202, 194, 194);
+      }
+      .MuiTablePagination-displayedRows{
+        color: rgb(202, 194, 194);
+      }
+
+    }
+
+    // .datatableContainer{
+    //   background-color: rgb(43, 41, 42);
+    //   color: rgb(202, 194, 194);
+
+    //   .datatableTitle{
+    //     background-color: rgb(43, 41, 42);
+    //     color: rgb(255, 255, 255);
+    //   }
+
+    //   .datatableHeader{
+    //     background-color: rgb(43, 41, 42);
+    //     color: rgb(255, 255, 255);
+    //   }
+    // }
+  }
+
+  .sidebar{
+
+    .top{
+
+      .logo{
+        color: rgb(157, 198, 181);
+      }
+
+    }
+
+    .center{
+
+        ul{
+
+          .title{
+            color: rgba(124, 120, 120, 0.724);
+          }
+
+          li{
+
+            &:hover{
+              background-color: #11764c32;
+            }
+
+            .icon{
+              color: rgb(47, 103, 115);
+            }
+
+            span{
+              color: rgb(157, 198, 181);
+            }
+          }
+        }
+    }
+
+    .bottom{
+
+      .theme{
+        color: rgb(255, 255, 255);
+
+        border: 1px solid rgb(157, 198, 181);
+      }
+    }
+  }
+
+
+}

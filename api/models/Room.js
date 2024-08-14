@@ -23,6 +23,9 @@ const RoomSchema = new Schema({
     required: true,
     maxlength: 500
   },
+  photos:{
+    type: [String],
+  },
   roomNumbers: [{
     number: {
       type: Number,
@@ -31,7 +34,7 @@ const RoomSchema = new Schema({
     bookedDates: {
       type: [Date],
       default: [] // Initialisation par défaut pour éviter les valeurs nulles
-    }
+    },
   }]
 }, { timestamps: true});
 

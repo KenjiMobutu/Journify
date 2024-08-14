@@ -14,6 +14,9 @@ const UserSchema = new Schema({
     unique: true,
     maxlength: 50
   },
+  img:{
+    type: String,
+  },
   password: {
     type: String,
     required: true

@@ -6,11 +6,22 @@
           "detail": "Démarre le frontend et le backend",
           "group": "build",
           "dependsOn": [
-              "run-react",
-              "run-express"
+            "run-react",
+            "run-express",
           ],
           "problemMatcher": []
       },
+      {
+        "label": "run-servers + admin",
+        "detail": "Démarre le frontend et le backend et l'admin",
+        "group": "build",
+        "dependsOn": [
+          "run-react",
+          "run-express",
+            "run-admin"
+        ],
+        "problemMatcher": []
+        },
       {
           "label": "run-react",
           "detail": "Démarre le frontend",
@@ -38,6 +49,20 @@
               "group": "servers"
           },
           "problemMatcher": "$msCompile"
-      }
+      },
+      {
+        "label": "run-admin",
+        "detail": "Démarre Admin page",
+        "type": "shell",
+        "command": "npm start",
+        "options": {
+            "cwd": "${workspaceFolder}/admin"
+        },
+        "group": "build",
+        "presentation": {
+            "group": "servers"
+        },
+        "problemMatcher": "$msCompile"
+    }
   ]
 }
