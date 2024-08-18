@@ -6,9 +6,13 @@ import { useContext } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
+import useFetch from "../../hooks/useFetch";
 
 const Navbar = () => {
   const { darkMode, dispatch } = useContext(DarkModeContext);
+  const { user } = useContext(AuthenticationContext);
+  const { data } = useFetch(`/api/users/${user?._id}`);
 
   return (
     <div className="navbar">
@@ -40,8 +44,7 @@ const Navbar = () => {
             )}
           </div>
           <div className="item">
-            <img
-              src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+            <img src={data.img || "https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
               alt=""
               className="avatar"
             />

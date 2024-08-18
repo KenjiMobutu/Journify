@@ -11,16 +11,21 @@ import { useContext } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useNavigate } from "react-router";
 import { AuthenticationContext } from '../../context/AuthenticationContext';
+import useFetch from "../../hooks/useFetch";
+import { useLocation } from "react-router-dom";
 
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const { dispatch: darkModeDispatch } = useContext(DarkModeContext); // Renommé pour éviter le conflit
   const { loading, error, dispatch: authDispatch } = useContext(AuthenticationContext); // Renommé pour éviter le conflit
+  const { user } = useContext(AuthenticationContext);
+
+
 
   const handleLogout = async () => {
     try {
-      
+
       // Supprime le token de l'utilisateur du localStorage ou de la session
       localStorage.removeItem('token');
       // Màj du contexte ou l'état global pour refléter que l'utilisateur n'est plus connecté
@@ -84,10 +89,12 @@ const Sidebar = () => {
           </li>
           <p className="title">User</p>
           <li className="item">
-            <AccountCircleOutlinedIcon className="icon" />
-            <span>
-              Profile
-            </span>
+            <Link to={`/users/${user?._id}`} className="link">
+              <AccountCircleOutlinedIcon className="icon" />
+              <span>
+                Profile
+              </span>
+            </Link>
           </li>
           <li className="item">
             <ExitToAppIcon className="icon" />

@@ -1,26 +1,22 @@
+
 import express from 'express';
-import Hotel from '../models/Hotel.js';
+import Amadeus from 'amadeus';
 import { countByCity, countByType, createHotel, deleteHotel, getAllHotels, getHotel, getHotelRooms, updateHotel } from '../controllers/hotelController.js';
 import { verifyAdmin } from '../utils/verifyToken.js';
+
 const router = express.Router();
 
-//CREATE
-router.post('/', verifyAdmin, createHotel)
+console.log(process.env.API_KEY);
+console.log(process.env.API_SECRET);
 
-//UPDATE
+// Hotel CRUD operations
+router.post('/', verifyAdmin, createHotel);
 router.put('/:id', verifyAdmin, updateHotel);
-
-//DELETE
 router.delete('/:id', verifyAdmin, deleteHotel);
-
-//GET
-router.get("/find/:id", getHotel);
-
-//GET ALL
+router.get('/find/:id', getHotel);
 router.get('/', getAllHotels);
-router.get('/CountByCity', countByCity);
-router.get('/CountByType', countByType);
+router.get('/countByCity', countByCity);
+router.get('/countByType', countByType);
 router.get('/room/:id', getHotelRooms);
-
 
 export default router;

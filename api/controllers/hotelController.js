@@ -1,7 +1,7 @@
 import e from 'express';
 import Hotel from '../models/Hotel.js';
 import Room from '../models/Room.js';
-import router from '../routes/auth.js';
+
 
 // Create Hotel
 export const createHotel = async (req, res, next) => {
@@ -120,6 +120,7 @@ export const getHotelRooms = async (req, res, next) => {
         next(error);
     }
 }
+
 
 
 

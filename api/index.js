@@ -65,4 +65,3 @@ app.listen(3000, () => {
   connectToMongo();
   console.log('Express server listening on port "http://localhost:3000"');
 });
-// Path: backend/routes/auth.js

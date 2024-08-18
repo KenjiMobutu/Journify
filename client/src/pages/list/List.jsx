@@ -81,12 +81,13 @@ const List = () => {
             <button onClick={handleClick} className="listSearchButton">Search</button>
           </div>
           <div className="listResults">
-            {loading ? ("Loading...") : <>
-              {hotels.data.map(item => (
-                <SearchList item={item} key={item._id} />
+            {loading ? (
+              "Loading..."
+            ) : (
+              hotels.data.hotels.map(item => (
+                <SearchList item={item} key={item.hotel_id} dates={dates} />
               ))
-              }
-            </>}
+            )}
           </div>
         </div>
       </div>

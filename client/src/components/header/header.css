@@ -94,6 +94,22 @@
   gap: 10px;
   color: black;
 }
+.css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root {
+  display: flex;
+  justify-content: center;
+  border-radius: 5px;
+  align-items: center;
+  border: none !important;
+  height: 42px;
+}
+
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+  color:  black !important;
+  margin-bottom: 69px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
 
 .headerBtn {
   background-color: #006be4;

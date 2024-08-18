@@ -8,10 +8,15 @@ import { SearchContext } from "../../context/SearchContext.jsx"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 
-function Reservation({ setOpen, hotelId }) {
+function Reservation({ setOpen, hotelId  }) {
   const { data, loading, error } = useFetch(`/api/hotels/room/${hotelId}`);
   const [selectedRooms, setSelectedRooms] = useState([]);
-  const { dates } = useContext(SearchContext);
+  const { dates: contextDates, options: contextOptions } = useContext(SearchContext);
+  const storedDates = JSON.parse(localStorage.getItem("dates")) || [];
+  const storedOptions = JSON.parse(localStorage.getItem("options")) || { adult: 1, children: 0, room: 1 };
+  const [dates, setDates] = useState(contextDates.length ? contextDates : storedDates);
+  const [options, setOptions] = useState(contextOptions.adult !== undefined ? contextOptions : storedOptions);
+
   const navigate = useNavigate();
   const datesInRange = (startDate, endDate) => {
     const start = new Date(startDate);
@@ -24,6 +29,7 @@ function Reservation({ setOpen, hotelId }) {
     }
     return dateList;
   };
+  
   console.log(datesInRange(dates[0].startDate, dates[0].endDate));
 
   const bookedDates = datesInRange(dates[0].startDate, dates[0].endDate);
