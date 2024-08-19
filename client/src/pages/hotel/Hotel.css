@@ -98,6 +98,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  height: 200px !important;
 }
 .hotelDescPriceWrapper{
   flex: 1;
@@ -106,6 +107,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+
 }
 
 .hotelDescPriceWrapper>h1{
@@ -182,4 +184,52 @@
   font-size: 30px;
   color: white;
   cursor: pointer;
+}
+
+.roomsDescTitle{
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+
+  font-weight: 500;
+}
+
+.roomsDesc{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  font-size: 12px;
+
+}
+
+.hotelDescTitle{
+  font-size: 2rem;
+  font-weight: bold;
+  color: black;
+}
+
+.hotelDescInfo{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+  text-align: justify;
+  padding-right: 15px;
+}
+
+.hotelDescList{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 10px;
+  color: #4f4d4d;
+}
+
+.hotelFacility{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
 }

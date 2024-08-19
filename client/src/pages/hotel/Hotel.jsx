@@ -20,11 +20,18 @@ const Hotel = () => {
   const [totalPrice, setTotalPrice] = useState(null);
   const [open, setOpen] = useState(false);
   const [openPayment, setOpenPayment] = useState(false);
+  const [photos, setPhotos] = useState([]);
+  const [firstRoom, setFirstRoom] = useState(null);
+  const [hotelDesc, setHotelDesc] = useState([]);
 
   const navigate = useNavigate();
   const { user } = useContext(AuthenticationContext);
   const location = useLocation();
   const hotelId = location.pathname.split("/")[2];
+
+  // Récupérer le reviewScore depuis l'état passé dans le Link
+  const reviewScore = location.state?.reviewScore || "N/A";
+  console.log("Review Score:", reviewScore);
 
   // Récupérer les dates et options du contexte ou de localStorage
   const { dates: contextDates, options: contextOptions } = useContext(SearchContext);
@@ -34,10 +41,7 @@ const Hotel = () => {
   const [dates, setDates] = useState(contextDates.length ? contextDates : storedDates);
   const [options, setOptions] = useState(contextOptions.adult !== undefined ? contextOptions : storedOptions);
 
-  console.log("Options après récupération:", options);
-
   useEffect(() => {
-    // Sauvegarde des dates et options dans le localStorage
     if (dates.length > 0) {
       localStorage.setItem("dates", JSON.stringify(dates));
     }
@@ -56,7 +60,7 @@ const Hotel = () => {
   const days = dates.length > 0 ? dateDiffInDays(new Date(dates[0].startDate), new Date(dates[0].endDate)) : 0;
 
   const handleSlide = (direction) => {
-    setSlideIndex(direction === "left" ? (slideIndex === 0 ? 5 : slideIndex - 1) : (slideIndex === 5 ? 0 : slideIndex + 1));
+    setSlideIndex(direction === "left" ? (slideIndex === 0 ? photos.length - 1 : slideIndex - 1) : (slideIndex === photos.length - 1 ? 0 : slideIndex + 1));
   };
 
   const handleOpen = (index) => {
@@ -66,7 +70,7 @@ const Hotel = () => {
 
   const handleClick = () => {
     if (user) {
-      setOpenPayment(true);
+      setOpenPayment(true);  // Ouvre la modal de réservation si l'utilisateur est connecté
     } else {
       navigate("/login");
     }
@@ -92,19 +96,38 @@ const Hotel = () => {
       },
     };
 
+    const hotelDesc = {
+      method: 'GET',
+      url: 'https://booking-com15.p.rapidapi.com/api/v1/hotels/getDescriptionAndInfo',
+      params: {
+        hotel_id: hotelId,
+        languagecode: 'en-us'
+      },
+      headers: {
+        'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+        'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
+      },
+    };
+
     try {
       const response = await axios.request(params);
-      console.log("Response Data:", response.data);
+      console.log("Hotel details:", response.data);
+
+      const descResponse = await axios.request(hotelDesc);
+      console.log("Hotel description:", descResponse);
+
+      const rooms = response.data.data.rooms;
+      const firstRoomKey = Object.keys(rooms)[0];
+      const firstRoom = rooms[firstRoomKey];
+      console.log(firstRoom);
+      setFirstRoom(firstRoom);
+      setPhotos(firstRoom.photos);
       setData(response.data);
+      setHotelDesc(descResponse.data.data);
 
       const grossPrice = response.data.data?.composite_price_breakdown?.gross_amount_per_night?.value || 0;
       const charges = response.data.data?.composite_price_breakdown?.charges_details?.amount?.value || 0;
       const calculatedPrice = formatPrice((grossPrice * days * options.room) + charges);
-      console.log("Gross Price:", grossPrice);
-      console.log("Charges:", charges);
-      console.log("Options:", options.room);
-
-      console.log("Calculated Price:", calculatedPrice);
       setTotalPrice(calculatedPrice);
     } catch (error) {
       console.error("Error fetching hotel details:", error);
@@ -130,19 +153,19 @@ const Hotel = () => {
               <FontAwesomeIcon icon={faXmarkCircle} className="closeIcon" onClick={() => setOpen(false)} />
               <FontAwesomeIcon icon={faArrowLeft} className="leftIcon" onClick={() => handleSlide("left")} />
               <div className="photoSliderWrapper">
-                {data.photos && data.photos[slideIndex] && (
-                  <img src={data.photos[slideIndex]} alt="" className="photoSliderImage" />
+                {photos.length > 0 && (
+                  <img src={photos[slideIndex].url_max1280} alt="" className="photoSliderImage" />
                 )}
               </div>
               <FontAwesomeIcon icon={faArrowRight} className="rightIcon" onClick={() => handleSlide("right")} />
             </div>
           )}
           <div className="hotelWrapper">
-            <button className="bookButton">Book Now</button>
+            <button className="bookButton" onClick={handleClick}>Book Now</button>
             <h1 className="hotelName">{data.data?.hotel_name}</h1>
             <div className="hotelLocation">
               <FontAwesomeIcon icon={faLocation} className="hotelLocationIcon" />
-              <span>{data.data?.address}, {data.data?.zip} {data.data?.city}</span>
+              <span>{data.data?.address}, {data.data?.zip} {data.data?.city}, {data.data?.country_trans}</span>
             </div>
             <div className="hotelWebsite">
               <a href={data.data?.url} target="_blank" rel="noreferrer">Visit website</a>
@@ -151,9 +174,9 @@ const Hotel = () => {
             <span className="hotelDist">{Math.floor(data.data?.distance_to_cc)}m from city center</span>
             <span className="hotelHighlight">Book early and get a free airport transport</span>
             <div className="hotelImages">
-              {data.photos?.map((image, index) => (
+              {photos.map((image, index) => (
                 <div className="hotelImagesWrapper" key={index}>
-                  <img onClick={() => handleOpen(index)} src={image.src} alt={`Hotel image ${index + 1}`} className="hotelImage" />
+                  <img onClick={() => handleOpen(index)} src={image.url_original} alt={`Hotel image ${index + 1}`} className="hotelImage" />
                 </div>
               ))}
             </div>
@@ -161,15 +184,29 @@ const Hotel = () => {
               <div className="hotelDesc">
                 <div className="hotelDescText">
                   <h2 className="hotelDescTitle">About {data.data?.hotel_name}</h2>
-                  <p className="hotelDescInfo">
-                    {data.data?.description}
-                  </p>
+                  <p className="hotelDescInfo">{hotelDesc.map(
+                    (desc, index) => (
+                      <span key={index}>{desc.description}</span>
+                    )
+                  )}</p>
+                  <h3 className="roomsDescTitle">Rooms description:</h3>
+                  <p className="roomsDesc">{firstRoom.description}</p>
+
+                </div>
+                <div>
+                  <h2 className="hotelFacility">Amenities</h2>
+                  <ul className="hotelDescList">
+                    {firstRoom.facilities.map((facility, index) => (
+                      <li key={index} className="hotelDescListItem">{facility.name}</li>
+                    ))}
+                  </ul>
                 </div>
               </div>
               <div className="hotelDescPrice">
                 <div className="hotelDescPriceWrapper">
                   <h1>Perfect for a {days} night stay</h1>
-                  <span>Good location: highly rated by recent travelers {data.data?.breakfast_review_score?.rating}</span>
+                  {/* Utiliser le reviewScore transmis */}
+                  <span>Highly rated by travelers: <strong>{reviewScore}</strong></span>
                   <span className="hotelDescPriceAmount">
                     {totalPrice ? `${totalPrice}€ (${days} Nights)` : "Price not available"}
                   </span>
@@ -188,3 +225,4 @@ const Hotel = () => {
 }
 
 export default Hotel;
+
