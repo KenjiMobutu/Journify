@@ -1,8 +1,27 @@
 import express from 'express';
-import { createUser, updateUser, deleteUser, getUser, getAllUsers } from '../controllers/userController.js';
+import { createUser,
+          updateUser,
+          deleteUser,
+          getUser,
+          getAllUsers,
+          getUserBookings
+        } from '../controllers/userController.js';
 import { verifyAdmin, verifyToken, verifyUser } from '../utils/verifyToken.js';
 
 const router = express.Router();
+
+router.get("/me", verifyToken, async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error", error: err });
+  }
+});
 
 // router.get("/checkToken", verifyToken, (req, res, next) => {
 //   res.send("Token is valid");
@@ -31,5 +50,8 @@ router.get('/:id', verifyUser, getUser);
 
 //GET ALL
 router.get('/', verifyAdmin, getAllUsers);
+
+// GET USER BOOKINGS
+router.get('/:id/bookings', verifyUser, getUserBookings);
 
 export default router;

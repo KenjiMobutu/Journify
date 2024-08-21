@@ -13,6 +13,7 @@ import { AuthenticationContext } from "../../context/AuthenticationContext.jsx";
 import Reservation from "../../components/reservation/Reservation.jsx";
 import axios from "axios";
 import formatPrice from "../../utils/utils";
+import { da } from "date-fns/locale";
 
 const Hotel = () => {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -32,6 +33,9 @@ const Hotel = () => {
   // Récupérer le reviewScore depuis l'état passé dans le Link
   const reviewScore = location.state?.reviewScore || "N/A";
   console.log("Review Score:", reviewScore);
+
+  const hotel = data?.data;
+  console.log("Hotel:", hotel);
 
   // Récupérer les dates et options du contexte ou de localStorage
   const { dates: contextDates, options: contextOptions } = useContext(SearchContext);
@@ -72,7 +76,7 @@ const Hotel = () => {
     if (user) {
       setOpenPayment(true);  // Ouvre la modal de réservation si l'utilisateur est connecté
     } else {
-      navigate("/login");
+      navigate("/login", { state: { from: location.pathname } }); // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
     }
   };
 
@@ -194,9 +198,9 @@ const Hotel = () => {
 
                 </div>
                 <div>
-                  <h2 className="hotelFacility">Amenities</h2>
+                  <h2 className="hotelFacility">Facilities</h2>
                   <ul className="hotelDescList">
-                    {firstRoom.facilities.map((facility, index) => (
+                    {data.data?.property_highlight_strip.map((facility, index) => (
                       <li key={index} className="hotelDescListItem">{facility.name}</li>
                     ))}
                   </ul>
@@ -217,7 +221,7 @@ const Hotel = () => {
           </div>
         </div>
       )}
-      {openPayment && <Reservation setOpen={setOpenPayment} hotelId={hotelId} />}
+      {openPayment && <Reservation setOpen={setOpenPayment} hotelId={hotelId} hotel={hotel} />}
       <Newsletter />
       <Footer />
     </div>

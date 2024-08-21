@@ -101,6 +101,7 @@
   align-items: center;
   border: none !important;
   height: 42px;
+
 }
 
 .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
@@ -109,6 +110,7 @@
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
+  border: none !important;
 }
 
 .headerBtn {

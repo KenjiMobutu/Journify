@@ -1,6 +1,11 @@
 import e from 'express';
 import Hotel from '../models/Hotel.js';
 import Room from '../models/Room.js';
+import Booking from '../models/Booking.js';
+import User from '../models/User.js';
+import Stripe from 'stripe';
+import dotenv from 'dotenv';
+const stripe = new Stripe('sk_test_51Ppa9LP9VBJhBODfMnEkzEzH3DmyxzKqPSr71VXvXsHQIAKwnYHsnup6qVFB0bA1ROuS9IzCF1dkWRfWlBBzSa8U00sr19lFAb');
 
 
 // Create Hotel
@@ -120,6 +125,56 @@ export const getHotelRooms = async (req, res, next) => {
         next(error);
     }
 }
+
+
+export const createPaymentIntent = async (req, res) => {
+    try {
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: req.body.amount, // Montant à facturer en centimes
+            currency: 'eur', // Devise utilisée
+            payment_method_types: ['card'], // Méthodes de paiement acceptées
+        });
+        console.log("Payment Intent : ", paymentIntent);
+        res.status(200).json({
+            clientSecret: paymentIntent.client_secret,
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const createBooking = async (req, res, next) => {
+    console.log("Create Booking");
+    console.log("STRIPE :", stripe);
+    try{
+        const paymentIntentId = req.body.paymentIntentId;
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+        if(paymentIntent.status !== 'succeeded'){
+            return res.status(400).json({message: 'Payment not successful. Status: ' + paymentIntent.status});
+        }
+
+        // Filtrer l'ID pour éviter la duplication
+        const bookingData = { ...req.body };
+        delete bookingData._id;
+
+        // Création de la nouvelle réservation avec paid à true
+        const newBooking = new Booking({
+            ...bookingData,
+            paid: true
+        });
+
+        const savedBooking = await newBooking.save();
+        await User.findByIdAndUpdate(
+            {_id: req.body._id},
+            {$push: {bookings: savedBooking._id}},
+        );
+
+        res.status(200).json(savedBooking);
+    }catch(err){
+        next(err);
+    }
+}
+
 
 
 

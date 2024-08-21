@@ -19,6 +19,8 @@
     "@fortawesome/react-fontawesome": "latest",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
+    "@stripe/react-stripe-js": "^2.8.0",
+    "@stripe/stripe-js": "^4.3.0",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.7.3",
     "date-fns": "^3.6.0",

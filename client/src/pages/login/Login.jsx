@@ -19,7 +19,9 @@ export default function Login() {
     try {
       const res = await axios.post("/api/auth/login", credentials);
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
-      navigate("/");
+      const redirectTo = location.state?.from || '/';
+      //navigate("/");
+      navigate(redirectTo);
     } catch (error) {
       dispatch({ type: "LOGIN_FAILURE", payload: error.response.data });
     }

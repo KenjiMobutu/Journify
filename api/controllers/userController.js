@@ -1,5 +1,4 @@
 import User from '../models/User.js';
-import amadeus from 'amadeus';
 
 // Create User
 export const createUser = async (req, res, next) => {
@@ -51,6 +50,16 @@ export const getAllUsers = async (req, res, next) => {
   try{
       const Users = await User.find();
       res.status(200).json(Users);
+  }catch(err){
+      next(err);
+  }
+}
+
+// Get User Bookings
+export const getUserBookings = async (req, res, next) => {
+  try{
+      const user = await User.findById(req.params.id).populate('bookings');
+      res.status(200).json(user.bookings);
   }catch(err){
       next(err);
   }

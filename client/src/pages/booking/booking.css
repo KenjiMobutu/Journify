@@ -1,0 +1,239 @@
+.bookingContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 800px;
+  margin: 20px auto;
+  gap: 20px;
+  background-color: #f8f9fa; /* Ajout d'une couleur de fond douce */
+  border-radius: 10px; /* Coins arrondis */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.586); /* Ombre pour donner de la profondeur */
+}
+
+.details,
+.confirmDetails {
+  background-color: white; /* Fond blanc pour les sections */
+  border-radius: 10px; /* Coins arrondis */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.525); /* Légère ombre pour un effet de carte */
+  padding: 20px;
+  width: 100%;
+}
+
+.detailsTitle,
+.confirmDetailsTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #343a40; /* Couleur de texte améliorée */
+  border-bottom: 2px solid #dee2e6; /* Ligne de séparation sous le titre */
+  padding-bottom: 10px;
+}
+
+.locationLabel {
+  margin-bottom: 10px;
+
+  color: #495057; /* Couleur du texte pour les étiquettes */
+}
+
+.locationName,
+.locationAddress {
+  font-size: 16px;
+  color: #6c757d; /* Texte légèrement atténué pour les informations */
+}
+
+.datesItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-top: 1px solid #dee2e6; /* Séparation des éléments */
+  margin-top: 10px;
+}
+
+.checkIn,
+.checkOut {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.checkIn label,
+.checkOut label {
+  font-size: 14px;
+
+  color: #495057;
+}
+
+.checkIn span,
+.checkOut span,
+.numberNightsValue,
+.numberRoomsValue,
+.numberGuestsValue {
+  font-weight: bold;
+  font-size: 16px;
+  color: #343a40; /* Couleur du texte principale */
+}
+
+.numberNights,
+.numberRooms,
+.numberGuests {
+  margin-top: 15px;
+}
+
+.numberNightsLabel,
+.numberRoomsLabel,
+.numberGuestsLabel {
+  margin-bottom: 5px;
+  color: #495057;
+}
+
+.confirmDetails {
+  flex: 2;
+  margin-top: 20px;
+  border: 1px solid #dee2e6;
+}
+
+.confirmDetailsTitle {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  color: #343a40;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.confirmDetails {
+  flex: 2;
+  height: 1000px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.confirmDetailsTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.confirmDetailsItem {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.itemName,
+.itemEmail,
+.itemPrice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.priceValue {
+  background-color: rgba(0, 89, 253, 0.113);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  padding: 10px;
+}
+
+.priceValue span {
+  color: #504b4b;
+}
+
+.priceValue p {
+  font-weight: 200;
+  font-size: 12px;
+  color: #726f6f;
+}
+
+.nameLabel,
+.emailLabel,
+.priceLabel,
+.payDetailsLabel {
+  font-size: 16px;
+  font-weight: bold;
+  color: #555;
+  width: 30%;
+}
+
+.nameValue,
+.emailValue,
+.priceValue {
+  font-size: 16px;
+  width: 70%;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  font-size: 16px;
+  color: #333;
+}
+
+input[type="text"]:read-only {
+  background-color: #e9e9e9;
+}
+
+.priceValue {
+  font-weight: bold;
+  font-size: 18px;
+  color: #000;
+}
+
+.itemDetails {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.payDetailsValue {
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #e9e9e9;
+}
+.payDetailsLabel {
+  margin-bottom: 20px;
+}
+
+
+.bookButton {
+  background-color: #0059fd;
+  color: white;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+}
+
+.paidButton {
+  background-color: green !important;
+  color: white;
+}
+
+.confirmationMessage {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 18px;
+  z-index: 1000;
+}
+

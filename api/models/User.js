@@ -24,7 +24,11 @@ const UserSchema = new Schema({
   isAdmin: {
     type: Boolean,
     default: false
-  }
+  },
+  bookings: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Booking'
+  }]
 }, { timestamps: true }
 );
 

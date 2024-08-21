@@ -39,7 +39,7 @@ export const SearchList = ({ item }) => {
             to={{
               pathname: `/hotels/${item.hotel_id}`  // Transmission du reviewScore
             }}
-            state={{ reviewScore: item.property.reviewScore }}
+            state={{ reviewScore: item.property.reviewScore, hotel: item }}
           >
 
             <button className="searchItemBook">Book now</button>

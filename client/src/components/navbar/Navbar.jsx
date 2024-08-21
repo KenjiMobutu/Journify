@@ -4,9 +4,6 @@ import { useContext } from 'react';
 import { AuthenticationContext } from '../../context/AuthenticationContext';
 import axios from 'axios';
 
-
-
-
 const Navbar = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthenticationContext);
@@ -32,17 +29,22 @@ const Navbar = () => {
     }
   }
 
+  const handleBookings = () => {
+    navigate('/myBookings');
+  }
+
   return (
     <div className="navbar">
       <div className="navContainer">
         <div>
           <span className="text-3xl text-pink font-bold tracking-tight">
-            <Link to="/">JOURNIFY</Link>, the new BAAANGER!
+            <Link to="/">JOURNIFY</Link>
           </span>
         </div>
         {user ? (
           <div>
             <span>Welcome, {user.userName}</span>
+            <button className="navButton" onClick={handleBookings}>My Bookings</button>
             <button className="navButton" onClick={handleLogout}>Logout</button>
           </div>
         ) : (

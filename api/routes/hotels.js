@@ -1,8 +1,19 @@
-
 import express from 'express';
-import Amadeus from 'amadeus';
-import { countByCity, countByType, createHotel, deleteHotel, getAllHotels, getHotel, getHotelRooms, updateHotel } from '../controllers/hotelController.js';
-import { verifyAdmin } from '../utils/verifyToken.js';
+import { countByCity,
+        countByType,
+        createHotel,
+        deleteHotel,
+        getAllHotels,
+        getHotel,
+        getHotelRooms,
+        createBooking,
+        createPaymentIntent,
+        updateHotel } from '../controllers/hotelController.js';
+import { verifyAdmin, verifyToken } from '../utils/verifyToken.js';
+import dotenv from 'dotenv';
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const router = express.Router();
 
@@ -18,5 +29,12 @@ router.get('/', getAllHotels);
 router.get('/countByCity', countByCity);
 router.get('/countByType', countByType);
 router.get('/room/:id', getHotelRooms);
+
+// Booking
+router.post("/:id/bookings", verifyToken, createBooking);
+
+// Payment Stripe
+router.post("/create-payment-intent", verifyToken, createPaymentIntent)
+
 
 export default router;
