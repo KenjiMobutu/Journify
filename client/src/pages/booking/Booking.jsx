@@ -4,7 +4,7 @@ import { AuthenticationContext } from '../../context/AuthenticationContext';
 import { useNavigate } from 'react-router-dom';
 import Navbar from "../../components/navbar/Navbar";
 import { useLocation } from "react-router-dom";
-import { format, differenceInDays, parseISO, add } from "date-fns";
+import { format } from "date-fns";
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useState } from 'react';
 
@@ -24,8 +24,9 @@ const Booking = () => {
   const stripe = useStripe();
   const elements = useElements();
 
-  const startDate = params.get('startDate');
-  const endDate = params.get('endDate');
+
+  const startDate = new Date(params.get('startDate')); // Utiliser le constructeur Date pour les dates
+  const endDate = new Date(params.get('endDate'))
   const adults = params.get('adults');
   const children = params.get('children');
   const rooms = params.get('rooms');
@@ -34,16 +35,14 @@ const Booking = () => {
   console.log("Hotel:", hotel);
   console.log("Start Date:", startDate);
 
-  // Convert startDate and endDate strings to Date objects
-  const start = parseISO(startDate);
-  const end = parseISO(endDate);
-
   // Format dates to dd/MM/yyyy
-  const formattedStartDate = format(start, "dd/MM/yyyy");
-  const formattedEndDate = format(end, "dd/MM/yyyy");
+  const formattedStartDate = format(startDate, "dd/MM/yyyy");
+  const formattedEndDate = format(endDate, "dd/MM/yyyy");
 
-  // Calculate the number of nights
-  const numberOfNights = differenceInDays(end, start);
+  // Calculer le nombre de nuits
+  const timeDifference = endDate.getTime() - startDate.getTime();
+  const numberOfNights = timeDifference / (1000 * 3600 * 24);
+
 
   if (!user) {
     // Redirige l'utilisateur vers la page de connexion si non authentifié

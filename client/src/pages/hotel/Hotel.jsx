@@ -147,7 +147,7 @@ const Hotel = () => {
   return (
     <div>
       <Navbar />
-      <Header type="list" />
+      {/* <Header type="list" /> */}
       {!data ? (
         "Loading..."
       ) : (
@@ -165,7 +165,7 @@ const Hotel = () => {
             </div>
           )}
           <div className="hotelWrapper">
-            <button className="bookButton" onClick={handleClick}>Book Now</button>
+            <button className="bookButtonUp" onClick={handleClick}>Book Now</button>
             <h1 className="hotelName">{data.data?.hotel_name}</h1>
             <div className="hotelLocation">
               <FontAwesomeIcon icon={faLocation} className="hotelLocationIcon" />
@@ -222,8 +222,8 @@ const Hotel = () => {
         </div>
       )}
       {openPayment && <Reservation setOpen={setOpenPayment} hotelId={hotelId} hotel={hotel} />}
-      <Newsletter />
-      <Footer />
+      {/* <Newsletter /> */}
+      {/* <Footer /> */}
     </div>
   );
 }

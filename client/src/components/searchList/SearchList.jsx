@@ -9,8 +9,8 @@ export const SearchList = ({ item }) => {
   // const research = useLocation();
   // const [hotels, setHotels] = useState(research.state.hotels);
   // console.log("Hotels DE RAPID API ==> :" , hotels.data);
-  console.log(item);
-  console.log("Review Score:", item.property.reviewScore);
+  //console.log(item);
+  //console.log("Review Score:", item.property.reviewScore);
   return (
     <div className='searchItem'>
       <img src={item.property.photoUrls} alt="" className="searchItemImage" />

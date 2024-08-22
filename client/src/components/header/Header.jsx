@@ -5,7 +5,7 @@ import { DateRange } from 'react-date-range';
 import { useContext, useState, useEffect } from 'react';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
-import { format } from "date-fns";
+import { format, addDays, isValid } from "date-fns";
 import { useNavigate } from 'react-router-dom';
 import { SearchContext } from '../../context/SearchContext.jsx';
 import axios from 'axios';
@@ -164,13 +164,19 @@ function Header({ type }) {
   const [destination, setDestination] = useState(""); // Utiliser setDestination pour mettre à jour
   console.log("Destination", destination);
   const [hotels, setHotels] = useState([]);
-  const [dates, setDates] = useState([
-    {
-      startDate: new Date(),
-      endDate: new Date(),
-      key: 'selection'
-    }
-  ]);
+  // Initialiser les dates avec aujourd'hui et demain par défaut
+  const [dates, setDates] = useState(() => {
+    const startDate = new Date();
+    const endDate = addDays(new Date(), 1);
+
+    return [
+      {
+        startDate: isValid(new Date()) ? new Date() : startDate,
+        endDate: isValid(addDays(new Date(), 1)) ? addDays(new Date(), 1) : endDate,
+        key: 'selection'
+      }
+    ];
+  });
 
   const [openOptions, setOpenOptions] = useState(false);
   const [options, setOptions] = useState({
@@ -249,7 +255,7 @@ function Header({ type }) {
       </video>
       <div className={type === "list" ? "headerContainer listMode" : "headerContainer"}>
         <div className="headerList">
-          <button className="headerListItem selected">
+          {/* <button className="headerListItem selected">
             <FontAwesomeIcon icon={faBed} />
             <span>Stays</span>
           </button>
@@ -272,16 +278,14 @@ function Header({ type }) {
           <button className="headerListItem">
             <FontAwesomeIcon icon={faTaxi} />
             <span>Airport taxis</span>
-          </button>
+          </button> */}
         </div>
         {type !== "list" &&
           <>
-            <h1 className="headerTitle">Find your best JOURNEY</h1>
-            <p className="headerDescription">Search low prices on hotels, homes and much more...</p>
+            <h1 className="headerTitle">JOURNIFY YOUR LIFE</h1>
             <div className="headerSearch">
               <div className="headerSearchItem">
                 <GoogleMaps setDestination={setDestination} /> {/* Passer setDestination comme prop */}
-
               </div>
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faCalendarDays} style={{ color: 'black' }} className="headerIcon" />

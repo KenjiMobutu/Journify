@@ -1,11 +1,9 @@
-
 .header {
   position: relative;
   color: white;
   display: flex;
   justify-content: center;
   z-index: 2;
-   /* Assurez-vous que rien ne dépasse du conteneur .header */
 }
 
 .background-video {
@@ -71,7 +69,7 @@
 .headerSearch {
   height: 50px;
   background-color: white;
-  border: 5px solid #febb02;
+  border: 5px solid #554b40;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -101,15 +99,29 @@
   align-items: center;
   border: none !important;
   height: 42px;
-
 }
 
 .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
-  color:  black !important;
+  color: black !important;
   margin-bottom: 69px !important;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
+  border: none !important;
+}
+
+.MuiInputBase-input {
+  border: none !important;
+  outline: none !important;
+  padding: 0px !important;
+  margin: 0px !important;
+  height: 40px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
   border: none !important;
 }
 
@@ -198,4 +210,8 @@ button {
 
 .headerListItemButton {
   background-color: transparent;
+}
+
+.background-video {
+  height: 430px;
 }

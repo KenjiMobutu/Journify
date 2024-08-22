@@ -44,14 +44,14 @@
   gap: 10px;
 }
 
-.bookButton{
+.bookButtonUp{
   position: absolute;
   right: 10px;
   top: 10px;
   padding: 5px 20px;
   border-radius: 5px;
   font-size: 15px;
-  background-color: #0f35a7;
+  background-color: #000000;
   color: white;
   cursor: pointer;
 }
@@ -126,7 +126,7 @@
   padding: 10px;
   border-radius: 5px;
   font-size: 15px;
-  background-color: #0f35a7;
+  background-color: #000000;
   color: white;
   cursor: pointer;
 }

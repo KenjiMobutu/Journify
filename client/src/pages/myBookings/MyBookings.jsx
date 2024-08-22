@@ -54,6 +54,10 @@ const MyBookings = () => {
                   <label>Number of Guests</label>
                   <span>{booking.adultsCount + booking.childrenCount}</span>
                 </div>
+                <div className="bookingDetail">
+                  <label>Total Cost</label>
+                  <span>{booking.totalCost} €</span>
+                </div>
               </div>
             </div>
           ))

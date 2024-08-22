@@ -12,14 +12,14 @@ export default function Index(){
       <Navbar/>
       <Header/>
       <div className="homeContainer">
-        <Featured/>
+        {/* <Featured/>
         <h1 className="homeTitle">Browse by property type</h1>
         <PropertyList/>
         <h1 className="homeTitle">Accommodations that guests love</h1>
-        <LoveProperties/>
+        <LoveProperties/> */}
         <Newsletter/>
       </div>
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   );
 }

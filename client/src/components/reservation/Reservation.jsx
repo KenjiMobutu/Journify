@@ -90,6 +90,9 @@ function Reservation({ setOpen, hotelId, hotel }) {
       <div className="reservationContainer">
         <FontAwesomeIcon className="reservClose" icon={faXmarkCircle} onClick={() => setOpen(false)} />
         <span className="chooseRoomText">Choose your room :</span>
+        <div className="totalPrice">
+          <span>Total Price: {totalPrice}€</span>
+        </div>
         {availableRooms.length > 0 ? (
           availableRooms.map(item => (
             <div
@@ -106,9 +109,7 @@ function Reservation({ setOpen, hotelId, hotel }) {
         ) : (
           <p>No rooms available for the selected dates.</p>
         )}
-        <div className="totalPrice">
-          <span>Total Price: {totalPrice}€</span>
-        </div>
+
         <button className="bookButtonModal" onClick={handleClick}>Reserve</button>
       </div>
     </div>
