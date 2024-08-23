@@ -2,9 +2,10 @@ import { useState } from 'react';
 import './register.css'; // Assurez-vous que le chemin d'accès est correct
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-
+import { io } from "socket.io-client";
 
 const Register = () => {
+  const socket = io("http://localhost:3000")
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
@@ -49,7 +50,8 @@ const Register = () => {
     setLoading(true);
     try {
       await axios.post('/api/auth/register', userData);
-      navigate('/login');
+      socket?.emit("notificationRegister", userData.userName);
+      navigate('/');
     } catch (error) {
       if (error.response && error.response.data.errors) {
         setErrors(error.response.data.errors.map(err => err.msg));

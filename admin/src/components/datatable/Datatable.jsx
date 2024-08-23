@@ -10,9 +10,9 @@ import axios from "axios";
 const Datatable = ({ columns, title }) => {
   console.log("TITLE", title);
   const location = useLocation();
-  const path = location.pathname.split("/")[1];
+  const path = location.pathname.split("/")[1] || "users";
   const [list, setList] = useState();
-  const { data, loading, error } = useFetch(`/api/${path}`);
+  const { data} = useFetch(`/api/${path}`);
   console.log("DATA", data);
   useEffect(() => {
     setList(data);

@@ -9,14 +9,39 @@ import roomsRouter from './routes/rooms.js';
 import destinationsRouter from './routes/destinations.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 const app = express();
+
 dotenv.config();
+
+const httpServer = createServer(app);
+
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: "http://localhost:8000",
+//   }
+// });
+const io = new Server(httpServer, {
+  cors: {
+    cors: { origin: "*" }
+    // origin: (origin, callback) => {
+    //   const allowedOrigins = ["http://localhost:8000", "http://localhost:5000"];
+    //   if (allowedOrigins.includes(origin)) {
+    //     callback(null, true);
+    //   } else {
+    //     callback(new Error("Not allowed by CORS"));
+    //   }
+    // },
+    // methods: ["GET", "POST", "PUT", "DELETE"],
+  }
+});
+
 
 const connectToMongo = async() =>{
   try {
     await mongoose.connect(process.env.MONGO);
-    console.log('MongoDB connected');
   } catch (error) {
     console.log(error);
     throw error;
@@ -30,6 +55,8 @@ mongoose.connection.on('disconnected', () => {
 mongoose.connection.on('connected', () => {
   console.log('MongoDB connected!!!');
 });
+
+connectToMongo();
 
 // Middlewares
 app.use(cors()); // Autorise toutes les origines
@@ -61,7 +88,37 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(3000, () => {
-  connectToMongo();
+// Gestion des connexions socket.io
+io.on("connection", (socket) => {
+  console.log("A user connected!", socket.id);
+
+  // Lorsqu'un nouvel utilisateur s'inscrit
+  socket.on("notificationRegister", (username) => {
+    //console.log(`${username} registered.`);
+    // Envoyer une notification à tous les utilisateurs connectés
+    io.emit("notification", `New user registered : ${username} .`);
+  });
+
+  // Lorsqu'une nouvelle réservation est effectuée
+  socket.on("notificationBooking", (message) => {
+    console.log("New booking:", message);
+    // Envoyer une notification à tous les utilisateurs connectés
+    io.emit("notification", `${message}`);
+  });
+
+  // Gestion de la déconnexion
+  socket.on('disconnect', () => {
+    console.log(`User with socketId ${socket.id} disconnected.`);
+  });
+});
+
+
+// Écoute du serveur sur le port 3000
+httpServer.listen(3000, () => {
   console.log('Express server listening on port "http://localhost:3000"');
 });
+
+// app.listen(3000, () => {
+//   connectToMongo();
+//   console.log('Express server listening on port "http://localhost:3000"');
+// });

@@ -7,7 +7,7 @@
   height: 120px;
   box-shadow: 4px 13px 19px 0px rgba(0,0,0,0.5);
   -webkit-box-shadow: 4px 13px 19px 0px rgba(0,0,0,0.5);
-  
+
 
   .left,.right{
     display: flex;
@@ -50,6 +50,7 @@
       text-decoration: none;
       border-bottom: 1px solid rgba(128, 128, 128, 0.203);
       width: max-content;
+      color: inherit;
     }
 
     .icon{

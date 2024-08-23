@@ -134,7 +134,7 @@ export const createPaymentIntent = async (req, res) => {
             currency: 'eur', // Devise utilisée
             payment_method_types: ['card'], // Méthodes de paiement acceptées
         });
-        console.log("Payment Intent : ", paymentIntent);
+        //console.log("Payment Intent : ", paymentIntent);
         res.status(200).json({
             clientSecret: paymentIntent.client_secret,
         });
@@ -144,8 +144,6 @@ export const createPaymentIntent = async (req, res) => {
 };
 
 export const createBooking = async (req, res, next) => {
-    console.log("Create Booking");
-    console.log("STRIPE :", stripe);
     try{
         const paymentIntentId = req.body.paymentIntentId;
         const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
@@ -170,6 +168,15 @@ export const createBooking = async (req, res, next) => {
         );
 
         res.status(200).json(savedBooking);
+    }catch(err){
+        next(err);
+    }
+}
+
+export const getBookings = async (req, res, next) => {
+    try{
+        const bookings = await Booking.find();
+        res.status(200).json(bookings);
     }catch(err){
         next(err);
     }

@@ -10,7 +10,7 @@ import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthenticationContext } from "./context/AuthenticationContext";
-import { hotelColumns, roomColumns, userColumns } from "./dataTableSource";
+import { hotelColumns, roomColumns, userColumns, lastUserColumns } from "./dataTableSource";
 import { userInputs, hotelInputs, roomInputs } from "./formSource";
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
             <Route path="login" element={<Login/>}/>
             <Route index element={
               <ProtectedRoute>
-                <Home/>
+                <Home columns={ lastUserColumns} title="Last Users added"/>
               </ProtectedRoute>
             }/>
             <Route path="users">

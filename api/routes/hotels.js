@@ -7,6 +7,7 @@ import { countByCity,
         getHotel,
         getHotelRooms,
         createBooking,
+        getBookings,
         createPaymentIntent,
         updateHotel } from '../controllers/hotelController.js';
 import { verifyAdmin, verifyToken } from '../utils/verifyToken.js';
@@ -32,6 +33,7 @@ router.get('/room/:id', getHotelRooms);
 
 // Booking
 router.post("/:id/bookings", verifyToken, createBooking);
+router.get("/bookings", verifyAdmin, getBookings);
 
 // Payment Stripe
 router.post("/create-payment-intent", verifyToken, createPaymentIntent)

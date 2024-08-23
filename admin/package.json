@@ -21,6 +21,7 @@
     "react-scripts": "5.0.1",
     "recharts": "^2.12.7",
     "sass": "^1.77.8",
+    "socket.io-client": "^4.7.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -46,5 +47,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }, "proxy": "http://localhost:3000"
+  },
+  "proxy": "http://localhost:3000"
 }

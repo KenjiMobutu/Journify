@@ -14,7 +14,7 @@ const NewRoom = ({ inputs, title }) => {
   const [roomNumbers, setRoomNumbers] = useState("");
   const [hotelId, setHotelId] = useState(undefined);
   const roomTypes = ['Single', 'Double', 'Triple', 'Quad', 'Queen', 'King', 'Twin'];
-  const { data, loading, error } = useFetch("/api/hotels");
+  const { data, loading} = useFetch("/api/hotels");
 
   const handleChange = (e) => {
     const { id, value } = e.target;

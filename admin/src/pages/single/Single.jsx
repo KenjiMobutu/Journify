@@ -35,14 +35,14 @@ const Single = () => {
                   <span className="detailKey">ID:</span>
                   <span className="detailValue">{data._id}</span>
                 </div>
-                <div className="detailItem">
+                {/* <div className="detailItem">
                   <span className="detailKey">Birthday:</span>
                   <span className="detailValue">{data.birthday || "N/A"}</span>
                 </div>
                 <div className="detailItem">
                   <span className="detailKey">Phone:</span>
                   <span className="detailValue">{data.phone || "N/A"}</span>
-                </div>
+                </div> */}
                 <div className="detailItem">
                   <span className="detailKey">Email:</span>
                   <span className="detailValue">{data.email}</span>

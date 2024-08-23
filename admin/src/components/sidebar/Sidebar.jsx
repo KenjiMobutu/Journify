@@ -11,14 +11,13 @@ import { useContext } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useNavigate } from "react-router";
 import { AuthenticationContext } from '../../context/AuthenticationContext';
-import useFetch from "../../hooks/useFetch";
-import { useLocation } from "react-router-dom";
+
 
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const { dispatch: darkModeDispatch } = useContext(DarkModeContext); // Renommé pour éviter le conflit
-  const { loading, error, dispatch: authDispatch } = useContext(AuthenticationContext); // Renommé pour éviter le conflit
+  const { dispatch: authDispatch } = useContext(AuthenticationContext); // Renommé pour éviter le conflit
   const { user } = useContext(AuthenticationContext);
 
 

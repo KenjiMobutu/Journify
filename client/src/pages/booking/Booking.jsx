@@ -7,9 +7,10 @@ import { useLocation } from "react-router-dom";
 import { format } from "date-fns";
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useState } from 'react';
-
+import { io } from "socket.io-client";
 
 const Booking = () => {
+  const socket = io("http://localhost:3000")
   const [paymentSuccess, setPaymentSuccess] = useState(false);  // État pour le succès du paiement
   const [showConfirmation, setShowConfirmation] = useState(false);  // État pour afficher la confirmation
   const [buttonDisabled, setButtonDisabled] = useState(false);  // État pour désactiver le bouton
@@ -17,7 +18,6 @@ const Booking = () => {
 
   const { user } = useContext(AuthenticationContext);
   const navigate = useNavigate();
-  console.log("User:", user);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
 
@@ -32,8 +32,6 @@ const Booking = () => {
   const rooms = params.get('rooms');
   const hotel = JSON.parse(params.get('hotel'));
   const price = params.get('price');
-  console.log("Hotel:", hotel);
-  console.log("Start Date:", startDate);
 
   // Format dates to dd/MM/yyyy
   const formattedStartDate = format(startDate, "dd/MM/yyyy");
@@ -76,7 +74,6 @@ const Booking = () => {
       }
 
       const paymentIntentData = await paymentIntentRes.json();
-      console.log('Payment Intent:', paymentIntentData);
 
       // Vérification du client_secret
       if (!paymentIntentData.clientSecret) {
@@ -98,8 +95,6 @@ const Booking = () => {
         setButtonDisabled(false);  // Réactiver le bouton en cas d'erreur
         return; // Arrêtez l'exécution si une erreur de paiement se produit
       }
-
-      console.log('Payment successful:', paymentIntent);
 
       // Enregistrez la réservation après la réussite du paiement
       const response = await fetch(`/api/hotels/${hotel.hotel_id}/bookings`, {
@@ -132,14 +127,14 @@ const Booking = () => {
         throw new Error(`Failed to book: ${response.statusText}`);
       }
 
-      const bookingData = await response.json();
-      console.log('Booking successful', bookingData);
+      await response.json();
+
 
       // Gestion du succès du paiement
       setPaymentSuccess(true);  // Marquer le paiement comme réussi
       setButtonText('Paid');  // Changer le texte du bouton
       setShowConfirmation(true);  // Afficher la fenêtre de confirmation
-
+      socket?.emit("notificationBooking", user.userName + " made a new booking");  // Envoyer une notification de nouvelle réservation
       // Masquer la confirmation après 5 secondes
       setTimeout(() => {
         setShowConfirmation(false);

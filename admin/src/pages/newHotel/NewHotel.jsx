@@ -13,7 +13,7 @@ const NewHotel = ({ inputs, title }) => {
   const [info, setInfo] = useState({});
   const [rooms, setRooms] = useState([]);
 
-  const { data, loading, error } = useFetch("/api/rooms");
+  const { data, loading} = useFetch("/api/rooms");
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -70,7 +70,7 @@ const NewHotel = ({ inputs, title }) => {
 
           <div className="right">
             <form>
-              {inputs.map((input) => ( 
+              {inputs.map((input) => (
                 <div className="formInput" key={input.id}>
                   <label>{input.label}</label>
                   <input

@@ -5,7 +5,7 @@
   align-items: center;
   font-size: 15px;
   color: #555050;
-  
+
 
   .wrapper{
     width: 100%;
@@ -13,6 +13,7 @@
     align-items: center;
     padding: 25px;
     justify-content: space-between;
+    position: relative;
 
     .search{
       display: flex;
@@ -47,6 +48,10 @@
           color: #848182;
         }
 
+        .iconNotif{
+          cursor: pointer;
+        }
+
         .counter{
           background-color: #f70404;
           color: white;
@@ -68,6 +73,48 @@
           margin-left: 10px;
         }
       }
+    }
+
+    .notifications{
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      position: absolute;
+      border: 1px solid #d8d5d788;
+      top: 70px;
+      right: 150px;
+      background-color: rgb(255, 255, 255);
+      color: black;
+      padding: 10px;
+      border-radius: 5px;
+      width: 200px;
+      box-shadow: 4px 13px 19px 0px rgba(0,0,0,0.5);
+      -webkit-box-shadow: 4px 13px 19px 0px rgba(0,0,0,0.5);
+    }
+
+    .noNotifications {
+      color: #888; // Couleur grise pour indiquer l'absence de notifications
+      font-size: 14px;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .notButton{
+      background-color: #129f25;
+      color: white;
+      width: 60%;
+      border: none;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      padding: 5px;
+      margin-top: 20px;
+    }
+
+    .notButton:hover {
+      background-color: #3b7737;
     }
   }
 }
