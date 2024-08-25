@@ -255,7 +255,7 @@ function Header({ type }) {
       </video>
       <div className={type === "list" ? "headerContainer listMode" : "headerContainer"}>
         <div className="headerList">
-          {/* <button className="headerListItem selected">
+          <button className="headerListItem selected">
             <FontAwesomeIcon icon={faBed} />
             <span>Stays</span>
           </button>
@@ -278,11 +278,13 @@ function Header({ type }) {
           <button className="headerListItem">
             <FontAwesomeIcon icon={faTaxi} />
             <span>Airport taxis</span>
-          </button> */}
+          </button>
         </div>
         {type !== "list" &&
           <>
-            <h1 className="headerTitle">JOURNIFY YOUR LIFE</h1>
+            <h1 className="headerTitle">
+              <span className='hTitle'>JOURNIFY</span> YOUR LIFE
+              </h1>
             <div className="headerSearch">
               <div className="headerSearchItem">
                 <GoogleMaps setDestination={setDestination} /> {/* Passer setDestination comme prop */}

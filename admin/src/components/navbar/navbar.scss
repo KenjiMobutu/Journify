@@ -71,26 +71,68 @@
           height: 30px;
           border-radius: 50%;
           margin-left: 10px;
+          cursor: pointer;
         }
       }
     }
 
-    .notifications{
+    .notifications {
       display: flex;
-      align-items: center;
       flex-direction: column;
       position: absolute;
-      border: 1px solid #d8d5d788;
       top: 70px;
-      right: 150px;
-      background-color: rgb(255, 255, 255);
-      color: black;
-      padding: 10px;
-      border-radius: 5px;
-      width: 200px;
-      box-shadow: 4px 13px 19px 0px rgba(0,0,0,0.5);
-      -webkit-box-shadow: 4px 13px 19px 0px rgba(0,0,0,0.5);
+      right: 240px;
+      background-color: #fff;
+      color: #333;
+      padding: 15px;
+      border-radius: 8px;
+      width: 250px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease-in-out;
+      z-index: 1000;
     }
+
+    .notification {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .notification:last-child {
+      border-bottom: none;
+    }
+
+    .notification:hover {
+      background-color: #f9f9f9;
+      cursor: pointer;
+    }
+
+    .notifications::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      border-width: 0 10px 10px 10px;
+      border-style: solid;
+      border-color: transparent transparent #fff transparent;
+      filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
+    }
+
+    .notifications.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .notifications.hide {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+    }
+
 
     .noNotifications {
       color: #888; // Couleur grise pour indiquer l'absence de notifications
@@ -111,6 +153,8 @@
       font-size: 14px;
       padding: 5px;
       margin-top: 20px;
+      cursor: pointer;
+      margin-left: 20%;
     }
 
     .notButton:hover {

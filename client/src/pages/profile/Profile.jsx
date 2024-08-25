@@ -1,28 +1,29 @@
-import './single.scss'
-import Sidebar from '../../components/sidebar/Sidebar'
-import Navbar from '../../components/navbar/Navbar'
+import "./profile.css"
 import useFetch from '../../hooks/useFetch'
-import { useLocation } from 'react-router-dom'
+import Navbar from '../../components/navbar/Navbar';
 import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
-const Single = () => {
+
+const Profile = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname.split("/")[2];
   const { data } = useFetch(`/api/users/${path}`);
+
   const handleEdit = () => {
-    navigate(`/users/new/${path}`);
-  };
+    navigate(`/register/${path}`);
+  }
 
   if (!data) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className='single'>
-      <Sidebar />
-      <div className="singleContainer">
-        <Navbar />
+    <>
+    <Navbar />
+    <div className='profile'>
+      <div className="profileContainer">
         <div className="top">
           <div className="left">
             <div className="editButton" onClick={handleEdit}>Edit</div>
@@ -40,21 +41,9 @@ const Single = () => {
                   <span className="detailKey">ID:</span>
                   <span className="detailValue">{data._id}</span>
                 </div>
-                {/* <div className="detailItem">
-                  <span className="detailKey">Birthday:</span>
-                  <span className="detailValue">{data.birthday || "N/A"}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="detailKey">Phone:</span>
-                  <span className="detailValue">{data.phone || "N/A"}</span>
-                </div> */}
                 <div className="detailItem">
                   <span className="detailKey">Email:</span>
                   <span className="detailValue">{data.email}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="detailKey">Status:</span>
-                  <span className="detailValue">{data.isAdmin ? "Admin" : "User"}</span>
                 </div>
               </div>
             </div>
@@ -62,7 +51,8 @@ const Single = () => {
         </div>
       </div>
     </div>
+    </>
   )
 }
 
-export default Single;
+export default Profile

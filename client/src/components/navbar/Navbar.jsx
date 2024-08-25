@@ -7,17 +7,20 @@ import axios from 'axios';
 const Navbar = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthenticationContext);
+  console.log(user);
   const {loading, error, dispatch } = useContext(AuthenticationContext);
+
   const handleLoginClick = () => {
     navigate('/login'); // Redirige vers la route login
   }
+
   const handleRegisterClick = () => {
     navigate('/register');
   }
 
   const handleLogout = async () => {
     try {
-      //await axios.post('/api/auth/logout'); // Appel à l'API pour déconnecter l'utilisateur
+
       // Supprime le token de l'utilisateur du localStorage ou de la session
       localStorage.removeItem('token');
       // Màj du contexte ou l'état global pour refléter que l'utilisateur n'est plus connecté
@@ -33,17 +36,27 @@ const Navbar = () => {
     navigate('/myBookings');
   }
 
+  const handleProfile = () => {
+    navigate('/profile/' + user._id);
+  }
+
   return (
     <div className="navbar">
       <div className="navContainer">
-        <div>
-          <span className="text-3xl text-pink font-bold tracking-tight">
+        <div className="navTitle" id="scroll-text">
+          <span>
             <Link to="/">JOURNIFY</Link>
           </span>
         </div>
         {user ? (
+
           <div>
-            <span>Welcome, {user.userName}</span>
+            <span onClick={handleProfile} className="navName">Welcome, {user.userName}</span>
+            <img src={user.img || "https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
+              alt=""
+              className="avatar"
+              onClick={handleProfile}
+            />
             <button className="navButton" onClick={handleBookings}>My Bookings</button>
             <button className="navButton" onClick={handleLogout}>Logout</button>
           </div>

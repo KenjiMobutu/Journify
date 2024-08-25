@@ -1,32 +1,36 @@
-import Chart from "../../components/chart/Chart"
-import Featured from "../../components/featured/Featured"
-import Navbar from "../../components/navbar/Navbar"
-import Sidebar from "../../components/sidebar/Sidebar"
-import Widget from "../../components/widget/Widget"
-import Datatable from "../../components/datatable/Datatable"
-import "./home.scss"
-import { io } from "socket.io-client";
 import { useEffect, useContext, useState } from "react";
+import { io } from "socket.io-client";
 import { AuthenticationContext } from '../../context/AuthenticationContext';
+import Navbar from "../../components/navbar/Navbar";
+import Sidebar from "../../components/sidebar/Sidebar";
+import Widget from "../../components/widget/Widget";
+import Featured from "../../components/featured/Featured";
+import Chart from "../../components/chart/Chart";
+import Datatable from "../../components/datatable/Datatable";
+import "./home.scss";
 
 const Home = ({ columns, title }) => {
-
   const { user } = useContext(AuthenticationContext);
-  //const { data } = useFetch(`/api/users/${user?._id}`);
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    setSocket(io("http://localhost:3000"));
-  }, [])
+    const newSocket = io("http://localhost:3000", { transports: ['websocket'] });
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect(); // Déconnecter le socket lors du démontage du composant
+    };
+  }, []);
 
   useEffect(() => {
-    socket?.emit("newUser", user.userName);
-  }, [socket, user.userName]);
-
+    if (socket && user?.userName) {
+      socket.emit("newUser", user.userName);
+    }
+  }, [socket, user?.userName]);
 
   return (
     <div className="home">
-      <Sidebar />
+      <Sidebar className="sideHome"/>
       <div className="homeContainer">
         <Navbar socket={socket} />
         <div className="widgets">
@@ -46,7 +50,7 @@ const Home = ({ columns, title }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

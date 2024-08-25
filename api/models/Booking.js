@@ -52,7 +52,6 @@ const BookingSchema = new Schema({
   },
   zip: {
     type: String,
-    required: true
   },
   city: {
     type: String,

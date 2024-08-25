@@ -1,0 +1,121 @@
+/* Général */
+
+.profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.profileContainer {
+  width: 80%;
+  max-width: 1200px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  padding: 20px;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.left {
+  flex: 1;
+  text-align: center;
+}
+
+.editButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.editButton:hover {
+  background-color: #0056b3;
+}
+
+.title {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.itemImg {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.638);
+}
+
+.details {
+  width: 100%;
+  max-width: 500px;
+  text-align: left;
+}
+
+.itemTitle {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.detailItem {
+  margin: 10px 0;
+}
+
+.detailKey {
+  font-weight: bold;
+  color: #555;
+}
+
+.detailValue {
+  margin-left: 10px;
+  color: #777;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profileContainer {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .top {
+    padding: 10px;
+  }
+
+  .editButton {
+    top: 10px;
+    right: 10px;
+    padding: 5px 15px;
+  }
+
+  .itemImg {
+    width: 120px;
+    height: 120px;
+  }
+
+  .itemTitle {
+    font-size: 1.25rem;
+  }
+}

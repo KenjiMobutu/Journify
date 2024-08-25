@@ -1,7 +1,5 @@
-
 .navbar {
-  height: 50px;
-  /* background: linear-gradient(to right, #15c5bc, #872687ae, #129f98d1); */
+  height: 80px;
   background-color: #000000;
   display: flex;
   justify-content: center;
@@ -17,16 +15,87 @@
   justify-content: space-between;
 }
 
-.logo {
-  font-weight: 800;
-  font-size: 30px;
+.navTitle {
+  font-size: 35px;
+  font-weight: 700;
+  cursor: pointer;
+  color: white;
+  letter-spacing: 2px;
+  font-family: "Permanent Marker", cursive;
+}
+
+.navTitle:hover {
+  background: -webkit-linear-gradient(#ff00a6, hsl(223, 100%, 50%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .navButton {
-  margin-left: 30px;
+  margin-left: 15px;
   border: none;
-  padding: 5px 10px;
+  padding: 5px 15px;
   cursor: pointer;
   color: #003580;
   background-color: white;
+  border-radius: 4px;
+}
+
+.navButton:hover {
+  color: white;
+  background-color: #003580;
+}
+
+.navName {
+  cursor: pointer;
+  position: relative;
+  margin-right: 15px; /* Espace entre le nom et l'avatar */
+  display: inline-block;
+}
+
+.navName:hover {
+  color: #2a88fc;
+}
+
+.navName::after {
+  content: "Click to view profile"; /* Texte de la bulle d'information */
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  font-size: 12px;
+  z-index: 1;
+}
+
+.navName:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+.avatar {
+  width: 40px; /* Taille de l'avatar ajustée */
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.navItems {
+  display: flex;
+  align-items: center;
+}
+
+.navItems .navButton {
+  margin-left: 15px;
+}
+
+.navContainer > div {
+  display: flex;
+  align-items: center;
 }

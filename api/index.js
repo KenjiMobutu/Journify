@@ -18,25 +18,13 @@ dotenv.config();
 
 const httpServer = createServer(app);
 
-// const io = new Server(httpServer, {
-//   cors: {
-//     origin: "http://localhost:8000",
-//   }
-// });
 const io = new Server(httpServer, {
   cors: {
-    cors: { origin: "*" }
-    // origin: (origin, callback) => {
-    //   const allowedOrigins = ["http://localhost:8000", "http://localhost:5000"];
-    //   if (allowedOrigins.includes(origin)) {
-    //     callback(null, true);
-    //   } else {
-    //     callback(new Error("Not allowed by CORS"));
-    //   }
-    // },
-    // methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: ["http://localhost:8000", "http://localhost:5000"],
+    methods: ["GET", "POST"],
   }
 });
+
 
 
 const connectToMongo = async() =>{
@@ -63,7 +51,9 @@ app.use(cors()); // Autorise toutes les origines
 
 // Ou pour une origine spécifique :
 app.use(cors({
-  origin: 'http://localhost:5000'
+  origin: 'http://localhost:5000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
+  credentials: true
 }));
 
 app.use(cookieParser());
@@ -94,16 +84,18 @@ io.on("connection", (socket) => {
 
   // Lorsqu'un nouvel utilisateur s'inscrit
   socket.on("notificationRegister", (username) => {
-    //console.log(`${username} registered.`);
-    // Envoyer une notification à tous les utilisateurs connectés
-    io.emit("notification", `New user registered : ${username} .`);
+    io.emit("notification", `New user registered: ${username}`);
+  });
+
+  // Lorsqu'un utilisateur existant met à jour ses informations
+  socket.on("notificationUpdate", (username) => {
+    console.log("User updated:", username);
+    io.emit("notification", `User updated: ${username}`);
   });
 
   // Lorsqu'une nouvelle réservation est effectuée
   socket.on("notificationBooking", (message) => {
-    console.log("New booking:", message);
-    // Envoyer une notification à tous les utilisateurs connectés
-    io.emit("notification", `${message}`);
+    io.emit("notification", message);
   });
 
   // Gestion de la déconnexion
@@ -113,12 +105,8 @@ io.on("connection", (socket) => {
 });
 
 
+
 // Écoute du serveur sur le port 3000
 httpServer.listen(3000, () => {
   console.log('Express server listening on port "http://localhost:3000"');
 });
-
-// app.listen(3000, () => {
-//   connectToMongo();
-//   console.log('Express server listening on port "http://localhost:3000"');
-// });

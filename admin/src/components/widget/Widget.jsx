@@ -1,6 +1,7 @@
 import "./widget.scss";
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import ArrowOutwardOutlinedIcon from '@mui/icons-material/ArrowOutwardOutlined';
+import NorthOutlinedIcon from '@mui/icons-material/NorthOutlined';
+import SouthOutlinedIcon from '@mui/icons-material/SouthOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import EuroOutlinedIcon from '@mui/icons-material/EuroOutlined';
 import KingBedOutlinedIcon from '@mui/icons-material/KingBedOutlined';
@@ -9,84 +10,73 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 
-
 const Widget = ({ type }) => {
   const [users, setUsers] = useState(0);
   const [nights, setNights] = useState(0);
   const [rooms, setRooms] = useState(0);
   const [bookings, setBookings] = useState(0);
   const [amount, setAmount] = useState(0);
+  const [percentage, setPercentage] = useState(0); // Pourcentage de variation
 
   useEffect(() => {
-    if (type === "user") {
-      axios.get("/api/users")
-        .then(response => {
-          setUsers(response.data.length);
-        })
-        .catch(error => {
-          console.error("Error fetching users count:", error);
-        });
-    }
-    if (type === "night") {
-      axios.get("/api/hotels/bookings")
-        .then(response => {
-          const totalNights = response.data.reduce((acc, booking) => {
-            const checkInDate = new Date(booking.checkIn);
-            const checkOutDate = new Date(booking.checkOut);
+    const fetchData = async () => {
+      let currentValue = 0;
+      let previousValue = 0;
 
-            // Calculer la différence en temps entre les deux dates
-            const timeDifference = checkOutDate.getTime() - checkInDate.getTime();
+      if (type === "user") {
+        const response = await axios.get("/api/users");
+        currentValue = response.data.length;
+        previousValue = await getPreviousValue("/api/users", "user");
+        setUsers(currentValue);
+      }
 
-            // Convertir la différence de temps en jours (1 jour = 86400000 ms)
-            const nights = timeDifference / (1000 * 3600 * 24);
+      if (type === "night") {
+        const response = await axios.get("/api/hotels/bookings");
+        currentValue = response.data.reduce((acc, booking) => {
+          const checkInDate = new Date(booking.checkIn);
+          const checkOutDate = new Date(booking.checkOut);
+          const timeDifference = checkOutDate.getTime() - checkInDate.getTime();
+          const nights = timeDifference / (1000 * 3600 * 24);
+          return acc + nights;
+        }, 0);
+        previousValue = await getPreviousValue("/api/hotels/bookings", "night");
+        setNights(currentValue);
+      }
 
-            // Ajouter le nombre de nuits au total
-            return acc + nights;
-          }, 0);
+      if (type === "room") {
+        const response = await axios.get("/api/hotels/bookings");
+        currentValue = response.data.reduce((acc, booking) => acc + booking.rooms, 0);
+        previousValue = await getPreviousValue("/api/hotels/bookings", "room");
+        setRooms(currentValue);
+      }
 
-          setNights(totalNights);
+      if (type === "booking") {
+        const response = await axios.get("/api/hotels/bookings");
+        currentValue = response.data.length;
+        previousValue = await getPreviousValue("/api/hotels/bookings", "booking");
+        setBookings(currentValue);
+      }
 
-        })
-        .catch(error => {
-          console.error("Error fetching nights count:", error);
-        });
-    }
+      if (type === "balance") {
+        const response = await axios.get("/api/hotels/bookings");
+        currentValue = response.data.reduce((acc, booking) => acc + booking.totalCost, 0);
+        previousValue = await getPreviousValue("/api/hotels/bookings", "balance");
+        setAmount(currentValue);
+      }
 
-    if (type === "room") {
-      axios.get("/api/hotels/bookings")
-        .then(response => {
-          const totalRooms = response.data.reduce((acc, booking) => acc + booking.rooms, 0);
-          setRooms(totalRooms);
+      // Calculer le pourcentage de variation
+      const variation = ((currentValue - previousValue) / previousValue) * 100;
+      setPercentage(variation.toFixed(2));
+    };
 
-        })
-        .catch(error => {
-          console.error("Error fetching balance amount:", error);
-        });
-
-    }
-    if (type === "booking") {
-      axios.get("/api/hotels/bookings")
-        .then(response => {
-          setBookings(response.data.length);
-
-        })
-        .catch(error => {
-          console.error("Error fetching bookings count:", error);
-        });
-    }
-    if (type === "balance") {
-      axios.get("/api/hotels/bookings")
-        .then(response => {
-          const totalAmount = response.data.reduce((acc, booking) => acc + booking.totalCost, 0);
-          setAmount(totalAmount);
-
-        })
-        .catch(error => {
-          console.error("Error fetching balance amount:", error);
-        });
-    }
-
+    fetchData();
   }, [type]);
+
+  // Simule la récupération des valeurs précédentes (peut être une API réelle)
+  const getPreviousValue = async (url, type) => {
+    // Simuler la récupération de la valeur précédente
+    return type === "user" ? 90 : 100; // Exemple de valeur précédente
+  };
 
   let data;
 
@@ -101,7 +91,7 @@ const Widget = ({ type }) => {
             View All Users
           </Link>
         ),
-        percentage: "+2.5%",
+        percentage: `${percentage}%`,
         icon: (
           <PersonOutlineOutlinedIcon
             className="icon"
@@ -116,7 +106,7 @@ const Widget = ({ type }) => {
         count: nights,
         isMoney: false,
         link: "All Hotels",
-        percentage: "+2.5%",
+        percentage: `${percentage}%`,
         icon: (
           <HomeOutlinedIcon
             className="icon"
@@ -131,7 +121,7 @@ const Widget = ({ type }) => {
         count: rooms,
         isMoney: false,
         link: "All Rooms",
-        percentage: "+2.5%",
+        percentage: `${percentage}%`,
         icon: (
           <KingBedOutlinedIcon
             className="icon"
@@ -146,7 +136,7 @@ const Widget = ({ type }) => {
         count: bookings,
         isMoney: false,
         link: "All Bookings",
-        percentage: "+2.5%",
+        percentage: `${percentage}%`,
         icon: (
           <BookOnlineOutlinedIcon
             className="icon"
@@ -161,7 +151,7 @@ const Widget = ({ type }) => {
         count: amount,
         isMoney: true,
         link: "All Transactions",
-        percentage: "+2.5%",
+        percentage: `${percentage}%`,
         icon: (
           <EuroOutlinedIcon
             className="icon"
@@ -182,8 +172,8 @@ const Widget = ({ type }) => {
         <span className="link">{data.link}</span>
       </div>
       <div className="right">
-        <div className="percentage positive">
-          <ArrowOutwardOutlinedIcon />
+        <div className={`percentage ${percentage >= 0 ? 'positive' : 'negative'}`}>
+        {percentage >= 0 ? <NorthOutlinedIcon /> : <SouthOutlinedIcon />}
           <span className="text">{data.percentage}</span>
         </div>
         {data.icon}

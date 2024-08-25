@@ -7,10 +7,9 @@ import { useLocation } from "react-router-dom";
 import { format } from "date-fns";
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useState } from 'react';
-import { io } from "socket.io-client";
 
-const Booking = () => {
-  const socket = io("http://localhost:3000")
+const Booking = ({ socket }) => {
+
   const [paymentSuccess, setPaymentSuccess] = useState(false);  // État pour le succès du paiement
   const [showConfirmation, setShowConfirmation] = useState(false);  // État pour afficher la confirmation
   const [buttonDisabled, setButtonDisabled] = useState(false);  // État pour désactiver le bouton
@@ -117,7 +116,7 @@ const Booking = () => {
           totalCost: price,
           numberOfNights: numberOfNights,
           address: hotel.address,
-          zip: hotel.zip,
+          zip: hotel.zip || '',
           city: hotel.city_trans,
           country: hotel.country_trans,
         }),
@@ -134,7 +133,7 @@ const Booking = () => {
       setPaymentSuccess(true);  // Marquer le paiement comme réussi
       setButtonText('Paid');  // Changer le texte du bouton
       setShowConfirmation(true);  // Afficher la fenêtre de confirmation
-      socket?.emit("notificationBooking", user.userName + " made a new booking");  // Envoyer une notification de nouvelle réservation
+      socket?.emit("notificationBooking", user.userName + " made a new booking.");  // Envoyer une notification de nouvelle réservation
       // Masquer la confirmation après 5 secondes
       setTimeout(() => {
         setShowConfirmation(false);

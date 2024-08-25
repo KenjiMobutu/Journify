@@ -2,14 +2,31 @@ import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import "./new.scss";
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 const New = ({ inputs, title }) => {
   const navigate = useNavigate();
+  const { id } = useParams(); // Récupération de l'ID depuis l'URL
   const [file, setFile] = useState("");
   const [info, setInfo] = useState({ isAdmin: "false" });
+  const [errors, setErrors] = useState([]);
+
+  // Charger les données de l'utilisateur si un ID est présent
+  useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`/api/users/${id}`);
+          setInfo(response.data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+      fetchData();
+    }
+  }, [id]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -34,15 +51,25 @@ const New = ({ inputs, title }) => {
     }
 
     const user = { ...info, img: imgUrl || undefined };
+
     try {
-      await axios.post("/api/auth/register", user);
+      if (id) {
+        // Si un ID est présent, c'est une mise à jour
+        await axios.put(`/api/users/${id}`, user);
+      } else {
+        // Sinon, c'est une création
+        await axios.post("/api/auth/register", user);
+      }
       navigate("/users");
     } catch (error) {
-      console.log("Error registering user:", error);
+      if (error.response && error.response.data.errors) {
+        setErrors(error.response.data.errors.map(err => err.msg));
+      } else {
+        console.error('Submission failed:', error);
+        setErrors(['Submission failed']);
+      }
     }
   };
-
-  console.log(info);
 
   return (
     <div className="new">
@@ -50,12 +77,12 @@ const New = ({ inputs, title }) => {
       <div className="newContainer">
         <Navbar />
         <div className="top">
-          <h1>{title}</h1>
+          <h1>{id ? "Update User" : title}</h1>
         </div>
         <div className="bottom">
           <div className="left">
             <img
-              src={file ? URL.createObjectURL(file) : "https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1"}
+              src={file ? URL.createObjectURL(file) : info.img || "https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1"}
               alt=""
             />
           </div>
@@ -97,7 +124,14 @@ const New = ({ inputs, title }) => {
                   style={{ display: "none" }}
                 />
               </div>
-              <button className="create" onClick={handleSubmit}>Create</button>
+              {errors.length > 0 && (
+                <div className="error-messages">
+                  {errors.map((error, index) => <p key={index}>{error}</p>)}
+                </div>
+              )}
+              <button className="create" onClick={handleSubmit}>
+                {id ? "Update" : "Create"}
+              </button>
             </form>
           </div>
         </div>
