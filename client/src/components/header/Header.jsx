@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBed, faPlane, faEarthAfrica, faCar, faIcons, faTaxi, faCalendarDays, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBed, faPlane, faCar, faIcons, faTaxi, faCalendarDays, faUser } from '@fortawesome/free-solid-svg-icons';
 import "./header.css";
 import { DateRange } from 'react-date-range';
 import { useContext, useState, useEffect } from 'react';
@@ -247,6 +247,24 @@ function Header({ type }) {
     }
   };
 
+  const handleFlight = () => {
+    navigate('/flights');
+  };
+
+  const handleCar = () => {
+    navigate('/car');
+  };
+
+  const handleAttraction = () => {
+    navigate('/attractions');
+  };
+
+  const handleTaxi = () => {
+    navigate('/taxi');
+  };
+
+
+
 
   return (
     <div className="header">
@@ -259,25 +277,25 @@ function Header({ type }) {
             <FontAwesomeIcon icon={faBed} />
             <span>Stays</span>
           </button>
-          <button className="headerListItem">
+          <button className="headerListItem" onClick={handleFlight}>
             <FontAwesomeIcon icon={faPlane} />
             <span>Flights</span>
           </button>
-          <button className="headerListItem">
+          {/* <button className="headerListItem">
             <FontAwesomeIcon icon={faEarthAfrica} />
             <span>Flight + Hotel</span>
-          </button>
-          <button className="headerListItem">
+          </button> */}
+          <button className="headerListItem" onClick={handleCar}>
             <FontAwesomeIcon icon={faCar} />
             <span>Car rentals</span>
           </button>
-          <button className="headerListItem">
+          <button className="headerListItem" onClick={handleAttraction}>
             <FontAwesomeIcon icon={faIcons} />
             <span>Attractions</span>
           </button>
-          <button className="headerListItem">
+          <button className="headerListItem" onClick={handleTaxi}>
             <FontAwesomeIcon icon={faTaxi} />
-            <span>Airport taxis</span>
+            <span>Taxis</span>
           </button>
         </div>
         {type !== "list" &&

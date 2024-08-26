@@ -76,3 +76,13 @@ export const getUserBookings = async (req, res, next) => {
       next(err);
   }
 }
+
+// Get User Flight Bookings
+export const getUserFlightBookings = async (req, res, next) => {
+  try{
+      const user = await User.findById(req.params.id).populate('flightBookings');
+      res.status(200).json(user.flightBookings);
+  }catch(err){
+      next(err);
+  }
+}

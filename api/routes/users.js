@@ -4,7 +4,8 @@ import { createUser,
           deleteUser,
           getUser,
           getAllUsers,
-          getUserBookings
+          getUserBookings,
+          getUserFlightBookings
         } from '../controllers/userController.js';
 import { verifyAdmin, verifyToken, verifyUser } from '../utils/verifyToken.js';
 
@@ -53,5 +54,6 @@ router.get('/', verifyAdmin, getAllUsers);
 
 // GET USER BOOKINGS
 router.get('/:id/bookings', verifyUser, getUserBookings);
+router.get('/:id/flightBookings', verifyUser, getUserFlightBookings);
 
 export default router;

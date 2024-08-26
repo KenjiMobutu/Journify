@@ -1,131 +1,111 @@
-.bookings {
+.myBookings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 40px;
+  background-color: #f4f7fa;
+  min-height: 100vh;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.bookings {
+  width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
 }
 
 .bookingsTitle {
-  font-size: 36px;
-  font-weight: bold;
-  text-align: center;
-  color: #343a40;
+  font-size: 2.5rem;
+  font-weight: 800;
   margin-bottom: 40px;
-}
-
-.bookingsContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.booking {
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.booking:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.bookingTitle {
-  font-size: 24px;
-  font-weight: 700;
-  color: #007bff;
-  margin-bottom: 20px;
+  color: #2b2d42;
   text-align: center;
-  border-bottom: 2px solid #e9ecef;
+  text-transform: uppercase;
+  border-bottom: 3px solid #ef233c;
   padding-bottom: 10px;
 }
 
-.bookingDetails {
+.bookingsContainer {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 30px;
+}
+
+.hotelBookings, .flightBookings {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.hotelBookings:hover, .flightBookings:hover {
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+.booking {
+  border-bottom: 1px solid #e9ecef;
+  padding: 20px 0;
+}
+
+.booking:last-child {
+  border-bottom: none;
+}
+
+.bookingTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #3a3b5a;
+}
+
+.bookingDetails {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
 }
 
 .bookingDetail {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
 }
 
 .bookingDetail label {
-  font-size: 16px;
   font-weight: 600;
-  color: #495057;
+  margin-bottom: 5px;
+  color: #7a7f9a;
+  font-size: 0.95rem;
 }
 
 .bookingDetail span {
-  font-size: 16px;
+  font-size: 1.1rem;
+  color: #2b2d42;
   font-weight: 500;
-  color: #343a40;
 }
 
-.bookingDetail span::before {
-  content: '';
+.homeButton {
   display: block;
-  width: 5px;
-  height: 5px;
-  background-color: #007bff;
-  border-radius: 50%;
-  margin-right: 8px;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.homeButton{
-  display: block;
-  margin-top: 30px !important;
-  width: 100%;
-  max-width: 200px;
-  margin: 0 auto;
-  padding: 10px 20px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #ffffff;
-  background-color: #000000;
+  width: 220px;
+  padding: 12px 0;
+  background-color: #ef233c;
+  color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  margin: 50px auto 0;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .homeButton:hover {
-  background-color: #33373c;
+  background-color: #d90429;
+  transform: translateY(-3px);
 }
 
-@media (max-width: 768px) {
-  .bookingsContainer {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 576px) {
-  .bookings {
-    padding: 20px;
-  }
-
-  .bookingsTitle {
-    font-size: 28px;
-  }
-
-  .bookingTitle {
-    font-size: 20px;
-  }
-
-  .bookingDetails {
-    gap: 10px;
-  }
-
-  .bookingDetail label,
-  .bookingDetail span {
-    font-size: 14px;
-  }
+.homeButton:active {
+  background-color: #9b2a3d;
 }

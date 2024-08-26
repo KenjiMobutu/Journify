@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import './register.css'; // Assurez-vous que le chemin d'accès est correct
 import axios from 'axios';
 import { useNavigate, Link, useParams } from 'react-router-dom';
+import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 
 const Register = ({ socket }) => {
   const { id } = useParams(); // Récupère l'ID de l'utilisateur depuis l'URL
   const navigate = useNavigate();
+  const [file, setFile] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
   const [userData, setUserData] = useState({
@@ -43,6 +46,22 @@ const Register = ({ socket }) => {
     event.preventDefault();
     setErrors([]);
 
+    let imgUrl = "";
+
+    if (file) {
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "upload");
+      try {
+        const uploadResponse = await axios.post("https://api.cloudinary.com/v1_1/dlzpg0hgw/image/upload", data);
+        imgUrl = uploadResponse.data.url;
+      } catch (error) {
+        console.log("Error uploading image:", error);
+      }
+    }
+
+    const user = { ...userData, img: imgUrl || undefined };
+
     // Validation des données
     if (userData.password !== userData.confirmPassword) {
       setErrors(['Passwords do not match']);
@@ -68,12 +87,12 @@ const Register = ({ socket }) => {
     try {
       if (id) {
         // Mise à jour de l'utilisateur existant
-        await axios.put(`/api/users/${id}`, userData);
-        socket?.emit("notificationUpdate", userData.userName);
+        await axios.put(`/api/users/${id}`, user);
+        socket?.emit("notificationUpdate", user.userName);
       } else {
         // Création d'un nouvel utilisateur
-        await axios.post('/api/auth/register', userData);
-        socket?.emit("notificationRegister", userData.userName);
+        await axios.post('/api/auth/register', user);
+        socket?.emit("notificationRegister", user.userName);
       }
       navigate('/'); // Rediriger vers la page d'accueil après l'inscription
     } catch (error) {
@@ -90,6 +109,12 @@ const Register = ({ socket }) => {
   return (
     <div className="register-container">
       <h1 className='title'>{id ? 'Update User' : 'Create Your Account'}</h1>
+      <div className="left">
+        <img
+          src={file ? URL.createObjectURL(file) : userData.img || "https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1"}
+          alt=""
+        />
+      </div>
       <form onSubmit={handleSubmit} className="register-form">
         <label htmlFor="userName">Username</label>
         <input
@@ -131,6 +156,18 @@ const Register = ({ socket }) => {
           required
         />
 
+        <div className="formInput">
+          <label htmlFor="file">
+            Image: <AddPhotoAlternateOutlinedIcon className="addImageIcon" />
+          </label>
+          <input
+            type="file"
+            id="file"
+            onChange={e => setFile(e.target.files[0])}
+            style={{ display: "none" }}
+          />
+        </div>
+
         <button type="submit" className="register-btn" disabled={loading}>
           {loading ? (id ? 'Updating...' : 'Registering...') : (id ? 'Update' : 'Register')}
         </button>
@@ -147,5 +184,11 @@ const Register = ({ socket }) => {
     </div>
   );
 };
+Register.propTypes = {
+  socket: PropTypes.shape({
+    emit: PropTypes.func.isRequired
+  })
+};
 
 export default Register;
+

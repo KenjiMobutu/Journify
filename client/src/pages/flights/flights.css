@@ -1,0 +1,47 @@
+.flightsContainer {
+  margin: 20px;
+}
+
+.listFlightSearchOptionInput{
+  color: black;
+}
+
+.selectedAirport{
+  color: black;
+}
+
+.destinationSearchButton{
+  background-color: #febb02 !important;
+  color: white;
+  font-size: 12px !important;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  align-items: center;
+  width: 50% !important;
+  margin-bottom: 20px;
+}
+
+.listSearchButton {
+  background-color: #003580; /* Couleur normale */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease !important;
+}
+
+.listSearchButton:hover {
+  background-color: #0056b3; /* Couleur au survol */
+}
+
+.listSearchButton:disabled {
+  background-color: #cccccc; /* Couleur grisée pour le bouton désactivé */
+  cursor: not-allowed; /* Curseur pour le bouton désactivé */
+}

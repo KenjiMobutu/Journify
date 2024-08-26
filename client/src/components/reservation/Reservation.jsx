@@ -83,6 +83,7 @@ function Reservation({ setOpen, hotelId, hotel }) {
 
     setOpen(false);
     navigate(`/hotels/${hotelId}/booking?${queryParams}`);
+    //navigate(`/hotels/${hotelId}/booking`, { state: {}}); //envoyer les données de la réservation via le state
   };
 
   return (

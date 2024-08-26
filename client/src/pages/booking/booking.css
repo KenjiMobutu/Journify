@@ -10,7 +10,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.586); /* Ombre pour donner de la profondeur */
 }
 
-.details,
+.detailsB,
 .confirmDetails {
   background-color: white; /* Fond blanc pour les sections */
   border-radius: 10px; /* Coins arrondis */

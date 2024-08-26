@@ -45,7 +45,7 @@ const Home = ({ columns, title }) => {
           <Chart />
         </div>
         <div className="listContainer">
-          <div className="listTitle">Latest users added</div>
+          <div className="listTitle">Bookings</div>
           <Datatable columns={columns} title={title} />
         </div>
       </div>
