@@ -10,9 +10,9 @@ import axios from "axios";
 const Datatable = ({ columns, title }) => {
   console.log("TITLE", title);
   const location = useLocation();
-  const path = location.pathname.split("/")[1] || "users";
+  const path = location.pathname.split("/")[1] || "hotels/bookings";
   const [list, setList] = useState();
-  const { data} = useFetch(`/api/${path}`);
+  const { data } = useFetch(`/api/${path}`);
   console.log("DATA", data);
   useEffect(() => {
     setList(data);
@@ -29,11 +29,13 @@ const Datatable = ({ columns, title }) => {
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      width: 180,
+      headerAlign: 'center',  // Centrer le titre
+    align: 'center',
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Link to={`/${path}/${params.row._id}`}  style={{ textDecoration: "none" }}>
+            <Link to={`/${path}/${params.row._id}`} style={{ textDecoration: "none" }}>
               <div className="datatableEdit">Edit</div>
             </Link>
             <div
@@ -42,23 +44,21 @@ const Datatable = ({ columns, title }) => {
             >
               Delete
             </div>
-            <div className="cellDetails">
-              <Link to={`/${path}/${params.row._id}`}  style={{ textDecoration: "none" }}>
-                <div className="datatableDetails">Details</div>
-              </Link>
-            </div>
           </div>
         );
       },
     },
   ];
+
+  const finalColumns = path === "hotels/bookings" ? columns : columns.concat(actionColumn);
+
   return (
     <div className="datatable">
       <div className="datatableTitle">{title}</div>
       <DataGrid
         className="datagrid"
         rows={list}
-        columns={columns.concat(actionColumn)}
+        columns={finalColumns}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 10 },
@@ -68,13 +68,15 @@ const Datatable = ({ columns, title }) => {
         checkboxSelection
         getRowId={(row) => row._id}
       />
-      <button className="createUser">
-        <Link to={`/${path}/new`} className="link">
-          <div className="icon">
-            + NEW
-          </div>
-        </Link>
-      </button>
+      {path !== "hotels/bookings" && (
+        <button className="createUser">
+          <Link to={`/${path}/new`} className="link">
+            <div className="icon">
+              + NEW
+            </div>
+          </Link>
+        </button>
+      )}
     </div>
 
   );

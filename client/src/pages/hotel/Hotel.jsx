@@ -14,6 +14,7 @@ import Reservation from "../../components/reservation/Reservation.jsx";
 import axios from "axios";
 import formatPrice from "../../utils/utils";
 import { da } from "date-fns/locale";
+import MoreBookings from "../../components/moreBookings/MoreBookings";
 
 const Hotel = () => {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -21,6 +22,9 @@ const Hotel = () => {
   const [totalPrice, setTotalPrice] = useState(null);
   const [open, setOpen] = useState(false);
   const [openPayment, setOpenPayment] = useState(false);
+  // const [openFlight, setOpenFlight] = useState(false);
+  // const [openTaxi, setOpenTaxi] = useState(false);
+  const [openMoreBooking, setOpenMoreBooking] = useState(false);
   const [photos, setPhotos] = useState([]);
   const [firstRoom, setFirstRoom] = useState(null);
   const [hotelDesc, setHotelDesc] = useState([]);
@@ -44,6 +48,7 @@ const Hotel = () => {
 
   const [dates, setDates] = useState(contextDates.length ? contextDates : storedDates);
   const [options, setOptions] = useState(contextOptions.adult !== undefined ? contextOptions : storedOptions);
+  console.log(options);
 
   useEffect(() => {
     if (dates.length > 0) {
@@ -72,13 +77,24 @@ const Hotel = () => {
     setSlideIndex(index);
   };
 
+  // const handleClick = () => {
+  //   if (user) {
+  //     setOpenPayment(true);  // Ouvre la modal de réservation si l'utilisateur est connecté
+  //   } else {
+  //     navigate("/login", { state: { from: location.pathname } }); // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
+  //   }
+  // };
+
   const handleClick = () => {
     if (user) {
-      setOpenPayment(true);  // Ouvre la modal de réservation si l'utilisateur est connecté
+      // Afficher une boîte de dialogue demandant si l'utilisateur souhaite réserver un vol ou un taxi
+      setOpenMoreBooking(true);
     } else {
-      navigate("/login", { state: { from: location.pathname } }); // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
+      // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
+      navigate("/login", { state: { from: location.pathname } });
     }
   };
+
 
   const hotelDetails = async () => {
     if (!dates.length || !dates[0].startDate || !dates[0].endDate) {
@@ -221,7 +237,8 @@ const Hotel = () => {
           </div>
         </div>
       )}
-      {openPayment && <Reservation setOpen={setOpenPayment} hotelId={hotelId} hotel={hotel} />}
+      {openPayment && <Reservation setOpen={setOpenPayment} hotelId={hotelId} hotel={hotel} nbRooms={options.room} />}
+      {openMoreBooking && <MoreBookings setOpen={setOpenMoreBooking} setOpenPayment={setOpenPayment} />}
       {/* <Newsletter /> */}
       {/* <Footer /> */}
     </div>

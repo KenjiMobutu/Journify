@@ -72,7 +72,7 @@ const Single = () => {
         <div className="top">
           <div className="left">
             <div className="editButton" onClick={handleEdit}>Edit</div>
-            <h1 className="title">Information</h1>
+            <h1 className="title">Informations</h1>
             <div className="item">
               <img src={data.img || "https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
                 alt=""
@@ -105,7 +105,7 @@ const Single = () => {
             <div className="bottomBookingsContainer">
               <div className="bookingsContainer">
                 {bookings.length === 0 && flights.length === 0 ? (
-                  <div>You have no bookings yet.</div>
+                  <div>Have no bookings yet.</div>
                 ) : (
                   <>
                     {/* Hotel Bookings */}

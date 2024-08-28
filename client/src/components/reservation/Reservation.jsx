@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 
-function Reservation({ setOpen, hotelId, hotel }) {
+function Reservation({ setOpen, hotelId, hotel, nbRooms }) {
   const { dates: contextDates, options: contextOptions } = useContext(SearchContext);
   const storedDates = JSON.parse(localStorage.getItem("dates")) || [];
   const storedOptions = JSON.parse(localStorage.getItem("options")) || { adult: 1, children: 0, room: 1 };
@@ -16,6 +16,7 @@ function Reservation({ setOpen, hotelId, hotel }) {
   const [availableRooms, setAvailableRooms] = useState([]); // Initialize with an empty array
   const [selectedRooms, setSelectedRooms] = useState([]); // State to manage selected rooms
   const [totalPrice, setTotalPrice] = useState(0); // State to manage total price
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -57,17 +58,28 @@ function Reservation({ setOpen, hotelId, hotel }) {
       let newTotalPrice = totalPrice;
 
       if (prevSelectedRooms.includes(roomId)) {
-        newSelectedRooms = prevSelectedRooms.filter(id => id !== roomId); // Remove room from selection if already selected
+        // Remove room from selection if already selected
+        newSelectedRooms = prevSelectedRooms.filter(id => id !== roomId);
         newTotalPrice -= roomPrice; // Subtract price when room is deselected
+        setErrorMessage(""); // Clear error message
       } else {
-        newSelectedRooms = [...prevSelectedRooms, roomId]; // Add room to selection if not selected
-        newTotalPrice += roomPrice; // Add price when room is selected
+        // Add room to selection if not selected, but check if adding exceeds nbRooms
+        if (prevSelectedRooms.length < nbRooms) {
+          newSelectedRooms = [...prevSelectedRooms, roomId];
+          newTotalPrice += roomPrice; // Add price when room is selected
+          setErrorMessage(""); // Clear error message
+        } else {
+          // Set an error message if the max number of rooms is reached
+          setErrorMessage(`Pay Attention You can only select up to ${nbRooms} room(s) !`);
+          return prevSelectedRooms; // Return without changing state
+        }
       }
-
       setTotalPrice(newTotalPrice);
       return newSelectedRooms;
     });
   };
+
+
 
   const handleClick = () => {
     // Logic to handle reservation with selected rooms
@@ -91,6 +103,7 @@ function Reservation({ setOpen, hotelId, hotel }) {
       <div className="reservationContainer">
         <FontAwesomeIcon className="reservClose" icon={faXmarkCircle} onClick={() => setOpen(false)} />
         <span className="chooseRoomText">Choose your room :</span>
+        {errorMessage && <p className="errorMessage">{errorMessage}</p>}
         <div className="totalPrice">
           <span>Total Price: {totalPrice}€</span>
         </div>

@@ -8,6 +8,8 @@
     .top {
       padding: 50px;
       display: flex;
+      align-items: center;
+      justify-content: center;
       gap: 20px;
 
       .left {
@@ -15,6 +17,12 @@
         padding: 20px;
         box-shadow: 4px 13px 19px 0px rgba(0, 0, 0, 0.5);
         border-radius: 10px;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+        &:hover {
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+          transform: translateY(-5px);
+        }
 
         .title {
           font-size: 1.5rem;
@@ -38,6 +46,11 @@
           align-items: center;
           cursor: pointer;
           font-size: 0.875rem;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: #d6006f;
+          }
         }
 
         .item {
@@ -95,6 +108,12 @@
         padding: 20px;
         box-shadow: 4px 13px 19px 0px rgba(0, 0, 0, 0.5);
         border-radius: 10px;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+        &:hover {
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+          transform: translateY(-5px);
+        }
 
         .title {
           font-size: 1.5rem;
@@ -115,11 +134,18 @@
               border-radius: 8px;
               background-color: #fafafa;
               margin-bottom: 20px;
+              transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+              &:hover {
+                box-shadow: 0 4px 15px rgba(0, 0, 2, 0.359);
+                transform: translateY(-3px);
+              }
 
               h2 {
                 font-size: 1.25rem;
                 font-weight: 400;
                 margin-bottom: 10px;
+                color: #828181;
               }
 
               .booking {
@@ -128,6 +154,16 @@
                 background-color: #ffffff;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
                 margin-bottom: 20px;
+                display: flex;
+                flex-direction: column;
+                height: 8rem;
+                position: relative;
+                transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+                &:hover {
+                  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.55);
+                  transform: translateY(-3px);
+                }
 
                 .bookingTitle {
                   font-size: 1.125rem;
@@ -166,12 +202,16 @@
                       cursor: pointer;
                       font-size: 0.875rem;
                       transition: background-color 0.3s ease;
+                      display: flex;
+                      align-items: center;
+                      position: absolute;
+                      bottom: 20px;
+                      right: 20px;
                     }
 
                     .cancelButton:hover {
                       background-color: #cc0000;
                     }
-
                   }
                 }
               }
