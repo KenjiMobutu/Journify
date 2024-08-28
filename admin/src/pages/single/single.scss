@@ -1,50 +1,51 @@
 .single {
   display: flex;
   width: 100%;
-  .singleContainer {
-    flex:6;
 
-    .top{
+  .singleContainer {
+    flex: 6;
+
+    .top {
       padding: 50px;
       display: flex;
       gap: 20px;
 
-      .left{
+      .left {
         position: relative;
         padding: 20px;
-        box-shadow: 4px 13px 19px 0px rgba(0,0,0,0.5);
-        -webkit-box-shadow: 4px 13px 19px 0px rgba(0,0,0,0.5);
+        box-shadow: 4px 13px 19px 0px rgba(0, 0, 0, 0.5);
         border-radius: 10px;
 
-        .title{
+        .title {
           font-size: 1.5rem;
           font-weight: 300;
           margin-bottom: 20px;
           color: rgba(142, 141, 141, 0.614);
         }
 
-        .editButton{
+        .editButton {
           position: absolute;
           top: 0;
           right: 0;
-          padding: 20px;
+          padding: 10px 20px;
           background-color: #f70476;
           color: white;
           border-radius: 5px;
           margin-top: 10px;
           margin-right: 10px;
-          height: 1px;
           letter-spacing: 2px;
           display: flex;
           align-items: center;
           cursor: pointer;
+          font-size: 0.875rem;
         }
 
-        .item{
+        .item {
           display: flex;
-          gap: 0px;
+          align-items: center;
+          gap: 20px;
 
-          .itemImg{
+          .itemImg {
             border-radius: 50%;
             width: 150px;
             height: 150px;
@@ -52,39 +53,131 @@
           }
         }
 
-        .details{
-          margin-top: -50px;
+        .details {
           margin-left: 20px;
-          padding: 30px;
           display: flex;
           flex-direction: column;
           gap: 10px;
 
-          .itemTitle{
+          .itemTitle {
             font-size: 2.5rem;
             font-weight: 300;
             margin-bottom: 20px;
           }
 
-          .detailItem{
+          .detailItem {
             display: flex;
-            gap: 20px;
+            gap: 10px;
             align-items: center;
 
-            .detailKey{
+            .detailKey {
               font-size: 1rem;
               font-weight: 300;
               color: gray;
             }
 
-            .detailValue{
+            .detailValue {
               font-size: 1rem;
               font-weight: 300;
             }
           }
+        }
+      }
+    }
 
+    .bottom {
+      padding: 50px;
+      display: flex;
+      gap: 20px;
+      flex-direction: column;
+
+      .bottomBookings {
+        padding: 20px;
+        box-shadow: 4px 13px 19px 0px rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+
+        .title {
+          font-size: 1.5rem;
+          font-weight: 300;
+          margin-bottom: 20px;
+          color: rgba(142, 141, 141, 0.614);
         }
 
+        .bottomBookingsContainer {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+
+          .bookingsContainer {
+            .hotelBookings,
+            .flightBookings {
+              padding: 20px;
+              border-radius: 8px;
+              background-color: #fafafa;
+              margin-bottom: 20px;
+
+              h2 {
+                font-size: 1.25rem;
+                font-weight: 400;
+                margin-bottom: 10px;
+              }
+
+              .booking {
+                padding: 20px;
+                border-radius: 8px;
+                background-color: #ffffff;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+
+                .bookingTitle {
+                  font-size: 1.125rem;
+                  font-weight: 500;
+                  margin-bottom: 10px;
+                  color: #333;
+                }
+
+                .bookingDetails {
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 15px;
+
+                  .bookingDetail {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+
+                    label {
+                      font-size: 0.875rem;
+                      color: gray;
+                    }
+
+                    span {
+                      font-size: 1rem;
+                      font-weight: 300;
+                      color: #333;
+                    }
+
+                    .cancelButton {
+                      background-color: #ff4d4d;
+                      color: white;
+                      border: none;
+                      padding: 10px 20px;
+                      border-radius: 5px;
+                      cursor: pointer;
+                      font-size: 0.875rem;
+                      transition: background-color 0.3s ease;
+                    }
+
+                    .cancelButton:hover {
+                      background-color: #cc0000;
+                    }
+
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

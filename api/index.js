@@ -100,6 +100,10 @@ io.on("connection", (socket) => {
     io.emit("notification", message);
   });
 
+  socket.on("notificationFlightBooking",(message) =>{
+    io.emit("notification", message);
+  });
+
   // Gestion de la déconnexion
   socket.on('disconnect', () => {
     console.log(`User with socketId ${socket.id} disconnected.`);

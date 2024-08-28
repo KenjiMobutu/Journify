@@ -4,6 +4,7 @@
   display: flex;
   justify-content: center;
   z-index: 2;
+
 }
 
 .background-video {
@@ -11,7 +12,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 70vh !important;
   object-fit: cover; /* S'assure que la vidéo couvre tout l'espace */
   z-index: -1; /* Positionne la vidéo derrière le contenu */
 }
@@ -218,4 +219,41 @@ button {
 
 .background-video {
   height: 430px;
+}
+
+.notLoggedInMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 250px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.notLoggedInMessage p {
+  font-size: 30px;
+  color: white;
+  margin-right: 20px;
+}
+
+.notLoggedInMessage .hTitle {
+  font-weight: bold;
+  color: #ff4d4d;
+}
+
+.notLoggedInMessage .headerBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.notLoggedInMessage .headerBtn:hover {
+  background-color: #804444; /* Changez la couleur selon vos besoins */
 }

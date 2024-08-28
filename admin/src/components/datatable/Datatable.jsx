@@ -42,6 +42,11 @@ const Datatable = ({ columns, title }) => {
             >
               Delete
             </div>
+            <div className="cellDetails">
+              <Link to={`/${path}/${params.row._id}`}  style={{ textDecoration: "none" }}>
+                <div className="datatableDetails">Details</div>
+              </Link>
+            </div>
           </div>
         );
       },

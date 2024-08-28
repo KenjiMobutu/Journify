@@ -31,6 +31,7 @@ export const userColumns = [
       );
     },
   },
+  
 ];
 
 export const lastUserColumns = [

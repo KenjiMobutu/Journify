@@ -1,12 +1,11 @@
 import Navbar from "../../components/navbar/Navbar"
 import "./flights.css"
-import { useLocation } from "react-router-dom"
 import { useState } from 'react'
 import { format, addDays, isValid } from "date-fns";
 import { DateRange } from "react-date-range"
 import FlightSearchList from "../../components/flightSearchList/FlightSearchList";
 import axios from "axios";
-import { de } from "date-fns/locale";
+
 
 const Flights = () => {
   const [departOptions, setDepartOptions] = useState([]);
@@ -26,7 +25,7 @@ const Flights = () => {
     return [
       {
         startDate: isValid(new Date()) ? new Date() : startDate,
-        endDate: isValid(addDays(new Date(), 1)) ? addDays(new Date(), 1) : endDate,
+        endDate: isValid(addDays(new Date(), 1)) ?  addDays(new Date(), 1) : endDate,
         key: 'selection'
       }
     ];
@@ -121,23 +120,24 @@ const Flights = () => {
     <div className="flights">
       <Navbar />
       <div className="flightsContainer">
-        Flights
-        <div className="listContainer">
-          <div className="listWrapper">
-            <div className="listSearch">
-              <h1 className="listSearchTitle">Search</h1>
-              <div className="listSearchItem">
+        <div className="listContainerflight">
+          <div className="listWrapperflight">
+            <div className="listSearchflight">
+              <h1 className="listSearchTitleflight">
+                Book a <span className="hTitle">FLIGHT</span>
+              </h1>
+              <div className="listSearchItemflight">
                 <label>From</label>
                 <input type="text" placeholder="from: Brussels" onChange={e => setDepart(e.target.value)} />
               </div>
-              <div className="listSearchItem">
+              <div className="listSearchItemflight">
                 <label>To</label>
                 <input type="text" placeholder="to: Miami" onChange={e => setArrival(e.target.value)} />
               </div>
-              <button onClick={handleSearch} className="destinationSearchButton">Search Destinations</button>
+              <button onClick={handleSearch} className="destinationSearchButtonflight">Search Destinations</button>
 
               {departOptions.length > 0 && (
-                <div className="listSearchItem">
+                <div className="listSearchItemflight">
                   <label>Select Departure</label>
                   <select onChange={e => setSelectedDepart(e.target.value)} className="selectedAirport">
                     <option value="">Select Departure</option>
@@ -148,7 +148,7 @@ const Flights = () => {
                 </div>
               )}
               {arrivalOptions.length > 0 && (
-                <div className="listSearchItem">
+                <div className="listSearchItemflight">
                   <label>Select Arrival</label>
                   <select onChange={e => setSelectedArrival(e.target.value)} className="selectedAirport">
                     <option value="">Select Arrival</option>
@@ -158,9 +158,9 @@ const Flights = () => {
                   </select>
                 </div>
               )}
-              <div className="listSearchItem">
+              <div className="listSearchItemflight">
                 <label>Departure & Arrival dates</label>
-                <span onClick={() => setOpenDate(!openDate)}>
+                <span className="dateRangeDisplay" onClick={() => setOpenDate(!openDate)}>
                   {`${format(dates[0].startDate, "dd/MM/yyyy")} to ${format(dates[0].endDate, "dd/MM/yyyy")}`}
                 </span>
                 {openDate && (
@@ -171,39 +171,33 @@ const Flights = () => {
                   />
                 )}
               </div>
-              <div className="listSearchItem">
+              <div className="listSearchItemflight">
                 <label>Options</label>
-                <div className="listSearchOptions">
-                  <div className="listSearchOptionItem">
-                    <span className="listSearchOptionText">
-                      Adult(s)
-                    </span>
+                <div className="listSearchOptionsflight">
+                  <div className="listSearchOptionItemflight">
+                    <span className="listSearchOptionTextflight">Adult(s)</span>
                     <input
                       type="number"
-                      className="listSearchOptionInput"
+                      className="listSearchOptionInputflight"
                       onChange={e => setOptions(prev => ({ ...prev, adult: e.target.value }))}
                       placeholder={options.adult}
                       min={1}
                     />
                   </div>
-                  <div className="listSearchOptionItem">
-                    <span className="listSearchOptionText">
-                      Children
-                    </span>
+                  <div className="listSearchOptionItemflight">
+                    <span className="listSearchOptionTextflight">Children</span>
                     <input
                       type="number"
-                      className="listSearchOptionInput"
+                      className="listSearchOptionInputflight"
                       onChange={e => setOptions(prev => ({ ...prev, children: e.target.value }))}
                       placeholder={options.children}
                       min={0}
                     />
                   </div>
-                  <div className="listSearchOptionItem">
-                    <span className="listSearchOptionText">
-                      Sort
-                    </span>
+                  <div className="listSearchOptionItemflight">
+                    <span className="listSearchOptionTextflight">Sort</span>
                     <select
-                      className="listFlightSearchOptionInput"
+                      className="listFlightSearchOptionInputflight"
                       onChange={e => setOptions(prev => ({ ...prev, sort: e.target.value }))}
                       value={options.sort || ""}
                     >
@@ -213,12 +207,10 @@ const Flights = () => {
                       <option value="FASTEST">Fastest</option>
                     </select>
                   </div>
-                  <div className="listSearchOptionItem">
-                    <span className="listSearchOptionText">
-                      Cabin Class
-                    </span>
+                  <div className="listSearchOptionItemflight">
+                    <span className="listSearchOptionTextflight">Cabin Class</span>
                     <select
-                      className="listFlightSearchOptionInput"
+                      className="listFlightSearchOptionInputflight"
                       onChange={e => setOptions(prev => ({ ...prev, cabinClass: e.target.value }))}
                       value={options.cabinClass || ""}
                     >
@@ -229,21 +221,20 @@ const Flights = () => {
                       <option value="FIRST">First</option>
                     </select>
                   </div>
-
                 </div>
               </div>
               <button
                 onClick={handleFinalSearch}
-                className="listSearchButton"
+                className="listSearchButtonflight"
                 disabled={!selectedDepart || !selectedArrival}
               >
                 Search Flights
               </button>
             </div>
-            <div className="listResults">
+            <div className="listResultsflight">
               {data.data && data.data.flightOffers.length > 0 ? (
                 data.data.flightOffers.map((item, index) => (
-                  <FlightSearchList item={item} index={index} key={item.token} flightKey={item.token} options={options}/>
+                  <FlightSearchList item={item} index={index} key={item.token} flightKey={item.token} options={options} />
                 ))
               ) : (
                 "No flights found"

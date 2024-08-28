@@ -32,7 +32,11 @@ const UserSchema = new Schema({
   flightBookings: [{
     type: Schema.Types.ObjectId,
     ref: 'FlightBooking'
-  }]
+  }],
+  taxiBookings: [{
+    type: Schema.Types.ObjectId,
+    ref: 'TaxiBooking'
+  }],
 
 }, { timestamps: true }
 );
