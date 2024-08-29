@@ -16,9 +16,12 @@ const Single = () => {
 
   const [bookings, setBookings] = useState([]);
   const [flights, setFlights] = useState([]);
+  const [taxis, setTaxis] = useState([]);
+  console.log("TAXI:", taxis);
 
   const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`/api/users/${path}/bookings`);
   const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`/api/users/${path}/flightBookings`);
+  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`/api/users/${path}/taxiBookings`);
 
   const handleEdit = () => {
     navigate(`/users/new/${path}`);
@@ -31,15 +34,19 @@ const Single = () => {
     if (flightData) {
       setFlights(flightData);
     }
-  }, [hotelData, flightData]);
+    if (taxiData) {
+      setTaxis(taxiData);
+    }
+  }, [hotelData, flightData, taxiData]);
 
   if (!data) {
     return <div>Loading...</div>;
   }
 
-  if (hotelLoading || flightLoading) return <div>Loading your bookings...</div>;
+  if (hotelLoading || flightLoading || taxiLoading) return <div>Loading your bookings...</div>;
   if (hotelError) return <div>Error loading hotel bookings: {hotelError.message}</div>;
   if (flightError) return <div>Error loading flight bookings: {flightError.message}</div>;
+  if (taxiError) return <div>Error loading taxi bookings: {taxiError.message}</div>;
 
   const handleCancelBooking = async (bookingId) => {
     try {
@@ -104,7 +111,7 @@ const Single = () => {
             <h1 className="title">Bookings</h1>
             <div className="bottomBookingsContainer">
               <div className="bookingsContainer">
-                {bookings.length === 0 && flights.length === 0 ? (
+                {bookings.length === 0 && flights.length === 0 && taxis.lenght === 0 ? (
                   <div>Have no bookings yet.</div>
                 ) : (
                   <>
@@ -191,6 +198,49 @@ const Single = () => {
                                 <button className="cancelButton" onClick={() => handleCancelFlight(flight.id)}>
                                   Cancel Booking
                                 </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Taxi Bookings */}
+                    {taxis.length > 0 && (
+                      <div className="taxiBookings">
+                        <h2>Taxi Bookings</h2>
+                        {taxis.map((taxi, index) => (
+                          <div className="booking" key={index}>
+                            <div className="bookingTitle">Taxi to {taxi.arrival}</div>
+                            <div className="bookingDetails">
+                              <div className="bookingDetail">
+                                <label>From</label>
+                                <span>{taxi.departure}</span>
+                              </div>
+                              <div className="bookingDetail">
+                                <label>To</label>
+                                <span>{taxi.arrival}</span>
+                              </div>
+                              <div className="bookingDetail">
+                                <label>Date</label>
+                                <span>{new Date(taxi.date).toLocaleDateString()}</span>
+                                <span>{taxi.time}</span>
+                              </div>
+                              <div className="bookingDetail">
+                                <label>Distance</label>
+                                <span>{taxi.distance} km</span>
+                              </div>
+                              <div className="bookingDetail">
+                                <label>Type</label>
+                                <span>{taxi.type}</span>
+                              </div>
+                              <div className="bookingDetail">
+                                <label>Description</label>
+                                <span>{taxi.description}</span>
+                              </div>
+                              <div className="bookingDetail">
+                                <label>Price</label>
+                                <span>{taxi.price} €</span>
                               </div>
                             </div>
                           </div>

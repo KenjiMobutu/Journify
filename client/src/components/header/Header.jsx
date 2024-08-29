@@ -290,10 +290,10 @@ function Header({ type }) {
                 <FontAwesomeIcon icon={faPlane} />
                 <span>Flights</span>
               </button>
-              <button className="headerListItem" onClick={handleCar}>
+              {/* <button className="headerListItem" onClick={handleCar}>
                 <FontAwesomeIcon icon={faCar} />
                 <span>Car rentals</span>
-              </button>
+              </button> */}
               <button className="headerListItem" onClick={handleAttraction}>
                 <FontAwesomeIcon icon={faIcons} />
                 <span>Attractions</span>
@@ -306,7 +306,7 @@ function Header({ type }) {
             {type !== 'list' && (
               <>
                 <h1 className="headerTitle">
-                  <span className="hTitle">JOURNIFY</span> YOUR LIFE
+                  <span className="hTitle">JOURNIFY YOUR LIFE</span>
                 </h1>
                 <div className="headerSearch">
                   <div className="headerSearchItem">
@@ -398,7 +398,7 @@ function Header({ type }) {
         ) : (
           // Message pour les utilisateurs non connectés
           <div className="notLoggedInMessage">
-            <p>Please log in or register to <span className="hTitle">JOURNIFY </span>your life.</p>
+            <p>Please log in or register and <span className="hTitle">JOURNIFY </span>your life.</p>
             <button className="headerBtn" onClick={() => navigate('/login')}>
               Log In
             </button>

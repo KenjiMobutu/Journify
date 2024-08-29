@@ -2,7 +2,14 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const TaxiSchema = new Schema({
-
+  userName: {
+    type: String,
+    required: true
+  },
+  userEmail: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true,
@@ -17,7 +24,6 @@ const TaxiSchema = new Schema({
   },
   description: {
     type: String,
-    required: true,
     maxlength: 500
   },
   departure: {

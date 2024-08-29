@@ -35,7 +35,7 @@ const UserSchema = new Schema({
   }],
   taxiBookings: [{
     type: Schema.Types.ObjectId,
-    ref: 'TaxiBooking'
+    ref: 'Taxi'
   }],
 
 }, { timestamps: true }

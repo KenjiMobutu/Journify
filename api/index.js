@@ -1,15 +1,15 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import authRouter from './routes/auth.js';
-import usersRouter from './routes/users.js';
-import registerRouter from './routes/register.js';
-import hotelsRouter from './routes/hotels.js';
-import roomsRouter from './routes/rooms.js';
-import destinationsRouter from './routes/destinations.js';
-import paymentRouter from './routes/payment.js';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
+import express from "express";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import authRouter from "./routes/auth.js";
+import usersRouter from "./routes/users.js";
+import registerRouter from "./routes/register.js";
+import hotelsRouter from "./routes/hotels.js";
+import roomsRouter from "./routes/rooms.js";
+import destinationsRouter from "./routes/destinations.js";
+import paymentRouter from "./routes/payment.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
@@ -23,12 +23,10 @@ const io = new Server(httpServer, {
   cors: {
     origin: ["http://localhost:8000", "http://localhost:5000"],
     methods: ["GET", "POST"],
-  }
+  },
 });
 
-
-
-const connectToMongo = async() =>{
+const connectToMongo = async () => {
   try {
     await mongoose.connect(process.env.MONGO);
   } catch (error) {
@@ -37,12 +35,12 @@ const connectToMongo = async() =>{
   }
 };
 
-mongoose.connection.on('disconnected', () => {
-  console.log('MongoDB disconnected!!!');
+mongoose.connection.on("disconnected", () => {
+  console.log("MongoDB disconnected!!!");
 });
 
-mongoose.connection.on('connected', () => {
-  console.log('MongoDB connected!!!');
+mongoose.connection.on("connected", () => {
+  console.log("MongoDB connected!!!");
 });
 
 connectToMongo();
@@ -51,11 +49,13 @@ connectToMongo();
 app.use(cors()); // Autorise toutes les origines
 
 // Ou pour une origine spécifique :
-app.use(cors({
-  origin: 'http://localhost:5000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5000",
+    methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
+    credentials: true,
+  })
+);
 
 app.use(cookieParser());
 app.use(express.json());
@@ -71,7 +71,7 @@ app.use("/api/payment", paymentRouter);
 
 app.use((error, req, res, next) => {
   const errorStatus = error.status || 500;
-  const errorMessage = error.message || 'Something went wrong';
+  const errorMessage = error.message || "Something went wrong";
   return res.status(errorStatus).json({
     success: false,
     status: errorStatus,
@@ -100,17 +100,23 @@ io.on("connection", (socket) => {
     io.emit("notification", message);
   });
 
-  socket.on("notificationFlightBooking",(message) =>{
+  socket.on("notificationFlightBooking", (message) => {
+    io.emit("notification", message);
+  });
+
+  socket.on("notificationTaxiBooking", (message) => {
+    io.emit("notification", message);
+  });
+
+  socket.on("notificationAttractionBooking", (message) => {
     io.emit("notification", message);
   });
 
   // Gestion de la déconnexion
-  socket.on('disconnect', () => {
+  socket.on("disconnect", () => {
     console.log(`User with socketId ${socket.id} disconnected.`);
   });
 });
-
-
 
 // Écoute du serveur sur le port 3000
 httpServer.listen(3000, () => {

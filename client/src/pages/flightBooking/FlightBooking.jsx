@@ -7,7 +7,7 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import Navbar from "../../components/navbar/Navbar";
 import { useNavigate } from 'react-router-dom';
 
-const FlightBooking = () => {
+const FlightBooking = ({socket}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { flight, options } = location.state || {};// Récupération du flight depuis le state

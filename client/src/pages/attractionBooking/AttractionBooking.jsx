@@ -1,4 +1,4 @@
-import "./taxiBooking.css"
+import "./attractionBooking.css"
 import { useLocation } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { AuthenticationContext } from '../../context/AuthenticationContext';
@@ -7,13 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from "../../components/navbar/Navbar";
 import { format } from 'date-fns';
 
-
-
-const TaxiBooking = ({socket}) => {
-
+const AttractionBooking = ({ socket }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { taxi, journeys } = location.state || {};
+  const { attraction, startDate, endDate } = location.state || {};
   const [paymentSuccess, setPaymentSuccess] = useState(false);  // État pour le succès du paiement
   const [showConfirmation, setShowConfirmation] = useState(false);  // État pour afficher la confirmation
   const [buttonDisabled, setButtonDisabled] = useState(false);  // État pour désactiver le bouton
@@ -22,27 +19,14 @@ const TaxiBooking = ({socket}) => {
   const stripe = useStripe();
   const elements = useElements();
 
-  console.log("TAXI:", taxi);
-  console.log("OPTIONS:", journeys);
+  console.log("ATTRACTION:", attraction);
 
-  const formatDate = (dateTime) => {
-    return format(new Date(dateTime), "dd/MM/yyyy");
-  };
-  const name = taxi.supplierName;
-  const type = taxi.vehicleType;
-  const price = taxi.price.amount;
+  const name = attraction.name;
+  const price = attraction.representativePrice.publicAmount;
   const priceInCents = Math.ceil(price * 100);
-  console.log("PRICE IN CENTS:", priceInCents);
-  const description = taxi.descriptionLocalised;
-  const departure = journeys[0].pickupLocation.name;
-  const arrival = journeys[0].dropOffLocation.name;
-  const date = new Date(journeys[0].requestedPickupDateTime);
-  const time = new Date(journeys[0].requestedPickupDateTime).toLocaleTimeString('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-  const distance = taxi.drivingDistance;
-  const photos = taxi.imageUrl;
+  const description = attraction.shortDescription;
+  const city = attraction.ufiDetails.bCityName;
+  const photos = attraction.primaryPhoto.small;
 
   if (!user) {
     navigate('/login');
@@ -56,7 +40,6 @@ const TaxiBooking = ({socket}) => {
       console.error("Stripe.js has not loaded yet.");
       return;
     }
-
     const cardElement = elements.getElement(CardElement);
 
     try {
@@ -97,26 +80,23 @@ const TaxiBooking = ({socket}) => {
       }
 
       // Enregistrez la réservation après la réussite du paiement
-      const response = await fetch(`/api/payment/taxi`, {
+      const response = await fetch(`/api/payment/attraction`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           paymentIntentId: paymentIntent.id,
-          taxiId: taxi._id,
+          attractionId: attraction._id,
           _id: user._id,
           userName: user.userName,
           userEmail: user.email,
           name: name,
-          type: type,
           price: price,
+          city: city,
           description: description,
-          departure: departure,
-          arrival: arrival,
-          date: date,
-          time: time,
-          distance: distance,
+          startDate: startDate.$d,
+          endDate:  endDate.$d,
           photos: photos,
         }),
       });
@@ -129,84 +109,57 @@ const TaxiBooking = ({socket}) => {
 
       if (response.ok) {
         setPaymentSuccess(true);
-        setShowConfirmation(true);
         setButtonText('Paid');
-        socket?.emit("notificationTaxiBooking", user.userName + " booked a Taxi.");
+        setShowConfirmation(true);
+        socket?.emit("notificationAttractionBooking", user.userName + " booked an attraction.");
         setTimeout(() => {
           setShowConfirmation(false);
         }, 5000);
       } else {
         setButtonDisabled(false);
         setButtonText('Pay');
-        console.error('Failed to process payment');
+        console.error('Failed to create payment method:', response);
       }
-
     } catch (error) {
-      console.error(error);
+      setButtonDisabled(false);
+      setButtonText('Pay');
+      console.error('Failed to create payment method:', error);
     }
-  }
+  };
 
   return (
     <>
       <Navbar />
-      <div className="taxiBookingContainer">
-        <div className="bookingTaxiContainer">
-          <div className="detailsTaxiBooking">
-            <div className="taxiDetails">
-              <div className="taxiDetailsBookingTitle">
-                Your Taxi Details
+      <div className="attBookingContainer">
+        <div className="bookingAttContainer">
+          <div className="detailsAttBookings">
+            <div className="attDetails">
+              <div className="attDetailsBookingTitle">
+                <h1>Your Attraction Booking</h1>
               </div>
-              <div className="taxiBookingItem">
-                <div className="taxiBookingName">
+              <div className="attBookingItem">
+                <div className="attractionName">
                   <label>Name: </label>
                   <div>{name}</div>
                 </div>
+                <div className="attractionCity">
+                  <label>City: </label>
+                  <div>{city}</div>
+                </div>
                 <div className="taxiBookingPhotos">
-                  <label>Photos: </label>
+                  <label>Photo: </label>
                   <div>
                     <img src={photos} alt="taxi" />
                   </div>
                 </div>
-                <div className="taxiBookingFrom">
-                  <label>From: </label>
-                  <div className="taxiBookingDe">
-                    {departure}
-                  </div>
-                </div>
-                <div className="taxiBookingTo">
-                  <label>To: </label>
-                  <div className="taxiBookingArrival">
-                    {arrival}
-                  </div>
-                </div>
-                <div className="taxiBookingDate">
-                  <label>Date: </label>
-                  <div>{new Date(journeys[0].requestedPickupDateTime).toLocaleString('en-GB', { dateStyle: 'short' })}</div>
-                </div>
-                <div className="taxiBookingTime">
-                  <label>Time: </label>
-                  <div>{new Date(journeys[0].requestedPickupDateTime).toLocaleString('en-GB', { timeStyle: 'short' })}</div>
-                </div>
-                <div className="taxiBookingDistance">
-                  <label>Distance: </label>
-                  <div>{distance} km</div>
-                </div>
-                <div className="taxiBookingType">
-                  <label>Type: </label>
-                  <div>{type}</div>
-                </div>
-                <div className="taxiBookingDescription">
+                <div className="attractionDescription">
                   <label>Description: </label>
                   <div>{description}</div>
-                </div>
-                <div className="taxiBookingPrice">
-                  <label>Price: </label>
-                  <div>{price} €</div>
                 </div>
               </div>
             </div>
 
-            <div className="paymentDetailsItem">
+            <div className="paymentAttBooking">
               <div className="paymentDetailsTitle">
                 Payment Details
               </div>
@@ -252,4 +205,4 @@ const TaxiBooking = ({socket}) => {
   )
 }
 
-export default TaxiBooking
+export default AttractionBooking

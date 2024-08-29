@@ -4,14 +4,17 @@ import { useContext, useEffect, useState } from 'react';
 import { AuthenticationContext } from '../../context/AuthenticationContext';
 import { Link } from "react-router-dom";
 import Navbar from "../../components/navbar/Navbar";
+import axios from 'axios';
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [flights, setFlights] = useState([]);
+  const [taxis, setTaxis] = useState([]);
   const { user } = useContext(AuthenticationContext);
 
   const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`/api/users/${user?._id}/bookings`);
   const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`/api/users/${user?._id}/flightBookings`);
+  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`/api/users/${user?._id}/taxiBookings`);
 
   useEffect(() => {
     if (hotelData) {
@@ -20,20 +23,42 @@ const MyBookings = () => {
     if (flightData) {
       setFlights(flightData);
     }
-  }, [hotelData, flightData]);
+    if (taxiData) {
+      setTaxis(taxiData);
+    }
+  }, [hotelData, flightData, taxiData]);
+  console.log("TAXI:", taxis);
+  const handleCancel = async (id, type) => {
+    // Logique pour annuler la réservation, en fonction du type (hotel ou flight)
+    try {
+      await axios.delete(`/api/${type === 'hotel' ? 'bookings' : 'flightBookings'}/${id}`);
+      setBookings((prev) => prev.filter((booking) => booking._id !== id));
+      setFlights((prev) => prev.filter((flight) => flight._id !== id));
+    } catch (error) {
+      console.error('Error cancelling the booking:', error);
+    }
+  };
 
-  if (hotelLoading || flightLoading) return <div>Loading your bookings...</div>;
+  const isCancelable = (date) => {
+    console.log(date);
+    const today = new Date();
+    const checkDate = new Date(date);
+    const differenceInTime = checkDate.getTime() - today.getTime();
+    const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+    return differenceInDays >= 3;
+  };
+
+  if (hotelLoading || flightLoading || taxiLoading) return <div>Loading your bookings...</div>;
   if (hotelError) return <div>Error loading hotel bookings: {hotelError.message}</div>;
   if (flightError) return <div>Error loading flight bookings: {flightError.message}</div>;
+  if (taxiError) return <div>Error loading taxi bookings: {taxiError.message}</div>;
 
   return (
     <>
       <Navbar />
       <div className="myBookings">
-
         <div className="bookings">
           <div className="bookingsTitle">My Bookings</div>
-
           <div className="bookingsContainer">
             {bookings.length === 0 && flights.length === 0 ? (
               <div>You have no bookings yet.</div>
@@ -75,6 +100,14 @@ const MyBookings = () => {
                             <label>Total Cost</label>
                             <span>{booking.totalCost} €</span>
                           </div>
+                          {isCancelable(booking.checkIn) && (
+                            <button
+                              className="cancelButton"
+                              onClick={() => handleCancel(booking._id, 'hotel')}
+                            >
+                              Cancel Booking
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -99,11 +132,13 @@ const MyBookings = () => {
                           </div>
                           <div className="bookingDetail">
                             <label>Departure</label>
-                            <span>{new Date(flight.departureDate).toLocaleDateString()}</span>
+                            <span>{new Date(flight.departureDate).toLocaleString('en-GB', { dateStyle: 'short' })}</span>
+                            <span>{new Date(flight.departureDate).toLocaleString('en-GB', { timeStyle: 'short' })}</span>
                           </div>
                           <div className="bookingDetail">
                             <label>Arrival</label>
-                            <span>{new Date(flight.arrivalDate).toLocaleDateString()}</span>
+                            <span>{new Date(flight.arrivalDate).toLocaleString('en-GB', { dateStyle: 'short' })}</span>
+                            <span>{new Date(flight.arrivalDate).toLocaleString('en-GB', { timeStyle: 'short' })}</span>
                           </div>
                           <div className="bookingDetail">
                             <label>Cabin Class</label>
@@ -113,6 +148,56 @@ const MyBookings = () => {
                             <label>Total Cost</label>
                             <span>{flight.totalCost} €</span>
                           </div>
+                          {isCancelable(flight.departureDate) && (
+                            <button
+                              className="cancelButton"
+                              onClick={() => handleCancel(flight._id, 'flight')}
+                            >
+                              Cancel Flight
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {/* TAXI BOOKINGS */}
+                {taxis.length > 0 && (
+                  <div className="taxiBookings">
+                    <h2>Taxi Bookings</h2>
+                    {taxis.map((taxi, index) => (
+                      <div className="booking" key={index}>
+                        <div className="bookingTitle">Taxi to {taxi.arrival}</div>
+                        <div className="bookingDetails">
+                          <div className="bookingDetail">
+                            <label>From</label>
+                            <span>{taxi.departure} </span>
+                          </div>
+                          <div className="bookingDetail">
+                            <label>To</label>
+                            <span>{taxi.arrival}</span>
+                          </div>
+                          <div className="bookingDetail">
+                            <label>Departure</label>
+                            <span>{new Date(taxi.date).toLocaleString('en-GB', { dateStyle: 'short' })}</span>
+                            <span>{taxi.time}</span>
+                          </div>
+                          <div className="bookingDetail">
+                            <label>Distance</label>
+                            <span>{taxi.distance} km</span>
+                          </div>
+                          <div className="bookingDetail">
+                            <label>Total Cost</label>
+                            <span>{taxi.price} €</span>
+                          </div>
+                          {isCancelable(taxi.time) && (
+                            <button
+                              className="cancelButton"
+                              onClick={() => handleCancel(taxi._id, 'taxi')}
+                            >
+                              Cancel Ride
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}

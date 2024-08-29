@@ -184,7 +184,7 @@ const Booking = ({ socket }) => {
                   <label>Number of Nights</label>
                 </div>
                 <div className="numberNightsValue">
-                  <span>{numberOfNights}</span>
+                  <span>{Math.round(numberOfNights)}</span>
                 </div>
               </div>
               <br></br>

@@ -86,3 +86,13 @@ export const getUserFlightBookings = async (req, res, next) => {
       next(err);
   }
 }
+
+// Get User Taxi Bookings
+export const getUserTaxiBookings = async (req, res, next) => {
+  try{
+      const user = await User.findById(req.params.id).populate('taxiBookings');
+      res.status(200).json(user.taxiBookings);
+  }catch(err){
+      next(err);
+  }
+}

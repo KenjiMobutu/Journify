@@ -1,0 +1,141 @@
+.attBookingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f7fa;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.bookingAttContainer {
+  width: 100%;
+  max-width: 1000px;
+  background-color: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.detailsAttBookings {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 30px;
+  gap: 20px;
+}
+
+.attDetails {
+  flex: 1;
+  padding-right: 20px;
+  border-right: 1px solid #eaeaea;
+}
+
+.attDetailsBookingTitle h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2b2d42;
+  margin-bottom: 20px;
+}
+
+.attBookingItem {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.attBookingItem div {
+  font-size: 1rem;
+  color: #4e5d78;
+}
+
+.attractionName label,
+.attractionCity label,
+.taxiBookingPhotos label,
+.attractionDescription label {
+  font-weight: 600;
+  color: #2b2d42;
+  margin-bottom: 5px;
+}
+
+.taxiBookingPhotos img {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.paymentAttBooking {
+  flex: 1;
+  padding-left: 20px;
+}
+
+.paymentDetailsTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2b2d42;
+  margin-bottom: 20px;
+}
+
+.paymentDetailsName,
+.paymentDetailsEmail,
+.paymentDetailsPrice,
+.paymentDetailsPay {
+  margin-bottom: 20px;
+}
+
+.paymentDetailsName label,
+.paymentDetailsEmail label,
+.paymentDetailsPrice label,
+.paymentDetailsPay label {
+  font-weight: 600;
+  color: #2b2d42;
+  margin-bottom: 5px;
+}
+
+.paymentDetailsPrice div {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ef233c;
+}
+
+.paymentDetailsPrice p {
+  font-size: 0.875rem;
+  color: #7a7f9a;
+  margin-top: 5px;
+}
+
+.buttonContainer {
+  margin-top: 20px;
+}
+
+.bookButton {
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  font-weight: 700;
+  background-color: #ef233c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.bookButton:hover {
+  background-color: #d90429;
+  transform: translateY(-3px);
+}
+
+.bookButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.confirmationMessage {
+  margin-top: 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: green;
+  text-align: center;
+}

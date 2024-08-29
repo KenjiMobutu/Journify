@@ -129,7 +129,8 @@
 
           .bookingsContainer {
             .hotelBookings,
-            .flightBookings {
+            .flightBookings,
+            .taxiBookings {
               padding: 20px;
               border-radius: 8px;
               background-color: #fafafa;
@@ -156,7 +157,7 @@
                 margin-bottom: 20px;
                 display: flex;
                 flex-direction: column;
-                height: 8rem;
+                height: 10rem;
                 position: relative;
                 transition: box-shadow 0.3s ease, transform 0.3s ease;
 

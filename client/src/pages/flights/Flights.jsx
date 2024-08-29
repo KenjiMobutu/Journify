@@ -12,26 +12,25 @@ const Flights = () => {
   const [arrivalOptions, setArrivalOptions] = useState([]);
   const [selectedDepart, setSelectedDepart] = useState(null);
   const [selectedArrival, setSelectedArrival] = useState(null);
+  const [loadingDestinations, setLoadingDestinations] = useState(false); // État pour gérer le chargement du bouton "Search Destinations"
+  const [loadingFlights, setLoadingFlights] = useState(false); // État pour gérer le chargement du bouton "Search Flights"
 
-  console.log("Selected Departure:", selectedDepart);
   const [depart, setDepart] = useState("");
   const [arrival, setArrival] = useState("");
   const [openDate, setOpenDate] = useState(false);
   const [data, setData] = useState([]);
-  console.log("Data:", data);
+
   const [dates, setDates] = useState(() => {
     const startDate = new Date();
     const endDate = addDays(new Date(), 1);
     return [
       {
         startDate: isValid(new Date()) ? new Date() : startDate,
-        endDate: isValid(addDays(new Date(), 1)) ?  addDays(new Date(), 1) : endDate,
+        endDate: isValid(addDays(new Date(), 1)) ? addDays(new Date(), 1) : endDate,
         key: 'selection'
       }
     ];
   });
-
-  console.log("DATES :", dates);
 
   const [options, setOptions] = useState({
     adult: 1,
@@ -40,9 +39,9 @@ const Flights = () => {
     cabinClass: 'ECONOMY',
   });
 
-  console.log("OPTIONS :", options.adult, options.children, options.sort, options.cabinClass);
-
   const handleSearch = async () => {
+    setLoadingDestinations(true); // Définir le chargement sur true
+
     const options = {
       method: 'GET',
       url: 'https://booking-com15.p.rapidapi.com/api/v1/flights/searchDestination',
@@ -72,16 +71,19 @@ const Flights = () => {
       const response2 = await axios.request(options2);
       setDepartOptions(response.data.data);
       setArrivalOptions(response2.data.data);
-      console.log("Departure Options:", response.data.data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoadingDestinations(false); // Réinitialiser l'état de chargement
     }
   };
 
   const handleFinalSearch = async () => {
+    setLoadingFlights(true); // Définir le chargement sur true
 
     if (!selectedDepart || !selectedArrival) {
       console.error("Please select both departure and arrival locations.");
+      setLoadingFlights(false);
       return;
     }
 
@@ -108,13 +110,12 @@ const Flights = () => {
     try {
       const response = await axios.request(opt);
       setData(response.data);
-      console.log("Final search data:", response.data);
     } catch (error) {
       console.error("Final search error:", error);
+    } finally {
+      setLoadingFlights(false); // Réinitialiser l'état de chargement
     }
   };
-
-
 
   return (
     <div className="flights">
@@ -134,7 +135,9 @@ const Flights = () => {
                 <label>To</label>
                 <input type="text" placeholder="to: Miami" onChange={e => setArrival(e.target.value)} />
               </div>
-              <button onClick={handleSearch} className="destinationSearchButtonflight">Search Destinations</button>
+              <button onClick={handleSearch} className="destinationSearchButtonflight">
+                {loadingDestinations ? "Processing..." : "Search Destinations"}
+              </button>
 
               {departOptions.length > 0 && (
                 <div className="listSearchItemflight">
@@ -226,13 +229,13 @@ const Flights = () => {
               <button
                 onClick={handleFinalSearch}
                 className="listSearchButtonflight"
-                disabled={!selectedDepart || !selectedArrival}
+                disabled={!selectedDepart || !selectedArrival || loadingFlights}
               >
-                Search Flights
+                {loadingFlights ? "Processing..." : "Search Flights"}
               </button>
             </div>
             <div className="listResultsflight">
-              {data.data && data.data.flightOffers.length > 0 ? (
+              {data?.data?.flightOffers?.length > 0 ? (
                 data.data.flightOffers.map((item, index) => (
                   <FlightSearchList item={item} index={index} key={item.token} flightKey={item.token} options={options} />
                 ))

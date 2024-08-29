@@ -15,6 +15,7 @@ import Flights from "./pages/flights/Flights";
 import Taxi from "./pages/taxi/Taxi";
 import FlightBooking from "./pages/flightBooking/FlightBooking";
 import TaxiBooking from "./pages/taxiBooking/TaxiBooking";
+import AttractionBooking from "./pages/attractionBooking/AttractionBooking";
 
 function App() {
   const [socket, setSocket] = useState(null);
@@ -40,6 +41,7 @@ function App() {
         <Route path="/myBookings" element={<MyBookings />} />
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/attractions" element={<Attractions />} />
+        <Route path="/attractions/booking" element={<AttractionBooking socket={socket}/>} />
         <Route path="/car" element={<CarRental />} />
         <Route path="/flights" element={<Flights />} />
         <Route path="/flights/booking" element={<FlightBooking socket={socket} />} />

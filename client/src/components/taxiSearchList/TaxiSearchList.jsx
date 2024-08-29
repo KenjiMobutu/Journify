@@ -1,20 +1,20 @@
 import "./taxiSearchList.css"
 import { useNavigate } from "react-router-dom";
 
-const TaxiSearchList = ({item, journeys}) => {
+const TaxiSearchList = ({ item, journeys }) => {
   console.log(item)
   console.log(journeys)
   const navigate = useNavigate();
 
   const onSelect = (item) => {
     console.log("Selected Taxi:", item);
-    navigate("/taxi/booking", {state: {taxi: item}});
+    navigate("/taxi/booking", { state: { taxi: item, journeys: journeys } });
   }
 
   return (
     <div className="taxiSearchList" onClick={() => onSelect(item)}>
       <div className="taxiSearchListTop">
-      <label>Here is a resume of your Jouney:</label>
+        <label>Here is a resume of your Jouney:</label>
         <div className="supplier">
           <label>Supplier :  </label>
           <img src={item.imageUrl || ''} alt="taxi" />
@@ -27,7 +27,7 @@ const TaxiSearchList = ({item, journeys}) => {
           <p>to</p>
         </div>
         <div className="taxiSearchListTopRight">
-        <p>{journeys[0].dropOffLocation.name}</p>
+          <p>{journeys[0].dropOffLocation.name}</p>
         </div>
       </div>
       <div className="taxiSearchListBottom">
