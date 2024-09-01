@@ -13,7 +13,7 @@
   color: white;
   gap: 20px;
   height: 17rem;
-  z-index: 99; /* Utilisez min-height pour permettre une flexibilité en hauteur */
+  z-index: 1; /* Utilisez min-height pour permettre une flexibilité en hauteur */
 }
 
 .emailTitle {

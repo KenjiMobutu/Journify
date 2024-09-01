@@ -1,19 +1,19 @@
-import "./List.css"
-import Navbar from '../../components/navbar/Navbar'
-import { useLocation } from "react-router-dom"
-import { useState } from 'react'
+import "./List.css";
+import Navbar from '../../components/navbar/Navbar';
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext } from 'react';
 import { format } from "date-fns";
-import { DateRange } from "react-date-range"
-import { SearchList } from "../../components/searchList/SearchList"
-import useFetch from "../../hooks/useFetch"
-import axios from "axios"
-import { useContext } from "react"
+import { DateRange } from "react-date-range";
+import { SearchList } from "../../components/searchList/SearchList";
+import useFetch from "../../hooks/useFetch";
+import axios from "axios";
 import { SearchContext } from '../../context/SearchContext.jsx';
-import { useNavigate } from "react-router-dom"
 
 const List = () => {
-  const research = useLocation()
-  console.log(research);
+  const research = useLocation();
+  const navigate = useNavigate();
+  const { dispatch } = useContext(SearchContext);
+
   const [destination, setDestination] = useState(research.state.destination);
   const [dates, setDates] = useState(research.state.dates);
   const [openDate, setOpenDate] = useState(false);
@@ -21,66 +21,93 @@ const List = () => {
   const [hotels, setHotels] = useState(research.state.hotels);
   const [min, setMin] = useState(undefined);
   const [max, setMax] = useState(undefined);
-  //const handleClick = () => { reFetch() };
-  //console.log(hotels.data); //resultat de la recherche
-  const { loading } = useFetch(`/api/hotels?city=${destination}&min=${min || 0}&max=${max || 999}`);
-  const { dispatch } = useContext(SearchContext);
-  const navigate = useNavigate();
-  console.log("DESTINATION :", destination);
-  console.log("DATES :", dates);
-  console.log("OPTIONS :", options.adult, options.children, options.room);
-  console.log("HOTELS :", hotels);
-  console.log("MIN :", min);
-  console.log("MAX :", max);
+  const [attractions, setAttractions] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(null);
 
+  const { loading, data } = useFetch(`/api/hotels?city=${destination}&min=${min || 0}&max=${max || 999}`);
+
+  useEffect(() => {
+    if (!selectedCity) {
+      findCity();
+    } else {
+      findAttractions();
+    }
+  }, [selectedCity]);
+
+  const findCity = async () => {
+    try {
+      const response = await axios.get('https://booking-com15.p.rapidapi.com/api/v1/attraction/searchLocation', {
+        params: { query: destination },
+        headers: {
+          'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+          'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
+        }
+      });
+      const cityId = response.data.data.destinations[0]?.id;
+      setSelectedCity(cityId);
+    } catch (error) {
+      console.error("Error fetching city:", error);
+    }
+  };
+
+  const findAttractions = async () => {
+    if (!selectedCity) return;
+
+    try {
+      const response = await axios.get('https://booking-com15.p.rapidapi.com/api/v1/attraction/searchAttractions', {
+        params: {
+          id: selectedCity,
+          sortBy: 'trending',
+          currency_code: 'EUR',
+          languagecode: 'en-us',
+        },
+        headers: {
+          'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+          'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
+        }
+      });
+      setAttractions(response.data.data.products);
+      console.log("!!!Attractions:", response.data.data.products);
+    } catch (error) {
+      console.error("Error fetching attractions:", error);
+    }
+  };
 
   const handleSearch = async () => {
     dispatch({ type: "NEW_SEARCH", payload: { destination, dates, options } });
-    console.log("Handle search button clicked");
-
-    const params = {
-      method: 'GET',
-      url: 'https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination',
-      params: { query: destination },
-      headers: {
-        'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
-        'x-rapidapi-host': 'booking-com15.p.rapidapi.com'
-      }
-    };
 
     try {
-      const response = await axios.request(params);
+      const response = await axios.get('https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination', {
+        params: { query: destination },
+        headers: {
+          'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+          'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
+        }
+      });
 
       if (Array.isArray(response.data.data)) {
-        const destinationIds = response.data.data.map(dest => dest.dest_id);
-        const destinationTypes = response.data.data.map(dest => dest.search_type);
-        console.log(destinationIds);
-        console.log(destinationTypes);
-        console.log(format(dates[0].startDate, "yyyy-MM-dd"));  // Vérifiez cette valeur
-        console.log(format(dates[0].endDate, "yyyy-MM-dd"));    // Vérifiez cette valeur
+        const destinationId = response.data.data[0]?.dest_id;
+        const searchType = response.data.data[0]?.search_type;
 
-        const hotelParams = {
-          method: 'GET',
-          url: 'https://booking-com15.p.rapidapi.com/api/v1/hotels/searchHotels',
-          params: {
-            dest_id: destinationIds[0],                // Premier ID de destination
-            search_type: destinationTypes[0],          // Premier type de recherche
-            arrival_date: format(dates[0].startDate, "yyyy-MM-dd"),  // Date d'arrivée formatée
-            departure_date: format(dates[0].endDate, "yyyy-MM-dd"),   // Date de départ formatée
-            price_min: min || '0',
-            price_max: max || '9999',
-          },
-          headers: {
-            'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
-            'x-rapidapi-host': 'booking-com15.p.rapidapi.com'
-          }
-        };
+        if (destinationId && searchType) {
+          const hotelResponse = await axios.get('https://booking-com15.p.rapidapi.com/api/v1/hotels/searchHotels', {
+            params: {
+              dest_id: destinationId,
+              search_type: searchType,
+              arrival_date: format(dates[0].startDate, "yyyy-MM-dd"),
+              departure_date: format(dates[0].endDate, "yyyy-MM-dd"),
+              price_min: min || '0',
+              price_max: max || '9999',
+            },
+            headers: {
+              'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+              'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
+            }
+          });
 
-        const hotelResponse = await axios.request(hotelParams);
-        console.log(hotelResponse.data);
-
-        setHotels(hotelResponse.data); // Utilisez la réponse des hôtels ici
-        navigate('/hotels', { state: { destination, dates, options, hotels: hotelResponse.data } });
+          setHotels(hotelResponse.data);
+          navigate('/hotels', { state: { destination, dates, options, hotels: hotelResponse.data, attractions } });
+        }
       } else {
         console.error('Unexpected data format:', response.data);
       }
@@ -88,7 +115,6 @@ const List = () => {
       console.error('Error fetching hotels:', error);
     }
   };
-
 
   return (
     <div>
@@ -99,64 +125,70 @@ const List = () => {
             <h1 className="listSearchTitle">Search</h1>
             <div className="listSearchItem">
               <label>Destination</label>
-              <input type="text" placeholder={destination} onChange={e => setDestination(e.target.value)} />
+              <input
+                type="text"
+                placeholder={destination}
+                onChange={e => setDestination(e.target.value)}
+              />
             </div>
             <div className="listSearchItem">
               <label>Check-in</label>
               <span onClick={() => setOpenDate(!openDate)}>
                 {`${format(dates[0].startDate, "dd/MM/yyyy")} to ${format(dates[0].endDate, "dd/MM/yyyy")}`}
               </span>
-              {openDate && (<DateRange onChange={item => setDates([item.selection])}
-                minDate={new Date()}
-                ranges={dates} />)}
+              {openDate && (
+                <DateRange
+                  onChange={item => setDates([item.selection])}
+                  minDate={new Date()}
+                  ranges={dates}
+                />
+              )}
             </div>
             <div className="listSearchItem">
               <label>Options</label>
               <div className="listSearchOptions">
                 <div className="listSearchOptionItem">
-                  <span className="listSearchOptionText">
-                    Min price per night
-                  </span>
-                  <input onChange={e => setMin(e.target.value)} type="number" className="listSearchOptionInput" />
-                </div>
-                <div className="listSearchOptionItem">
-                  <span className="listSearchOptionText">
-                    Max price per night
-                  </span>
-                  <input onChange={e => setMax(e.target.value)} type="number" className="listSearchOptionInput" />
-                </div>
-                <div className="listSearchOptionItem">
-                  <span className="listSearchOptionText">
-                    Adult(s)
-                  </span>
+                  <span className="listSearchOptionText">Min price per night</span>
                   <input
                     type="number"
+                    onChange={e => setMin(e.target.value)}
                     className="listSearchOptionInput"
+                  />
+                </div>
+                <div className="listSearchOptionItem">
+                  <span className="listSearchOptionText">Max price per night</span>
+                  <input
+                    type="number"
+                    onChange={e => setMax(e.target.value)}
+                    className="listSearchOptionInput"
+                  />
+                </div>
+                <div className="listSearchOptionItem">
+                  <span className="listSearchOptionText">Adult(s)</span>
+                  <input
+                    type="number"
                     onChange={e => setOptions(prev => ({ ...prev, adult: e.target.value }))}
+                    className="listSearchOptionInput"
                     placeholder={options.adult}
                     min={1}
                   />
                 </div>
                 <div className="listSearchOptionItem">
-                  <span className="listSearchOptionText">
-                    Children
-                  </span>
+                  <span className="listSearchOptionText">Children</span>
                   <input
                     type="number"
-                    className="listSearchOptionInput"
                     onChange={e => setOptions(prev => ({ ...prev, children: e.target.value }))}
+                    className="listSearchOptionInput"
                     placeholder={options.children}
                     min={0}
                   />
                 </div>
                 <div className="listSearchOptionItem">
-                  <span className="listSearchOptionText">
-                    Room(s)
-                  </span>
+                  <span className="listSearchOptionText">Room(s)</span>
                   <input
                     type="number"
-                    className="listSearchOptionInput"
                     onChange={e => setOptions(prev => ({ ...prev, room: e.target.value }))}
+                    className="listSearchOptionInput"
                     placeholder={options.room}
                     min={1}
                   />
@@ -169,15 +201,20 @@ const List = () => {
             {loading ? (
               "Loading..."
             ) : (
-              hotels.data.hotels.map(item => (
-                <SearchList item={item} key={item.hotel_id} dates={dates} />
+              hotels?.data?.hotels?.map(item => (
+                <SearchList
+                  item={item}
+                  key={item.hotel_id}
+                  dates={dates}
+                  attractions={attractions}
+                />
               ))
             )}
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default List
+export default List;

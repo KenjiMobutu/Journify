@@ -96,7 +96,7 @@ const AttractionBooking = ({ socket }) => {
           city: city,
           description: description,
           startDate: startDate.$d,
-          endDate:  endDate.$d,
+          endDate: endDate.$d,
           photos: photos,
         }),
       });
