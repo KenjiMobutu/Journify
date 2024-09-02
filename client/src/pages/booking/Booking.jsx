@@ -10,6 +10,7 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useState } from 'react';
 
 const Booking = ({ socket }) => {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const location = useLocation();
   const { startDate, endDate, adults, children, rooms, hotel, price, addedAttractions, attractionPrice } = location.state || {};
   const [paymentSuccess, setPaymentSuccess] = useState(false);  // État pour le succès du paiement
@@ -54,7 +55,7 @@ const Booking = ({ socket }) => {
       setButtonDisabled(true);  // Désactiver le bouton pendant le traitement du paiement
 
       // Créer un Payment Intent et récupérer le client_secret
-      const paymentIntentRes = await fetch('/api/hotels/create-payment-intent', {
+      const paymentIntentRes = await fetch(`${apiUrl}/api/hotels/create-payment-intent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: validatedAttractionPrice * 100 }) // Convertir le prix en centimes
@@ -88,7 +89,7 @@ const Booking = ({ socket }) => {
       }
 
       // Enregistrez la réservation après la réussite du paiement
-      const response = await fetch(`/api/hotels/${hotel.hotel_id}/bookings`, {
+      const response = await fetch(`${apiUrl}/api/hotels/${hotel.hotel_id}/bookings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
