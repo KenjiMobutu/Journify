@@ -1,52 +1,44 @@
 import "./booking.css";
+import PropTypes from 'prop-types';
 import { useContext } from 'react';
 import { AuthenticationContext } from '../../context/AuthenticationContext';
 import { useNavigate } from 'react-router-dom';
 import Navbar from "../../components/navbar/Navbar";
 import { useLocation } from "react-router-dom";
-import { format } from "date-fns";
+import { add, format } from "date-fns";
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useState } from 'react';
 
 const Booking = ({ socket }) => {
-
+  const location = useLocation();
+  const { startDate, endDate, adults, children, rooms, hotel, price, addedAttractions, attractionPrice } = location.state || {};
   const [paymentSuccess, setPaymentSuccess] = useState(false);  // État pour le succès du paiement
   const [showConfirmation, setShowConfirmation] = useState(false);  // État pour afficher la confirmation
   const [buttonDisabled, setButtonDisabled] = useState(false);  // État pour désactiver le bouton
   const [buttonText, setButtonText] = useState('Payer');  // Texte du bouton
-
   const { user } = useContext(AuthenticationContext);
   const navigate = useNavigate();
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-
   const stripe = useStripe();
   const elements = useElements();
+  const validatedPrice = Number(price) || 0; // Assure que price est un nombre, sinon 0
+  const validatedAttractionPrice = Number(attractionPrice) || 0; // Assure que attractionPrice est un nombre, sinon 0
+  console.log("validatedATTPrice", validatedAttractionPrice);
 
-
-  const startDate = new Date(params.get('startDate')); // Utiliser le constructeur Date pour les dates
-  const endDate = new Date(params.get('endDate'))
-  const adults = params.get('adults');
-  const children = params.get('children');
-  const rooms = params.get('rooms');
-  const hotel = JSON.parse(params.get('hotel'));
-  const price = params.get('price');
+  const totalCost = validatedPrice + validatedAttractionPrice;
 
   // Format dates to dd/MM/yyyy
   const formattedStartDate = format(startDate, "dd/MM/yyyy");
   const formattedEndDate = format(endDate, "dd/MM/yyyy");
 
   // Calculer le nombre de nuits
-  const timeDifference = endDate.getTime() - startDate.getTime();
+  const timeDifference = new Date(endDate).getTime() - new Date(startDate).getTime();
   const numberOfNights = timeDifference / (1000 * 3600 * 24);
-
 
   if (!user) {
     // Redirige l'utilisateur vers la page de connexion si non authentifié
     navigate('/login');
     return null;
   }
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -65,7 +57,7 @@ const Booking = ({ socket }) => {
       const paymentIntentRes = await fetch('/api/hotels/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: price * 100 }) // Convertir le prix en centimes
+        body: JSON.stringify({ amount: validatedAttractionPrice * 100 }) // Convertir le prix en centimes
       });
 
       if (!paymentIntentRes.ok) {
@@ -128,7 +120,6 @@ const Booking = ({ socket }) => {
 
       await response.json();
 
-
       // Gestion du succès du paiement
       setPaymentSuccess(true);  // Marquer le paiement comme réussi
       setButtonText('Paid');  // Changer le texte du bouton
@@ -144,7 +135,6 @@ const Booking = ({ socket }) => {
       setButtonDisabled(false);  // Réactiver le bouton en cas d'erreur
     }
   };
-
 
   return (
     <div>
@@ -205,10 +195,26 @@ const Booking = ({ socket }) => {
                   <span>{adults} Adults, {children} Children</span>
                 </div>
               </div>
+              <div className="addedAttractions">
+                {addedAttractions.length > 0 && (
+                  <div className="addedAttractionsList">
+                    <div className="addedAttractionsTitle">Added Attractions</div>
+                    {addedAttractions.map((attraction, index) => (
+                      <div key={index} className="addedAttractionsItem">
+                        <div className="addedAttractionName">
+                          <span>{attraction.ticketCount}X </span>
+                          <span>{attraction.name} </span>
+                        </div>
+                        <div className="addedAttractionPrice">
+                          <span>{attraction.price}€</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-
-
           <div className="confirmDetails">
             <div className="confirmDetailsTitle">Confirm Your Details</div>
             <div className="confirmDetailsItem">
@@ -233,7 +239,7 @@ const Booking = ({ socket }) => {
                   <label>Total Price Summary</label>
                 </div>
                 <div className="priceValue">
-                  <span>Total Cost: {price}€</span>
+                  <span>Total Cost: {validatedAttractionPrice.toFixed(2)}€</span>
                   <p>Includes taxes and fees</p>
                 </div>
               </div>
@@ -259,7 +265,6 @@ const Booking = ({ socket }) => {
                     Payment Successful!
                   </div>
                 )}
-
               </div>
             </div>
           </div>
@@ -269,6 +274,9 @@ const Booking = ({ socket }) => {
       )}
     </div>
   );
+};
+Booking.propTypes = {
+  socket: PropTypes.object
 };
 
 export default Booking;

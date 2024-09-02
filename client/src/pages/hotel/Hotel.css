@@ -289,7 +289,7 @@
   border-radius: 10px;
   padding: 15px;
   justify-content: space-between;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -332,6 +332,67 @@
   gap: 5px;
   justify-content: center;
   margin-top: auto;
+}
+
+/* Ajouter une classe pour mettre en surbrillance l'attraction sélectionnée */
+.selectedAttraction {
+  border: 2px solid #007BFF;
+  background-color: #e7f1ff;
+}
+
+/* Style pour la section de sélection des tickets */
+.ticketSelection {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.ticketSelection label {
+  font-weight: bold;
+}
+
+.ticketSelection input {
+  width: 60px;
+  padding: 5px;
+  text-align: center;
+}
+
+.ticketSelection button {
+  padding: 8px 15px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ticketSelection button:hover {
+  background-color: #0056b3;
+}
+
+.addedAttractionItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.addedAttractionItem span {
+  font-size: 13px;
+  color: #333;
+  font-weight: 500;
+}
+
+.removeAttractionIcon {
+  color: #e74c3c;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.removeAttractionIcon:hover {
+  color: #c0392b;
 }
 
 /* Responsive adjustments */

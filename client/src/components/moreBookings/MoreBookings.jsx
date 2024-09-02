@@ -1,10 +1,15 @@
 import "./moreBookings.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
-import { CheckBox } from "@mui/icons-material";
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 const MoreBookings = ({ setOpen, setOpenPayment, onConfirm }) => {
+  MoreBookings.propTypes = {
+    setOpen: PropTypes.func.isRequired,
+    setOpenPayment: PropTypes.func.isRequired,
+    onConfirm: PropTypes.func.isRequired,
+  };
 
   const [selectedOptions, setSelectedOptions] = useState({
     flight: false,
@@ -23,14 +28,7 @@ const MoreBookings = ({ setOpen, setOpenPayment, onConfirm }) => {
     console.log("Selected Options:", selectedOptions);
     onConfirm(selectedOptions);
     setOpen(false);
-
   };
-
-  const handleFlight = () => { console.log("Flight") };
-
-  const handleAttraction = () => { console.log("ATTRACTION") };
-
-  const handleTaxi = () => { console.log("TAXI") };
 
   return (
     <div className="moreBookings">
@@ -67,13 +65,13 @@ const MoreBookings = ({ setOpen, setOpenPayment, onConfirm }) => {
               checked={selectedOptions.taxi}
               onChange={() => handleOptionChange("taxi")}
             />
-            <span onClick={handleTaxi}>Taxi</span>
+            <span>Taxi</span>
           </label>
         </div>
         <span className="moreBookingsText">to your reservation?</span>
         <div className="moreBookingsActions">
           <button className="moreBookingsConfirm" onClick={handleConfirm}>
-            Let's go!
+            Let&rsquo;s go!
           </button>
           <button
             className="moreBookingsConfirm"
@@ -82,7 +80,7 @@ const MoreBookings = ({ setOpen, setOpenPayment, onConfirm }) => {
               setOpen(false);
             }}
           >
-            No, it's ok
+            No, it&rsquo;s ok
           </button>
         </div>
       </div>

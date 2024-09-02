@@ -18,6 +18,8 @@ const Single = () => {
   const [flights, setFlights] = useState([]);
   const [taxis, setTaxis] = useState([]);
   console.log("TAXI:", taxis);
+  console.log("FLIGHTS:", flights);
+  console.log("BOOKINGS:", bookings);
 
   const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`/api/users/${path}/bookings`);
   const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`/api/users/${path}/flightBookings`);
@@ -111,7 +113,7 @@ const Single = () => {
             <h1 className="title">Bookings</h1>
             <div className="bottomBookingsContainer">
               <div className="bookingsContainer">
-                {bookings.length === 0 && flights.length === 0 && taxis.lenght === 0 ? (
+                {bookings.length === 0 && flights.length === 0 && taxis.length === 0 ? (
                   <div>Have no bookings yet.</div>
                 ) : (
                   <>

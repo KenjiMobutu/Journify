@@ -2,17 +2,30 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./reservation.css";
 import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState, useContext } from "react";
+import PropTypes from "prop-types"; // Import prop-types library
 import { SearchContext } from "../../context/SearchContext.jsx";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
-function Reservation({ setOpen, hotelId, hotel, nbRooms }) {
+
+function Reservation({ setOpen, hotelId, hotel, nbRooms, addedAttractions, attractionPrice }) {
+  // Define the PropTypes for the Reservation component
+  // Add prop type validation
+  Reservation.propTypes = {
+    setOpen: PropTypes.func.isRequired,
+    hotelId: PropTypes.string.isRequired,
+    hotel: PropTypes.object.isRequired,
+    nbRooms: PropTypes.number.isRequired,
+    addedAttractions: PropTypes.array.isRequired,
+    attractionPrice: PropTypes.number.isRequired,
+  };
+
   const { dates: contextDates, options: contextOptions } = useContext(SearchContext);
   const storedDates = JSON.parse(localStorage.getItem("dates")) || [];
   const storedOptions = JSON.parse(localStorage.getItem("options")) || { adult: 1, children: 0, room: 1 };
-  const [dates, setDates] = useState(contextDates.length ? contextDates : storedDates);
-  const [options, setOptions] = useState(contextOptions.adult !== undefined ? contextOptions : storedOptions);
+  const [dates] = useState(contextDates.length ? contextDates : storedDates);
+  const [options] = useState(contextOptions.adult !== undefined ? contextOptions : storedOptions);
   const [availableRooms, setAvailableRooms] = useState([]); // Initialize with an empty array
   const [selectedRooms, setSelectedRooms] = useState([]); // State to manage selected rooms
   const [totalPrice, setTotalPrice] = useState(0); // State to manage total price
@@ -79,23 +92,23 @@ function Reservation({ setOpen, hotelId, hotel, nbRooms }) {
     });
   };
 
-
-
   const handleClick = () => {
     // Logic to handle reservation with selected rooms
-    const queryParams = new URLSearchParams({
+    const reservationData = {
       startDate: dates[0].startDate,
       endDate: dates[0].endDate,
       adults: options.adult,
       children: options.children,
       rooms: options.room,
-      hotel: JSON.stringify(hotel),
+      hotel: hotel, // pas besoin de JSON.stringify, l'objet est passé tel quel
       price: totalPrice,
-    }).toString();
+      addedAttractions: addedAttractions,
+      attractionPrice: attractionPrice,
+    };
 
     setOpen(false);
-    navigate(`/hotels/${hotelId}/booking?${queryParams}`);
-    //navigate(`/hotels/${hotelId}/booking`, { state: {}}); //envoyer les données de la réservation via le state
+    //navigate(`/hotels/${hotelId}/booking?${queryParams}`);
+    navigate(`/hotels/${hotelId}/booking`, { state: reservationData }); //envoyer les données de la réservation via le state
   };
 
   return (
@@ -123,11 +136,11 @@ function Reservation({ setOpen, hotelId, hotel, nbRooms }) {
         ) : (
           <p>No rooms available for the selected dates.</p>
         )}
-
         <button className="bookButtonModal" onClick={handleClick}>Reserve</button>
       </div>
     </div>
   );
+
 }
 
 export default Reservation;
