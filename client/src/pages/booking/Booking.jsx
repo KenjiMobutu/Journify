@@ -95,7 +95,9 @@ const Booking = ({ socket }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
+        credentials: 'include',
         body: JSON.stringify({
           paymentIntentId: paymentIntent.id,
           _id: user._id,
