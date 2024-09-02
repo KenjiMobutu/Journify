@@ -8,8 +8,8 @@ import axios from 'axios';
 export default function Login() {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   console.log(apiUrl);
-  const [credentials, setCredentials] = useState({ username: "", password: "" });
-  const {loading, error, dispatch } = useContext(AuthenticationContext);
+  const [credentials, setCredentials] = useState({ password: "" });
+  const { loading, error, dispatch } = useContext(AuthenticationContext);
   const navigate = useNavigate();
   const handleChange = (e) => {
     setCredentials(previous => ({ ...previous, [e.target.id]: e.target.value }));
@@ -33,7 +33,7 @@ export default function Login() {
     <div className="login">
       <div className='loginContainer'>
         <input type="text" placeholder="username" id='userName' onChange={handleChange} className='loginInput' />
-        <input type="password" placeholder="password" id='password' onChange={handleChange} className='loginInput'/>
+        <input type="password" placeholder="password" id='password' onChange={handleChange} className='loginInput' />
         <button onClick={handleClick} disabled={loading} className='loginButton'>Login</button>
         {error && <span> {error.message} </span>}
       </div>
