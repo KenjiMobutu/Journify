@@ -25,7 +25,8 @@ const Navbar = () => {
         const response = await axios.get(`${apiUrl}/api/users/${user._id}`, {
           headers: {
             Authorization: `Bearer ${token}`
-          }
+          },
+          withCredentials: true
         });
         setIsAdmin(response.data.isAdmin);
         console.log("Admin status:", response.data.isAdmin);
