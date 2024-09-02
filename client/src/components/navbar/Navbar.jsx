@@ -31,7 +31,7 @@ const Navbar = () => {
     if (user) {
       fetchAdminStatus();
     }
-  }, [user]);
+  }, [user, apiUrl]);
 
   const handleLogout = async () => {
     try {
