@@ -6,6 +6,7 @@ import { useNavigate, Link, useParams } from 'react-router-dom';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 
 const Register = ({ socket }) => {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const { id } = useParams(); // Récupère l'ID de l'utilisateur depuis l'URL
   const navigate = useNavigate();
   const [file, setFile] = useState("");
@@ -24,7 +25,7 @@ const Register = ({ socket }) => {
     if (id) {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`/api/users/${id}`);
+          const response = await axios.get(`${apiUrl}/api/users/${id}`);
           setUserData({ ...response.data, confirmPassword: response.data.password });
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -87,11 +88,11 @@ const Register = ({ socket }) => {
     try {
       if (id) {
         // Mise à jour de l'utilisateur existant
-        await axios.put(`/api/users/${id}`, user);
+        await axios.put(`${apiUrl}/api/users/${id}`, user);
         socket?.emit("notificationUpdate", user.userName);
       } else {
         // Création d'un nouvel utilisateur
-        await axios.post('/api/auth/register', user);
+        await axios.post(`${apiUrl}/api/auth/register`, user);
         socket?.emit("notificationRegister", user.userName);
       }
       navigate('/'); // Rediriger vers la page d'accueil après l'inscription

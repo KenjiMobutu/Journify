@@ -5,6 +5,7 @@ import { AuthenticationContext } from '../../context/AuthenticationContext';
 import axios from 'axios';
 
 const Navbar = () => {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
   const { user, dispatch } = useContext(AuthenticationContext);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -20,7 +21,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchAdminStatus = async () => {
       try {
-        const response = await axios.get(`/api/users/${user._id}`);
+        const response = await axios.get(`${apiUrl}/api/users/${user._id}`);
         setIsAdmin(response.data.isAdmin);
       } catch (error) {
         console.error("Failed to fetch admin status:", error);

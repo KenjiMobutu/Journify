@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Login() {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+  console.log(apiUrl);
   const [credentials, setCredentials] = useState({ username: "", password: "" });
   const {loading, error, dispatch } = useContext(AuthenticationContext);
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ export default function Login() {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
     try {
-      const res = await axios.post("/api/auth/login", credentials);
+      const res = await axios.post(`${apiUrl}/api/auth/login`, credentials);
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
       const redirectTo = location.state?.from || '/';
       //navigate("/");
