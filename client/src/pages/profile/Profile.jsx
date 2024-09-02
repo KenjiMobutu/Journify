@@ -6,11 +6,12 @@ import { useLocation } from 'react-router-dom'
 
 
 const Profile = () => {
+  const token = localStorage.getItem('access_token');
   const location = useLocation();
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
   const path = location.pathname.split("/")[2];
-  const { data } = useFetch(`${apiUrl}/api/users/${path}`);
+  const { data } = useFetch(`${apiUrl}/api/users/${path}`,{ headers: { Authorization: `Bearer ${token}` }, withCredentials: true });
 
   const handleEdit = () => {
     navigate(`/register/${path}`);

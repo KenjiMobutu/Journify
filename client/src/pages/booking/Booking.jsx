@@ -12,6 +12,7 @@ import axios from 'axios';
 
 const Booking = ({ socket }) => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
+  const token = localStorage.getItem('access_token');
   const location = useLocation();
   const { startDate, endDate, adults, children, rooms, hotel, price, addedAttractions, attractionPrice } = location.state || {};
   const [paymentSuccess, setPaymentSuccess] = useState(false);  // État pour le succès du paiement
@@ -58,7 +59,8 @@ const Booking = ({ socket }) => {
       // Créer un Payment Intent et récupérer le client_secret
       const paymentIntentRes = await axios(`${apiUrl}/api/hotels/create-payment-intent`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        withCredentials: true,
         body: JSON.stringify({ amount: validatedAttractionPrice * 100 }) // Convertir le prix en centimes
       });
 
