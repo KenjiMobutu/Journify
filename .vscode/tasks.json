@@ -26,7 +26,7 @@
           "label": "run-react",
           "detail": "Démarre le frontend",
           "type": "shell",
-          "command": "npm run dev",
+          "command": "npm start",
           "options": {
               "cwd": "${workspaceFolder}/client"
           },
@@ -40,7 +40,7 @@
           "label": "run-express",
           "detail": "Démarre le backend",
           "type": "shell",
-          "command": "npm start",
+          "command": "npm run dev",
           "options": {
               "cwd": "${workspaceFolder}/api"
           },
