@@ -23,6 +23,7 @@ const Navbar = () => {
       try {
         const response = await axios.get(`${apiUrl}/api/users/${user._id}`);
         setIsAdmin(response.data.isAdmin);
+        console.log("Admin status:", response.data.isAdmin);
       } catch (error) {
         console.error("Failed to fetch admin status:", error);
       }
