@@ -19,17 +19,15 @@ export default function Login() {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
     try {
-      const res = await axios.post(`${apiUrl}/api/auth/login`, credentials, {
+      const res = await axios.post(`${apiUrl}/api/auth/login`, credentials,{
         withCredentials: true
       });
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
       const redirectTo = location.state?.from || '/';
-      if (window.location.pathname !== redirectTo) {
-        navigate(redirectTo);
-      }
+      //navigate("/");
+      navigate(redirectTo);
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "An unexpected error occurred";
-      dispatch({ type: "LOGIN_FAILURE", payload: errorMessage });
+      dispatch({ type: "LOGIN_FAILURE", payload: error.response.data });
     }
   };
 
