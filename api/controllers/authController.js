@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { errorResponse} from "../utils/error.js";
 
 
+
 export const register = async (req, res, next) => {
   try {
     const salt =  bcrypt.genSaltSync(10);
@@ -38,7 +39,10 @@ export const login = async (req, res, next) => {
 
     const { password, isAdmin, ...others } = user._doc;
 
-    res.cookie("access_token",token,{httpOnly: true}).status(200).json({details: {...others}, isAdmin });
+    res.cookie("access_token",token,{
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    }).status(200).json({details: {...others}, isAdmin });
   } catch (error) {
     next(error);
   }
