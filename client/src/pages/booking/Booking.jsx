@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 import { add, format } from "date-fns";
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useState } from 'react';
+import axios from 'axios';
 
 const Booking = ({ socket }) => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -55,7 +56,7 @@ const Booking = ({ socket }) => {
       setButtonDisabled(true);  // Désactiver le bouton pendant le traitement du paiement
 
       // Créer un Payment Intent et récupérer le client_secret
-      const paymentIntentRes = await fetch(`${apiUrl}/api/hotels/create-payment-intent`, {
+      const paymentIntentRes = await axios(`${apiUrl}/api/hotels/create-payment-intent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: validatedAttractionPrice * 100 }) // Convertir le prix en centimes
