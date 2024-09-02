@@ -19,7 +19,7 @@ export default function Login() {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
     try {
-      const res = await axios.post(`${apiUrl}/api/auth/login`, credentials);
+      const res = await axios.post(`${apiUrl}/api/auth/login`, credentials, {withCredentials: true});
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
       const redirectTo = location.state?.from || '/';
       //navigate("/");
