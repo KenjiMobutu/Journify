@@ -9,6 +9,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { user, dispatch } = useContext(AuthenticationContext);
   const [isAdmin, setIsAdmin] = useState(false);
+  const token = localStorage.getItem('access_token');
 
   const handleLoginClick = () => {
     navigate('/login'); // Redirige vers la route login
@@ -21,7 +22,11 @@ const Navbar = () => {
   useEffect(() => {
     const fetchAdminStatus = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/users/${user._id}`);
+        const response = await axios.get(`${apiUrl}/api/users/${user._id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         setIsAdmin(response.data.isAdmin);
         console.log("Admin status:", response.data.isAdmin);
       } catch (error) {
