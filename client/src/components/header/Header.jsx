@@ -275,7 +275,7 @@ function Header({ type }) {
   return (
     <div className="header">
       <video autoPlay muted loop className="background-video">
-        <source src="/src/assets/home_page_bg_video2.mp4" type="video/mp4" />
+        <source src="/assets/home_page_bg_video2.mp4?v=1.0" type="video/mp4" />
       </video>
       <div className={type === 'list' ? 'headerContainer listMode' : 'headerContainer'}>
         {user ? (
