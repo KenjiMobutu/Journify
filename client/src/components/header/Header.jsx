@@ -18,6 +18,7 @@ import Typography from '@mui/material/Typography';
 import parse from 'autosuggest-highlight/parse';
 import { debounce } from '@mui/material/utils';
 import { AuthenticationContext } from '../../context/AuthenticationContext.jsx';
+import videoSrc from '../../assets/home_page_bg_video2.mp4';
 
 // Clé API Google Maps
 const GOOGLE_MAPS_API_KEY = "AIzaSyCZoVUq46vX7FuZjAh2l3h2dVZVb_ZMr6w";
@@ -275,7 +276,7 @@ function Header({ type }) {
   return (
     <div className="header">
       <video autoPlay muted loop className="background-video">
-        <source src="/assets/home_page_bg_video2.mp4?v=1.0" type="video/mp4" />
+        <source src={videoSrc} type="video/mp4" />
       </video>
       <div className={type === 'list' ? 'headerContainer listMode' : 'headerContainer'}>
         {user ? (
