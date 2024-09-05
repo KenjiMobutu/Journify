@@ -1,0 +1,85 @@
+.attractionSearchList {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.attractionSearchList:hover {
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+.attractionSearchListTop {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.supplier {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.supplier img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.supplier span {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.attractionSearchListTopLeft p {
+  font-size: 1rem;
+  color: #555;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.attractionSearchListBottom {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eaeaea;
+}
+
+.category,
+.price {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.category label,
+.price label {
+  font-weight: 600;
+  color: #7a7f9a;
+}
+
+.category span,
+.price span {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.category span {
+  color: #ffba00;
+}
+
+.price span {
+  color: #ef233c;
+}

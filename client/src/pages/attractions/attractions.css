@@ -1,0 +1,112 @@
+.Attractions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f4f7fa;
+  min-height: 100vh;
+}
+
+.AttractionsContainer {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 20px;
+  gap: 20px;
+}
+
+.searchWrapperAttraction {
+  flex: 1;
+  max-width: 350px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+}
+
+.searchTitleAttraction {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+.hTitle {
+  font-family: "Permanent Marker", cursive;
+  color: #ff4d4d;
+}
+
+.searchItemAttraction {
+  margin-bottom: 15px;
+}
+
+.searchItemAttraction label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #333;
+}
+
+.searchItemAttraction input,
+.searchItemAttraction select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.citySearchButtonAttraction,
+.listSearchButtonTaxi {
+  width: 100%;
+  padding: 10px;
+  background-color: #006be4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.citySearchButtonAttraction:hover,
+.listSearchButtonTaxi:hover {
+  background-color: #005bb5;
+  transform: translateY(-2px);
+}
+
+.citySearchButtonAttraction:disabled,
+.listSearchButtonTaxi:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.listResultsflight {
+  flex: 2;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.AttractionSearchList {
+  margin-bottom: 20px;
+}
+
+.AttractionSearchList:last-child {
+  margin-bottom: 0;
+}
+
+.datePicker {
+  width: 100%;
+}

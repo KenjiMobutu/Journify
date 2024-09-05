@@ -1,0 +1,144 @@
+.flightBookingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.bookingFlightContainer {
+  background-color: #ffffff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  width: 80%;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+.detailsFlightBooking {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.flightDetails, .paymentDetails {
+  flex: 1;
+  margin: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+}
+
+.flightDetailsBookingTitle, .paymentDetailsTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+}
+
+.flightBookingItem {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.flightBookingFrom, .flightBookingTo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.flightBookingCode {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.flightBookingTime {
+  font-size: 14px;
+  color: #666;
+}
+
+.numbersTravellers, .cabinClass, .flightBookingPrice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  color: #444;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.paymentDetailsItem {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.paymentDetailsName, .paymentDetailsEmail, .paymentDetailsPrice, .paymentDetailsPay {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.paymentDetailsName label, .paymentDetailsEmail label, .paymentDetailsPrice label, .paymentDetailsPay label {
+  font-size: 14px;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.paymentDetailsPrice {
+  font-size: 16px;
+  color: #444;
+}
+
+.paymentDetailsPrice p {
+  font-size: 12px;
+  color: #888;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.bookButton {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.bookButton:hover {
+  background-color: #0056b3;
+}
+
+.paidButton {
+  background-color: green;
+}
+
+.confirmationMessage {
+  color: green;
+  font-weight: bold;
+  margin-top: 20px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .detailsFlightBooking {
+    flex-direction: column;
+  }
+
+  .flightDetails, .paymentDetails {
+    width: 100%;
+  }
+}

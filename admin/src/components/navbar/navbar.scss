@@ -1,0 +1,164 @@
+.navbar{
+  height: 50px;
+  border-bottom: 0.5px solid  #d8d5d788;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: #555050;
+
+
+  .wrapper{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 25px;
+    justify-content: space-between;
+    position: relative;
+
+    .search{
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      border: 0.5px solid #d8d5d788;
+      border-radius: 5px;
+
+      input{
+        border: none;
+        outline: none;
+        background: transparent ;
+
+        &::placeholder{
+          color: #d8d5d7;
+          font-size: 10px;
+        }
+      }
+    }
+
+    .items{
+      display: flex;
+      align-items: center;
+
+      .item{
+        display: flex;
+        align-items: center;
+        margin-right: 25px;
+
+        .icon{
+          font-size: 20px;
+          color: #848182;
+        }
+
+        .iconNotif{
+          cursor: pointer;
+        }
+
+        .counter{
+          background-color: #f70404;
+          color: white;
+          border-radius: 50%;
+          width: 15px;
+          height: 15px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 10px;
+          margin-left: -10px;
+          margin-top: -10px;
+        }
+
+        .avatar{
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          margin-left: 10px;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .notifications {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 70px;
+      right: 240px;
+      background-color: #fff;
+      color: #333;
+      padding: 15px;
+      border-radius: 8px;
+      width: 250px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease-in-out;
+      z-index: 1000;
+    }
+
+    .notification {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .notification:last-child {
+      border-bottom: none;
+    }
+
+    .notification:hover {
+      background-color: #f9f9f9;
+      cursor: pointer;
+    }
+
+    .notifications::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      border-width: 0 10px 10px 10px;
+      border-style: solid;
+      border-color: transparent transparent #fff transparent;
+      filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
+    }
+
+    .notifications.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .notifications.hide {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+    }
+
+
+    .noNotifications {
+      color: #888; // Couleur grise pour indiquer l'absence de notifications
+      font-size: 14px;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .notButton{
+      background-color: #129f25;
+      color: white;
+      width: 60%;
+      border: none;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      padding: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+      margin-left: 20%;
+    }
+
+    .notButton:hover {
+      background-color: #3b7737;
+    }
+  }
+}

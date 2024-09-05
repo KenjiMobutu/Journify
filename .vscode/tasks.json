@@ -6,16 +6,27 @@
           "detail": "Démarre le frontend et le backend",
           "group": "build",
           "dependsOn": [
-              "run-react",
-              "run-express"
+            "run-react",
+            "run-express",
           ],
           "problemMatcher": []
       },
       {
+        "label": "run-servers + admin",
+        "detail": "Démarre le frontend et le backend et l'admin",
+        "group": "build",
+        "dependsOn": [
+          "run-react",
+          "run-express",
+            "run-admin"
+        ],
+        "problemMatcher": []
+        },
+      {
           "label": "run-react",
           "detail": "Démarre le frontend",
           "type": "shell",
-          "command": "yarn dev",
+          "command": "npm start",
           "options": {
               "cwd": "${workspaceFolder}/client"
           },
@@ -29,7 +40,7 @@
           "label": "run-express",
           "detail": "Démarre le backend",
           "type": "shell",
-          "command": "yarn start",
+          "command": "npm run dev",
           "options": {
               "cwd": "${workspaceFolder}/api"
           },
@@ -38,6 +49,20 @@
               "group": "servers"
           },
           "problemMatcher": "$msCompile"
-      }
+      },
+      {
+        "label": "run-admin",
+        "detail": "Démarre Admin page",
+        "type": "shell",
+        "command": "npm start",
+        "options": {
+            "cwd": "${workspaceFolder}/admin"
+        },
+        "group": "build",
+        "presentation": {
+            "group": "servers"
+        },
+        "problemMatcher": "$msCompile"
+    }
   ]
 }

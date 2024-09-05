@@ -1,0 +1,262 @@
+.header {
+  position: relative;
+  color: white;
+  display: flex;
+  justify-content: center;
+  z-index: 2;
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 73vh !important;
+  object-fit: cover; /* S'assure que la vidéo couvre tout l'espace */
+  z-index: -1; /* Positionne la vidéo derrière le contenu */
+}
+
+.headerContainer {
+  width: 100%;
+  max-width: 1024px;
+  margin: 20px 0px 100px 0px;
+  z-index: 1; /* Assurez-vous que le contenu est au-dessus de la vidéo */
+}
+
+.headerContainer.listMode {
+  margin: 20px 0px 30px 0px;
+}
+
+.headerList {
+  display: flex;
+  gap: 20px;
+}
+
+.headerListItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.headerListItem.selected {
+  border: 1px solid whitesmoke;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.headerListItem:hover {
+  border: none;
+  border-radius: 20px;
+  background-color: #e9ebec7b;
+  padding: 10px;
+}
+
+.headerListItem {
+  background-color: transparent;
+}
+
+.headerTitle {
+  font-weight: bold;
+  font-size: 60px;
+  margin: 80px 0px 0px;
+  text-align: center;
+}
+
+.hTitle {
+  font-family: "Permanent Marker", cursive;
+}
+
+.headerDescription {
+  margin: 10px 0px;
+  font-size: 25px;
+}
+
+.headerSearch {
+  height: 50px;
+  background-color: white;
+  border: 5px solid #554b40;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px 0px;
+  border-radius: 5px;
+  position: absolute;
+  bottom: -25px;
+  width: 100%;
+  max-width: 1024px;
+  z-index: 1;
+}
+
+.headerIcon {
+  color: lightgray;
+}
+
+.headerSearchItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: black;
+}
+.css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root {
+  display: flex;
+  justify-content: center;
+  border-radius: 5px;
+  align-items: center;
+  border: none !important;
+  height: 42px;
+}
+
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+  color: black !important;
+  margin-bottom: 69px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border: none !important;
+}
+
+.MuiInputBase-input {
+  border: none !important;
+  outline: none !important;
+  padding: 0px !important;
+  margin: 0px !important;
+  height: 40px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border: none !important;
+}
+
+.headerBtn {
+  background-color: #006be4;
+  padding: 5px;
+  color: white;
+}
+
+.headerSearchText {
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+}
+
+.headerSearchInput {
+  border: none;
+  outline: none;
+}
+
+.headerSearchInput::placeholder {
+  color: black;
+}
+
+.date {
+  position: absolute;
+  top: 30px;
+  left: 300px;
+  z-index: 999;
+}
+
+.options {
+  position: absolute;
+  top: 50px;
+  background-color: white;
+  color: gray;
+  border-radius: 5px;
+  box-shadow: 0px 0px 35px -5px rgb(0, 0, 0);
+  z-index: 2;
+}
+
+.optionItem {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+}
+
+.optionCounter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: black;
+  cursor: pointer;
+}
+
+.optionCounterButton {
+  width: 30px;
+  height: 30px;
+  color: #006be4;
+  cursor: pointer;
+  border: 1px solid #006be4;
+  background-color: transparent;
+}
+
+.optionCounterButton:disabled {
+  cursor: not-allowed;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.headerListItem:focus,
+.headerListItem:focus-visible {
+  border: 1px solid whitesmoke;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.headerListItemButton {
+  background-color: transparent;
+}
+
+.background-video {
+  height: 430px;
+}
+
+.notLoggedInMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 250px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.notLoggedInMessage p {
+  font-size: 30px;
+  color: white;
+  margin-right: 20px;
+}
+
+.notLoggedInMessage .hTitle {
+  font-weight: bold;
+  color: #ff4d4d;
+}
+
+.notLoggedInMessage .headerBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.notLoggedInMessage .headerBtn:hover {
+  background-color: #ff4d4d; /* Changez la couleur selon vos besoins */
+  transform: translateY(-3px);
+  transition: background-color 0.3s ease;
+}

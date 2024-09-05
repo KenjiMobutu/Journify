@@ -1,0 +1,135 @@
+.myBookings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  background-color: #f4f7fa;
+  min-height: 100vh;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.bookings {
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 20px;
+}
+
+.bookingsTitle {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 40px;
+  color: #2b2d42;
+  text-align: center;
+  text-transform: uppercase;
+  border-bottom: 3px solid #ef233c;
+  padding-bottom: 10px;
+}
+
+.bookingsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.hotelBookings, .flightBookings, .taxiBookings {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.hotelBookings:hover, .flightBookings:hover {
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+.booking {
+  border-bottom: 1px solid #e9ecef;
+  padding: 20px 0;
+  position: relative;
+}
+
+.booking:last-child {
+  border-bottom: none;
+}
+
+.bookingTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #3a3b5a;
+}
+
+.bookingDetails {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.bookingDetail {
+  display: flex;
+  flex-direction: column;
+}
+
+.bookingDetail label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #7a7f9a;
+  font-size: 0.95rem;
+}
+
+.bookingDetail span {
+  font-size: 1.1rem;
+  color: #2b2d42;
+  font-weight: 500;
+}
+
+.homeButton {
+  display: block;
+  width: 220px;
+  padding: 12px 0;
+  background-color: #ef233c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin: 50px auto 0;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.homeButton:hover {
+  background-color: #d90429;
+  transform: translateY(-3px);
+}
+
+.homeButton:active {
+  background-color: #9b2a3d;
+}
+
+.cancelButton {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.3s ease;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.cancelButton:hover {
+  background-color: #cc0000;
+  transform: translateY(-3px);
+}
+
+.taxiBookings{
+
+}

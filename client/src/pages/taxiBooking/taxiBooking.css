@@ -1,0 +1,129 @@
+.taxiBookingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f4f4f9;
+  min-height: 100vh;
+  font-family: 'Arial', sans-serif;
+}
+
+.bookingTaxiContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.detailsTaxiBooking {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 40px;
+  gap: 20px;
+}
+
+.taxiDetails, .paymentDetailsItem {
+  flex: 1;
+  background-color: #fafafa;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.taxiDetailsBookingTitle, .paymentDetailsTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.taxiBookingItem {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+}
+
+.taxiBookingItem label {
+  font-weight: bold;
+  color: #555;
+}
+
+.taxiBookingItem div {
+  color: #333;
+}
+
+.taxiBookingPhotos img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.paymentDetailsItem {
+  background-color: #f9f9f9;
+}
+
+.paymentDetailsName, .paymentDetailsEmail, .paymentDetailsPrice, .paymentDetailsPay {
+  margin-bottom: 20px;
+}
+
+.paymentDetailsName label, .paymentDetailsEmail label, .paymentDetailsPrice label, .paymentDetailsPay label {
+  font-weight: bold;
+  color: #555;
+}
+
+.paymentDetailsName div, .paymentDetailsEmail div, .paymentDetailsPrice div, .paymentDetailsPay div {
+  color: #333;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.bookButton {
+  padding: 15px 30px;
+  background-color: #007bff;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.bookButton:hover {
+  background-color: #0056b3;
+}
+
+.paidButton {
+  background-color: green;
+}
+
+.confirmationMessage {
+  text-align: center;
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .detailsTaxiBooking {
+    flex-direction: column;
+  }
+
+  .taxiDetailsBookingTitle, .paymentDetailsTitle {
+    font-size: 20px;
+  }
+
+  .taxiBookingItem {
+    grid-template-columns: 1fr;
+  }
+}

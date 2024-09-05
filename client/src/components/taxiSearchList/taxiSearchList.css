@@ -1,0 +1,102 @@
+.taxiSearchList {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.taxiSearchList:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.taxiSearchListTop {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.taxiSearchListTop label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.supplier {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.supplier label {
+  margin-right: 10px;
+
+}
+
+.supplier img {
+  width: 90px;
+  height: 60px;
+
+  margin-right: 10px;
+
+}
+
+.supplier span {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #26262b;
+}
+
+.taxiSearchListTopLeft,
+.taxiSearchListTopRight {
+  flex: 1;
+  font-size: 1rem;
+  color: #555;
+  text-align: center;
+  font-weight: 500;
+}
+
+.taxiSearchListTopMiddle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+}
+
+.taxiSearchListTopMiddle .journeyIcon {
+  font-size: 24px;
+  color: #007bff;
+}
+
+.taxiSearchListBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.taxiSearchListBottom div {
+  text-align: center;
+}
+
+.taxiSearchListBottom label {
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 5px;
+  display: block;
+  font-size: 1.1rem;
+}
+
+.taxiSearchListBottom span {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.price span {
+  font-weight: bold;
+  color: #007bff;
+  font-size: 1.2rem;
+}

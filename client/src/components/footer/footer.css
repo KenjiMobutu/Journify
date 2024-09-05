@@ -1,0 +1,47 @@
+.footer {
+  width: 100%;
+  font-size: 12px;
+  color: black;
+  background-color: #f0efeff7;
+  
+}
+.fTitle {
+  font-size: 15px;
+  font-weight: 600;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: black;
+}
+
+.fLists {
+  width: 100%;
+  display: flex;
+  color: black;
+  justify-content: space-between;
+  margin-bottom: 50px;
+}
+
+.fList {
+  list-style: none;
+  padding: 0;
+}
+
+.fListItem {
+  margin-bottom: 10px;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-top: 10px;
+  color: #003580;
+  cursor: pointer;
+  color: black;
+}
+
+.fText {
+  font-size: 15px;
+  color: black;
+  padding-bottom: 20px;
+  margin-left: 50px;
+  margin-right: 50px;
+}

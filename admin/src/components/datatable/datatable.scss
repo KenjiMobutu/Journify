@@ -1,0 +1,139 @@
+.datatable {
+  height: 750px;
+  padding: 20px;
+  margin: 40px;
+  box-shadow: 4px 13px 19px 0px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  width: 79em;
+
+  .datagrid {
+    height: 82%;
+    width: 100%;
+  }
+
+  .datatableTitle {
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 20px;
+    color: gray;
+  }
+
+  .cellWithImg {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .cellImg {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+  }
+
+  .cellWithStatus {
+    padding: 5px;
+    border-radius: 5px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    margin-top: 5px;
+
+    &.user {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    &.pending {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    &.admin {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  }
+
+  .cellAction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    width: 160px;
+
+    .datatableEdit,
+    .datatableDelete,
+    .cellDetails {
+      margin: 0 5px;
+      padding: 2px 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .datatableEdit {
+      color: blue;
+      border: 1px solid blue;
+      width: 30px;
+      &:hover {
+        background-color: rgba(66, 62, 142, 0.411);
+      }
+    }
+
+    .datatableDelete {
+      color: red;
+      border: 1px solid red;
+      width: 50px;
+
+      &:hover {
+        background-color: rgba(212, 50, 50, 0.411);
+      }
+    }
+
+    .cellDetails {
+
+      border: 1px solid green;
+      width: 50px;
+
+      &:hover {
+        background-color: rgba(62, 142, 62, 0.411);
+        color: white;
+      }
+
+      .datatableDetails{
+        color: green;
+      }
+    }
+  }
+
+  .createUser {
+    border: none;
+    border-radius: 5px;
+    margin-top: 50px;
+    background-color: #f70476;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    text-align: center; /* Center the text and link inside the button */
+
+    .link {
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center the link content */
+      text-decoration: none;
+      color: white;
+      gap: 10px;
+    }
+
+    &:hover {
+      background-color: #9d0c4f;
+    }
+  }
+}
