@@ -7,12 +7,17 @@ import Navbar from "../../components/navbar/Navbar";
 import axios from 'axios';
 
 const MyBookings = () => {
-  const apiUrl = import.meta.env.VITE_BACKEND_URL;
-  const token = localStorage.getItem('access_token');
+  const apiUrl = import.meta.env.VITE_BACKEND_URL; //PRODUCTION
+  const token = localStorage.getItem('access_token'); //PRODUCTION
   const [bookings, setBookings] = useState([]);
   const [flights, setFlights] = useState([]);
   const [taxis, setTaxis] = useState([]);
   const { user } = useContext(AuthenticationContext);
+
+  // const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`/api/users/${user?._id}/bookings`);
+  // const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`/api/users/${user?._id}/flightBookings`);
+  // const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`/api/users/${user?._id}/taxiBookings`);
+  // //PRODUCTION
 
   const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`${apiUrl}/api/users/${user?._id}/bookings`,{
     headers: {

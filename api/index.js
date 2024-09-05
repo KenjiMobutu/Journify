@@ -28,7 +28,10 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ["https://journify-9zve.onrender.com", "http://localhost:8000"], // Assurez-vous que les origines sont correctes
+    origin: [
+      "https://journify-9zve.onrender.com",
+      "http://localhost:8000",
+    ], // Assurez-vous que les origines sont correctes
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -57,7 +60,7 @@ mongoose.connection.on("connected", () => {
 connectToMongo();
 
 // Middlewares
-// app.use(cors()); // Autorise toutes les origines
+//app.use(cors()); // Autorise toutes les origines
 
 // Ou pour une origine spécifique :
 app.use(

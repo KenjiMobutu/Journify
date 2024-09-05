@@ -1,3 +1,4 @@
+/* Styles pour la navigation */
 .navbar {
   height: 80px;
   background-color: #000000;
@@ -48,7 +49,7 @@
 .navName {
   cursor: pointer;
   position: relative;
-  margin-right: 15px; /* Espace entre le nom et l'avatar */
+  margin-right: 15px;
   display: inline-block;
 }
 
@@ -57,7 +58,7 @@
 }
 
 .navName::after {
-  content: "Click to view profile"; /* Texte de la bulle d'information */
+  content: "Click to view profile";
   position: absolute;
   top: 100%;
   left: 50%;
@@ -80,7 +81,7 @@
 }
 
 .avatar {
-  width: 40px; /* Taille de l'avatar ajustée */
+  width: 40px;
   height: 40px;
   border-radius: 50%;
   cursor: pointer;
@@ -91,11 +92,83 @@
   align-items: center;
 }
 
-.navItems .navButton {
-  margin-left: 15px;
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
 }
 
-.navContainer > div {
-  display: flex;
-  align-items: center;
+.hamburger div {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 5px 0;
+  transition: 0.4s;
+}
+
+/* Media Queries pour les écrans plus petits */
+@media (max-width: 768px) {
+  .navItems {
+    display: none; /* Masquer les éléments de navigation par défaut */
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #000;
+    border-radius: 4px;
+    padding: 10px;
+    width: 200px;
+    z-index: 2; /* S'assurer que le menu est au-dessus des autres éléments */
+  }
+
+  .navItems.active {
+    display: flex; /* Afficher le menu lorsque le hamburger est actif */
+    z-index: 999;
+  }
+
+  .navItems .navButton {
+    margin-left: 0;
+    margin-top: 10px;
+    width: 100%;
+    text-align: left;
+    z-index: 999;
+  }
+
+  .hamburger {
+    display: flex; /* Afficher le bouton hamburger */
+    margin-right: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    height: 50px;
+    padding: 0 10px;
+  }
+
+  .navTitle {
+    font-size: 24px;
+  }
+
+  .navItems.active {
+    top: 50px;
+    right: 10px;
+    width: 150px;
+  }
+
+  .hamburger div {
+    width: 20px;
+    height: 2px;
+  }
+
+  .navButton {
+    padding: 6px 10px;
+    font-size: 14px;
+    z-index: 999;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+  }
 }

@@ -271,8 +271,6 @@ function Header({ type }) {
   };
 
 
-
-
   return (
     <div className="header">
       <video autoPlay muted loop className="background-video">

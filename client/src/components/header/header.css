@@ -260,3 +260,17 @@ button {
   transform: translateY(-3px);
   transition: background-color 0.3s ease;
 }
+
+
+/* Media Queries pour les écrans plus petits */
+@media (max-width: 768px) {
+
+  .notLoggedInMessage p{
+    font-size: 16px;
+  }
+
+  .headerBtn {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}
