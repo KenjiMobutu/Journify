@@ -11,6 +11,7 @@ import Reservation from "../../components/reservation/Reservation.jsx";
 import axios from "axios";
 import formatPrice from "../../utils/utils";
 import MoreBookings from "../../components/moreBookings/MoreBookings";
+import FlightComponent from "../../components/flightComponent/FlightComponent.jsx";
 
 const Hotel = () => {
   const [extraOptions, setExtraOptions] = useState({
@@ -33,6 +34,7 @@ const Hotel = () => {
   const [hotelDesc, setHotelDesc] = useState([]);
   const [selectedAttraction, setSelectedAttraction] = useState(null);
   const [ticketCounts, setTicketCounts] = useState({});
+  const [openFlight,setOpenFlight] = useState(false);  // État pour ouvrir les vols
   console.log(ticketCounts);
   const [addedAttractions, setAddedAttractions] = useState([]); // Stocker les attractions ajoutées
   console.log("Added ATTRACTIONS", addedAttractions);
@@ -97,9 +99,11 @@ const Hotel = () => {
     const value = parseInt(e.target.value, 10);
     setTicketCounts((prevCounts) => ({
       ...prevCounts,
-      [index]: value,
+      [index]: value || 1,
     }));
   };
+
+
 
   const handleRemoveAttraction = (index) => {
     const attractionToRemove = addedAttractions.find(att => att.index === index);
@@ -251,7 +255,7 @@ const Hotel = () => {
                 </div>
 
                 <div className="moreBookingFlight">
-
+                  <FlightComponent/>
                 </div>
 
                 <div className="moreBookingTaxi">
@@ -262,34 +266,39 @@ const Hotel = () => {
                   <h2 className="hotelAttractions">Nearby Attractions</h2>
                   {attractions?.length > 0 ? (
                     <ul className="hotelAttractionsList">
-                      {attractions.map((attraction, index) => (
-                        <li
-                          key={index}
-                          className={`hotelAttractionsListItem ${selectedAttraction === index ? 'selectedAttraction' : ''}`}
-                          onClick={() => handleAttractionSelect(index)}
-                        >
-                          <img src={attraction.primaryPhoto.small} alt="attraction" className="attractionImage" />
-                          <div className="attractionDetails">
-                            <div className="attractionName">{attraction.name}</div>
-                            <div className="attractionDescription">{attraction.shortDescription}</div>
-                            <div className="attractionPrice">{attraction.representativePrice.publicAmount}€</div>
+                      {attractions.map((attraction, index) => {
+                        const ticketCount = ticketCounts[index] || 1;  // Nombre de tickets sélectionnés ou 1 par défaut
+                        const totalPrice = attraction.representativePrice.publicAmount * ticketCount;
 
-                            {selectedAttraction === index && (
-                              <div className="ticketSelection">
-                                <label htmlFor={`ticketCount-${index}`}>Number of Tickets:</label>
-                                <input
-                                  type="number"
-                                  id={`ticketCount-${index}`}
-                                  value={ticketCounts[index] || 1}
-                                  min="1"
-                                  onChange={(e) => handleTicketCountChange(e, index)}
-                                />
-                                <button onClick={handleAddAttraction}>Add to Booking</button>
-                              </div>
-                            )}
-                          </div>
-                        </li>
-                      ))}
+                        return (
+                          <li
+                            key={index}
+                            className={`hotelAttractionsListItem ${selectedAttraction === index ? 'selectedAttraction' : ''}`}
+                            onClick={() => handleAttractionSelect(index)}
+                          >
+                            <img src={attraction.primaryPhoto.small} alt="attraction" className="attractionImage" />
+                            <div className="attractionDetails">
+                              <div className="attractionName">{attraction.name}</div>
+                              <div className="attractionDescription">{attraction.shortDescription}</div>
+                              <div className="attractionPrice">{totalPrice}€</div> {/* Prix total */}
+
+                              {selectedAttraction === index && (
+                                <div className="ticketSelection">
+                                  <label htmlFor={`ticketCount-${index}`}>Number of Tickets:</label>
+                                  <input
+                                    type="number"
+                                    id={`ticketCount-${index}`}
+                                    value={ticketCount}
+                                    min="1"
+                                    onChange={(e) => handleTicketCountChange(e, index)}
+                                  />
+                                  <button onClick={handleAddAttraction}>Add to Booking</button>
+                                </div>
+                              )}
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ul>
                   ) : (
                     <p className="noAttractionsMessage">Sorry, No nearby attractions found.</p>
@@ -324,21 +333,19 @@ const Hotel = () => {
                   </span>
                   <button onClick={handleClick} className="hotelDescPriceBook">Book now</button>
                 </div>
-
-
               </div>
             </div>
           </div>
         </div>
       )}
       {openPayment && <Reservation
-                        setOpen={setOpenPayment}
-                        hotelId={hotelId}
-                        hotel={hotel}
-                        nbRooms={options.room}
-                        extraOptions={extraOptions}
-                        addedAttractions={addedAttractions}
-                        attractionPrice={totalPrice}
+        setOpen={setOpenPayment}
+        hotelId={hotelId}
+        hotel={hotel}
+        nbRooms={options.room}
+        extraOptions={extraOptions}
+        addedAttractions={addedAttractions}
+        attractionPrice={totalPrice}
       />}
       {openMoreBooking && <MoreBookings setOpen={setOpenMoreBooking} setOpenPayment={setOpenPayment} onConfirm={handleMoreBookingsConfirm} />}
     </div>

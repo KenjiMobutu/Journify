@@ -19,19 +19,26 @@ const AttractionSchema = new Schema({
   },
   startDate: {
     type: Date,
-    required: true
   },
   endDate: {
     type: Date,
   },
   city: {
     type: String,
-    required: true
   },
   price: {
     type: Number,
     required: true
-  }
+  },
+  ticketCount: {
+    type: Number,
+    required: true
+  },
+  paid: {
+    type: Boolean,
+    default: false
+  },
+
 });
 
 export default mongoose.model('Attraction', AttractionSchema);

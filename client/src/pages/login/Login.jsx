@@ -9,7 +9,7 @@ export default function Login() {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   console.log(apiUrl);
   const [credentials, setCredentials] = useState({ password: "" });
-  const {loading, error, dispatch } = useContext(AuthenticationContext);
+  const { loading, error, dispatch } = useContext(AuthenticationContext);
   const navigate = useNavigate();
   const handleChange = (e) => {
     setCredentials(previous => ({ ...previous, [e.target.id]: e.target.value }));
@@ -19,7 +19,8 @@ export default function Login() {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
     try {
-      const res = await axios.post(`${apiUrl}/api/auth/login`, credentials, {withCredentials: true});
+      //const res = await axios.post(`${apiUrl}/api/auth/login`, credentials, {withCredentials: true}); //Production
+      const res = await axios.post(`/api/auth/login`, credentials, { withCredentials: true });
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
       const redirectTo = location.state?.from || '/';
       //navigate("/");
@@ -33,7 +34,7 @@ export default function Login() {
     <div className="login">
       <div className='loginContainer'>
         <input type="text" placeholder="username" id='userName' onChange={handleChange} className='loginInput' />
-        <input type="password" placeholder="password" id='password' onChange={handleChange} className='loginInput'/>
+        <input type="password" placeholder="password" id='password' onChange={handleChange} className='loginInput' />
         <button onClick={handleClick} disabled={loading} className='loginButton'>Login</button>
         {error && <span> {error.message} </span>}
       </div>

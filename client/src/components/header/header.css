@@ -244,6 +244,11 @@ button {
   color: #ff4d4d;
 }
 
+.hTitleHeader {
+  font-family: "Permanent Marker", cursive;
+  color: white;
+}
+
 .notLoggedInMessage .headerBtn {
   padding: 10px 20px;
   font-size: 16px;

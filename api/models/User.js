@@ -37,6 +37,10 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Taxi'
   }],
+  attractions: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Attraction'
+  }],
 
 }, { timestamps: true }
 );

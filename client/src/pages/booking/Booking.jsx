@@ -15,6 +15,7 @@ const Booking = ({ socket }) => {
   const location = useLocation();
   const { startDate, endDate, adults, children, rooms, hotel, price, addedAttractions, attractionPrice } = location.state || {};
   const [paymentSuccess, setPaymentSuccess] = useState(false);  // État pour le succès du paiement
+  const [paymentIntentId, setPaymentIntentId] = useState('');  // État pour l'ID du paiement
   const [showConfirmation, setShowConfirmation] = useState(false);  // État pour afficher la confirmation
   const [buttonDisabled, setButtonDisabled] = useState(false);  // État pour désactiver le bouton
   const [buttonText, setButtonText] = useState('Payer');  // Texte du bouton
@@ -26,7 +27,8 @@ const Booking = ({ socket }) => {
   const validatedAttractionPrice = Number(attractionPrice) || 0; // Assure que attractionPrice est un nombre, sinon 0
   console.log("validatedATTPrice", validatedAttractionPrice);
 
-  const totalCost = validatedPrice + validatedAttractionPrice;
+  const attractionCost = validatedAttractionPrice - validatedPrice;
+  console.log("attractionCost", attractionCost);
 
   // Format dates to dd/MM/yyyy
   const formattedStartDate = format(startDate, "dd/MM/yyyy");
@@ -56,7 +58,7 @@ const Booking = ({ socket }) => {
       setButtonDisabled(true);  // Désactiver le bouton pendant le traitement du paiement
 
       // Créer un Payment Intent et récupérer le client_secret
-      const paymentIntentRes = await fetch(`${apiUrl}/api/hotels/create-payment-intent`, {
+      const paymentIntentRes = await fetch(`/api/hotels/create-payment-intent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         credentials: 'include',
@@ -88,10 +90,13 @@ const Booking = ({ socket }) => {
         console.error('Payment error:', error);
         setButtonDisabled(false);  // Réactiver le bouton en cas d'erreur
         return; // Arrêtez l'exécution si une erreur de paiement se produit
+      } else {
+        // Paiement réussi, mettre à jour l'ID du PaymentIntent
+        setPaymentIntentId(paymentIntent.id);
       }
 
       // Enregistrez la réservation après la réussite du paiement
-      const response = await fetch(`${apiUrl}/api/hotels/${hotel.hotel_id}/bookings`, {
+      const response = await fetch(`/api/hotels/${hotel.hotel_id}/bookings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -124,6 +129,42 @@ const Booking = ({ socket }) => {
       }
 
       await response.json();
+
+      // Paiement pour les attractions
+      if (addedAttractions.length > 0) {
+        try {
+          for (const attraction of addedAttractions) {
+            const attractionResponse = await fetch(`/api/payment/attraction`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              credentials: 'include',
+              body: JSON.stringify({
+                paymentIntentId: paymentIntent.id, // Utilisation correcte de l'ID après sa définition
+                _id: user._id,
+                userName: user.userName,
+                userEmail: user.email,
+                name: attraction.name,
+                description: attraction.description,
+                startDate: attraction.startDate,
+                endDate: attraction.endDate,
+                city: attraction.city,
+                price: attraction.price,
+                ticketCount: attraction.ticketCount,
+              }),
+            });
+            await attractionResponse.json();
+            if (!attractionResponse.ok) {
+              throw new Error('Payment failed for attraction');
+            }
+          }
+
+        } catch (error) {
+          console.error('Error during attraction payment process:', error);
+        }
+      }
 
       // Gestion du succès du paiement
       setPaymentSuccess(true);  // Marquer le paiement comme réussi

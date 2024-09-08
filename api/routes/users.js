@@ -7,6 +7,8 @@ import { createUser,
           getUserBookings,
           getUserFlightBookings,
           getUserTaxiBookings,
+          getUserAttractions,
+          deleteBooking
         } from '../controllers/userController.js';
 import { verifyAdmin, verifyToken, verifyUser } from '../utils/verifyToken.js';
 
@@ -57,5 +59,9 @@ router.get('/', verifyAdmin, getAllUsers);
 router.get('/:id/bookings', verifyUser, getUserBookings);
 router.get('/:id/flightBookings', verifyUser, getUserFlightBookings);
 router.get('/:id/taxiBookings', verifyUser, getUserTaxiBookings);
+router.get('/:id/attractionBookings', verifyUser, getUserAttractions);
+
+//DELETE A BOOKING
+router.delete("/:userId/bookings/:id", verifyUser, deleteBooking);
 
 export default router;

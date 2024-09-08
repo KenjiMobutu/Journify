@@ -12,26 +12,32 @@ const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [flights, setFlights] = useState([]);
   const [taxis, setTaxis] = useState([]);
+  const [attractions, setAttractions] = useState([]);
   const { user } = useContext(AuthenticationContext);
 
-  const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`${apiUrl}/api/users/${user?._id}/bookings`,{
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
-    withCredentials: true,
-  });
-  const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`${apiUrl}/api/users/${user?._id}/flightBookings`,{
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
-    withCredentials: true,
-  });
-  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`${apiUrl}/api/users/${user?._id}/taxiBookings`,{
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
-    withCredentials: true,
-  });
+  // const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`${apiUrl}/api/users/${user?._id}/bookings`,{
+  //   headers: {
+  //     Authorization: `Bearer ${token}`
+  //   },
+  //   withCredentials: true,
+  // });
+  // const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`${apiUrl}/api/users/${user?._id}/flightBookings`,{
+  //   headers: {
+  //     Authorization: `Bearer ${token}`
+  //   },
+  //   withCredentials: true,
+  // });
+  // const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`${apiUrl}/api/users/${user?._id}/taxiBookings`,{
+  //   headers: {
+  //     Authorization: `Bearer ${token}`
+  //   },
+  //   withCredentials: true,
+  // });
+
+  const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`/api/users/${user?._id}/bookings`);
+  const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`/api/users/${user?._id}/flightBookings`);
+  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`/api/users/${user?._id}/taxiBookings`);
+  const { data: attractionData, loading: attractionLoading, error: attractionError } = useFetch(`/api/users/${user?._id}/attractionBookings`);
 
   useEffect(() => {
     if (hotelData) {
@@ -43,14 +49,18 @@ const MyBookings = () => {
     if (taxiData) {
       setTaxis(taxiData);
     }
-  }, [hotelData, flightData, taxiData]);
+    if (attractionData) {
+      setAttractions(attractionData);
+    }
+  }, [hotelData, flightData, taxiData, attractionData]);
+
+  console.log("ATTRACTIONS:", attractionData);
   console.log("TAXI:", taxis);
+
   const handleCancel = async (id, type) => {
-    // Logique pour annuler la réservation, en fonction du type (hotel ou flight)
     try {
-      await axios.delete(`/api/${type === 'hotel' ? 'bookings' : 'flightBookings'}/${id}`);
+      await axios.delete(`/api/users/${user._id}/bookings/${id}`);
       setBookings((prev) => prev.filter((booking) => booking._id !== id));
-      setFlights((prev) => prev.filter((flight) => flight._id !== id));
     } catch (error) {
       console.error('Error cancelling the booking:', error);
     }
@@ -65,10 +75,11 @@ const MyBookings = () => {
     return differenceInDays >= 3;
   };
 
-  if (hotelLoading || flightLoading || taxiLoading) return <div>Loading your bookings...</div>;
+  if (hotelLoading || flightLoading || taxiLoading || attractionLoading) return <div>Loading your bookings...</div>;
   if (hotelError) return <div>Error loading hotel bookings: {hotelError.message}</div>;
   if (flightError) return <div>Error loading flight bookings: {flightError.message}</div>;
   if (taxiError) return <div>Error loading taxi bookings: {taxiError.message}</div>;
+  if (attractionError) return <div>Error loading attraction bookings: {attractionError.message}</div>;
 
   return (
     <>
@@ -77,7 +88,7 @@ const MyBookings = () => {
         <div className="bookings">
           <div className="bookingsTitle">My Bookings</div>
           <div className="bookingsContainer">
-            {bookings.length === 0 && flights.length === 0 ? (
+            {bookings.length === 0 && flights.length === 0 && attractions.length == 0 && taxis.length == 0 ? (
               <div>You have no bookings yet.</div>
             ) : (
               <>
@@ -213,6 +224,48 @@ const MyBookings = () => {
                               onClick={() => handleCancel(taxi._id, 'taxi')}
                             >
                               Cancel Ride
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* ATTRACTION BOOKINGS */}
+                {attractions.length > 0 && (
+                  <div className="attractionBookings">
+                    <h2>Attraction Bookings</h2>
+                    {attractions.map((attraction, index) => (
+                      <div className="booking" key={index}>
+                        <div className="bookingTitle">{attraction.name}</div>
+                        <div className="bookingDetails">
+                          {/* <div className="bookingDetail">
+                            <label>Location</label>
+                            <span>{attraction.city}</span>
+                          </div>
+                          <div className="bookingDetail">
+                            <label>Start Date</label>
+                            <span>{new Date(attraction.startDate).toLocaleDateString()}</span>
+                          </div>
+                          <div className="bookingDetail">
+                            <label>End Date</label>
+                            <span>{new Date(attraction.endDate).toLocaleDateString()}</span>
+                          </div> */}
+                          <div className="bookingDetail">
+                            <label>Price</label>
+                            <span>{attraction.price} €</span>
+                          </div>
+                          <div className="bookingDetail">
+                            <label>Ticket(s)</label>
+                            <span>{attraction.ticketCount}</span>
+                          </div>
+                          {isCancelable(attraction.startDate) && (
+                            <button
+                              className="cancelButton"
+                              onClick={() => handleCancel(attraction._id, 'attraction')}
+                            >
+                              Cancel Booking
                             </button>
                           )}
                         </div>

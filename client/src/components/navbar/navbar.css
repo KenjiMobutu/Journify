@@ -46,33 +46,14 @@
 }
 
 .navName {
-  cursor: pointer;
+
   position: relative;
   margin-right: 15px; /* Espace entre le nom et l'avatar */
   display: inline-block;
 }
 
-.navName:hover {
-  color: #2a88fc;
-}
 
-.navName::after {
-  content: "Click to view profile"; /* Texte de la bulle d'information */
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 4px;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
-  font-size: 12px;
-  z-index: 1;
-}
+
 
 .navName:hover::after {
   opacity: 1;
@@ -98,4 +79,15 @@
 .navContainer > div {
   display: flex;
   align-items: center;
+}
+
+.shoppingCart {
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.bookingTickets{
+  font-size: 26px !important;
+  margin-right: 10px;
+  color: rgb(135, 135, 135);
 }

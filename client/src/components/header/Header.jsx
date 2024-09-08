@@ -307,7 +307,7 @@ function Header({ type }) {
             {type !== 'list' && (
               <>
                 <h1 className="headerTitle">
-                  <span className="hTitle">JOURNIFY YOUR LIFE</span>
+                  <span className="hTitleHeader">JOURNIFY YOUR LIFE</span>
                 </h1>
                 <div className="headerSearch">
                   <div className="headerSearchItem">
