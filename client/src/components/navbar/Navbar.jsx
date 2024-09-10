@@ -19,10 +19,15 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import AirplaneTicketOutlinedIcon from '@mui/icons-material/AirplaneTicketOutlined';
+import { useSelector } from 'react-redux';
+import { usePersistor } from '../../context/PersistorContext.jsx';
+import { logout } from '../../redux/authRedux.js';
+
 
 const Navbar = () => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
+  const persistor = usePersistor();
   const { user, dispatch } = useContext(AuthenticationContext);
   const [isAdmin, setIsAdmin] = useState(false);
   const token = localStorage.getItem('access_token');
@@ -64,6 +69,8 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
+      dispatch(logout()); // Réinitialiser l'état d'authentification
+      await persistor.purge(); // Supprimer les données de l'utilisateur du stockage local
       localStorage.removeItem('token');
       dispatch({ type: 'LOGOUT' });
       navigate('/');
@@ -79,6 +86,8 @@ const Navbar = () => {
   const handleProfile = () => {
     navigate(`/profile/${user._id}`);
   }
+  const quantity = useSelector((state) => state.cart.quantity);
+  console.log(quantity);
 
   return (
     <div className="navbar">
@@ -152,13 +161,13 @@ const Navbar = () => {
                   <Avatar /> Profile
                 </MenuItem>
                 <MenuItem onClick={handleBookings}>
-                  <AirplaneTicketOutlinedIcon className="bookingTickets"/> My bookings
+                  <AirplaneTicketOutlinedIcon className="bookingTickets" /> My bookings
                 </MenuItem>
                 <Divider />
 
                 {isAdmin && (
                   <MenuItem onClick={() => navigate('/admin')} >
-                    <Settings className="bookingTickets"/>
+                    <Settings className="bookingTickets" />
                     Admin
                   </MenuItem>
                 )}
@@ -172,7 +181,7 @@ const Navbar = () => {
             </React.Fragment>
 
             <Link to="/cart" >
-              <Badge badgeContent={4} color="primary">
+              <Badge badgeContent={quantity} color="primary">
                 <ShoppingCartOutlinedIcon className="shoppingCart" style={{ fontSize: 32 }} />
               </Badge>
             </Link>

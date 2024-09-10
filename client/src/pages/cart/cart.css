@@ -1,0 +1,199 @@
+.cartContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+}
+
+.cartTitle h1 {
+  font-size: 2.5rem;
+  font-weight: lighter;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.cartTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cartTopButton {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #007bff;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 2px;
+  border: 1px solid #007bff;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.cartTopButton:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.cartTopTexts p {
+  margin: 0;
+  font-size: 1rem;
+  color: #555;
+  font-weight: bold;
+}
+
+.cartBottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.cartLeft{
+  flex: 2;
+}
+.cartRight {
+  flex: 1;
+}
+
+.cartProducts {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cartProduct {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start; /* Change from space-between to flex-start */
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cartProductImage {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.hotelPhoto {
+  width: 15rem;
+  height: 15rem;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.cartProductDetails {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 20px;
+  align-items: center;
+  width: 100%;
+}
+
+.cartProductInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align details to the left */
+  gap: 10px; /* Add space between the details */
+}
+
+.cartDelete {
+  display: flex;
+  align-items: center;
+  color: #ff0000;
+  cursor: pointer;
+  font-size: 1.5rem;/* Add some space from the previous details */
+}
+
+.cartDelete button {
+  background: none;
+  border: none;
+  color: #ff0000;
+  cursor: pointer;
+  font-size: 1.5rem;
+  padding: 0;
+  transition: color 0.3s;
+}
+.cartTrash{
+  font-size: 2rem !important;
+  padding: 0;
+  transition: color 0.3s;
+}
+.cartDelete button:hover {
+  color: #cc0000;
+}
+
+.cartProductName, .cartProductId, .cartProductColor, .cartProductSize {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.cartProductName b, .cartProductId b, .cartProductColor b, .cartProductSize b {
+  color: #000;
+}
+
+.cartRight {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid black;
+  height: 30em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  top: 50px;
+
+}
+
+.cartInfoText {
+  font-size: 1.5rem;
+  font-weight: lighter;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.cartInfoPrice {
+  font-size: 1rem;
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.cartInfoPrice span {
+  color: #555;
+}
+
+.cartInfoButton {
+  display: flex;
+  justify-content: center;
+}
+
+.cartInfoButton button {
+  background-color: #000000;
+  color: white;
+  font-size: 1.2rem;
+  margin-top: 7.5rem;
+  font-weight: bold;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cartInfoButton button:hover {
+  background-color: #218838;
+}

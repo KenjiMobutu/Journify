@@ -12,7 +12,8 @@ import axios from "axios";
 import formatPrice from "../../utils/utils";
 import MoreBookings from "../../components/moreBookings/MoreBookings";
 import FlightComponent from "../../components/flightComponent/FlightComponent.jsx";
-
+import { addProduct } from "../../redux/cartRedux.js";
+import { useDispatch } from "react-redux";
 const Hotel = () => {
   const [extraOptions, setExtraOptions] = useState({
     flight: false,
@@ -34,7 +35,7 @@ const Hotel = () => {
   const [hotelDesc, setHotelDesc] = useState([]);
   const [selectedAttraction, setSelectedAttraction] = useState(null);
   const [ticketCounts, setTicketCounts] = useState({});
-  const [openFlight,setOpenFlight] = useState(false);  // État pour ouvrir les vols
+  const [openFlight, setOpenFlight] = useState(false);  // État pour ouvrir les vols
   console.log(ticketCounts);
   const [addedAttractions, setAddedAttractions] = useState([]); // Stocker les attractions ajoutées
   console.log("Added ATTRACTIONS", addedAttractions);
@@ -120,6 +121,24 @@ const Hotel = () => {
     } else {
       navigate("/login", { state: { from: location.pathname } });
     }
+  };
+
+  const dispatch = useDispatch();
+
+  const handleCart = () => {
+    if (!hotel || !totalPrice) {
+      console.error("Missing information in cart");
+      return;
+    }
+
+    dispatch(addProduct({
+      product: data.data,
+      attractions: addedAttractions || [],
+      flights: extraOptions.flight || [] ,
+      taxis: extraOptions.taxi || [],
+      price: totalPrice
+    }));
+
   };
 
   useEffect(() => {
@@ -255,7 +274,7 @@ const Hotel = () => {
                 </div>
 
                 <div className="moreBookingFlight">
-                  <FlightComponent/>
+                  <FlightComponent />
                 </div>
 
                 <div className="moreBookingTaxi">
@@ -332,6 +351,7 @@ const Hotel = () => {
                     {totalPrice ? `${Math.floor(totalPrice)}€ (${days} Nights)` : "Price not available"}
                   </span>
                   <button onClick={handleClick} className="hotelDescPriceBook">Book now</button>
+                  <button onClick={handleCart} className="hotelDescPriceBook">Add to cart</button>
                 </div>
               </div>
             </div>

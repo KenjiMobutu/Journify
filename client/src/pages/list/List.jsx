@@ -13,7 +13,7 @@ const List = () => {
   const research = useLocation();
   const navigate = useNavigate();
   const { dispatch } = useContext(SearchContext);
-
+  const [loading, setLoading] = useState(false);
   const [destination, setDestination] = useState(research.state.destination);
   const [dates, setDates] = useState(research.state.dates);
   const [openDate, setOpenDate] = useState(false);
@@ -24,14 +24,19 @@ const List = () => {
   const [attractions, setAttractions] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
 
-  const { loading, data } = useFetch(`/api/hotels?city=${destination}&min=${min || 0}&max=${max || 999}`);
+  //const { loading, data } = useFetch(`/api/hotels?city=${destination}&min=${min || 0}&max=${max || 999}`);
 
   useEffect(() => {
-    if (!selectedCity) {
-      findCity();
-    } else {
-      findAttractions();
-    }
+    const fetchCityAndAttractions = async () => {
+      if (!selectedCity) {
+        await findCity(); // Attendre que la ville soit trouvée
+      }
+      if (selectedCity) {
+        findAttractions(); // Une fois selectedCity mis à jour, trouver les attractions
+      }
+    };
+
+    fetchCityAndAttractions();
   }, [selectedCity]);
 
   const findCity = async () => {
