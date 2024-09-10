@@ -23,6 +23,7 @@
     "@reduxjs/toolkit": "^2.2.7",
     "@stripe/react-stripe-js": "^2.8.0",
     "@stripe/stripe-js": "^4.3.0",
+    "@toolpad/core": "^0.5.2",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.7.3",
     "date-fns": "^3.6.0",

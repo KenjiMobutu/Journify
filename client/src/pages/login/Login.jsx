@@ -7,6 +7,8 @@ import axios from 'axios';
 import { loginStart, loginSuccess, loginFailure } from '../../redux/authRedux.js';
 import { useDispatch } from "react-redux";
 import { setupStore } from '../../redux/store';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+
 
 export default function Login() {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -45,14 +47,37 @@ export default function Login() {
 
   return (
     <div className="login">
-      <div className='loginContainer'>
-        <input type="text" placeholder="username" id='userName' value={credentials.userName}
-          onChange={(e) => setCredentials({ ...credentials, userName: e.target.value })} className='loginInput' />
-
-        <input type="password" placeholder="password" id='password' value={credentials.password}
-          onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} className='loginInput' />
-        <button onClick={handleClick} disabled={loading} className='loginButton'>Login</button>
-        {error && <span> {error.message} </span>}
+      <div className="loginContainer">
+        <div className="loginTop">
+          <AccountCircle className="loginIcon" />
+          <h1 className="loginTitle">SIGN IN</h1>
+          <p className="loginSubTitle">Welcome user, please sign in to continue</p>
+        </div>
+        <form className="loginForm" onSubmit={handleClick}>
+          <input
+            type="text"
+            placeholder="Username"
+            id="userName"
+            value={credentials.userName}
+            onChange={(e) => setCredentials({ ...credentials, userName: e.target.value })}
+            className="loginInput"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            id="password"
+            value={credentials.password}
+            onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+            className="loginInput"
+          />
+          <button type="submit" disabled={loading} className="loginButton">
+            Login
+          </button>
+          {error && <span className="loginError">{error.message}</span>}
+        </form>
+        <button onClick={() => navigate('/register')} disabled={loading} className="loginRegisterButton">
+          Register
+        </button>
       </div>
     </div>
   );
