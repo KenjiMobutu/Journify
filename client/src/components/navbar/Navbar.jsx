@@ -22,6 +22,7 @@ import AirplaneTicketOutlinedIcon from '@mui/icons-material/AirplaneTicketOutlin
 import { useSelector } from 'react-redux';
 import { usePersistor } from '../../context/PersistorContext.jsx';
 import { logout } from '../../redux/authRedux.js';
+import Cookies from 'js-cookie';
 
 
 const Navbar = () => {
@@ -70,7 +71,11 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       dispatch(logout()); // Réinitialiser l'état d'authentification
+      Cookies.remove('access_token', { path: 'http://localhost:5000/' });
       await persistor.purge(); // Supprimer les données de l'utilisateur du stockage local
+      // Supprimer l'access token des cookies
+
+      document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       localStorage.removeItem('token');
       dispatch({ type: 'LOGOUT' });
       navigate('/');

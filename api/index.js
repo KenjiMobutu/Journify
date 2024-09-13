@@ -8,6 +8,7 @@ import hotelsRouter from "./routes/hotels.js";
 import roomsRouter from "./routes/rooms.js";
 import destinationsRouter from "./routes/destinations.js";
 import paymentRouter from "./routes/payment.js";
+import chatRouter from "./routes/chat.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { createServer } from "http";
@@ -87,6 +88,7 @@ app.use("/api/hotels", hotelsRouter);
 app.use("/api/rooms", roomsRouter);
 app.use("/api/destinations", destinationsRouter);
 app.use("/api/payment", paymentRouter);
+app.use("/api/chat", chatRouter);
 
 app.use((error, req, res, next) => {
   const errorStatus = error.status || 500;

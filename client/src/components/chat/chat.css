@@ -1,0 +1,179 @@
+.chatAi {
+  position: fixed;
+  bottom: 16rem; /* Distance du bas de la page */
+  right: 5em; /* Distance du côté droit de la page */
+  background-color: #2c2937; /* Fond légèrement transparent */
+  padding: 10px;
+  border-radius: 10px;
+  z-index: 1000; /* Assurez-vous que le chat est au-dessus des autres éléments */
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  color: white;
+  font-size: 1em;
+  gap: 10px;
+}
+
+.chatPageAi {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.wrapperAI {
+  width: 100%;
+  max-width: 800px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.chatContainerAI {
+  flex-grow: 1;
+  display: flex;
+  max-height: 300px; /* Définissez une hauteur maximale pour le conteneur de chat */
+  overflow-y: auto; /* Permet le défilement lorsque le contenu dépasse la hauteur maximale */
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #3e3b4d;
+}
+
+.chatContainer {
+  padding: 20px;
+  overflow-y: auto; /* Pour permettre le défilement des messages */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.chatBox {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Messages alignés à gauche (bot) */
+.chatLeft {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.chatLeft .chatMessage {
+  background-color: #e9e9eb;
+  border-radius: 10px;
+  padding: 10px 15px;
+  max-width: 70%;
+  color: #333;
+  font-size: 0.95em;
+  line-height: 1.4;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Messages alignés à droite (utilisateur) */
+.chatRight {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.chatRight .chatMessage {
+  background-color: #007bff;
+  border-radius: 10px;
+  padding: 10px 15px;
+  max-width: 70%;
+  color: white;
+  font-size: 0.95em;
+  line-height: 1.4;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Texte du message */
+.chatText {
+  margin: 0;
+  word-wrap: break-word;
+  font-size: 0.8rem; /* Taille de police ajustée pour une meilleure lisibilité */
+  line-height: 1.6; /* Hauteur de ligne augmentée pour aérer le texte */
+  padding: 5px 10px; /* Espacement interne pour donner de l'air autour du texte */
+  color: inherit; /* Hérite de la couleur du conteneur (utile si la couleur du message diffère selon l'expéditeur) */
+  text-align: left; /* Aligne le texte à gauche (modifiable selon les préférences) */
+  font-family: "Lato", sans-serif;
+}
+
+/* Ajout d'une petite "flèche" sur les bulles de message */
+.chatLeft .chatMessage::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #e9e9eb;
+}
+
+.chatRight .chatMessage::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  right: -10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid #007bff;
+}
+
+.formContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #2c2937;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+.inputWithButton {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.inputField {
+  width: 100%;
+  padding: 10px;
+  padding-right: 40px; /* Espace pour le bouton */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #4d3b3b;
+  color: white;
+  border: none;
+  outline: none;
+}
+
+.sendBtn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.sendIcon {
+  width: 25px;
+  height: 25px;
+  color: #605e68 !important;
+}

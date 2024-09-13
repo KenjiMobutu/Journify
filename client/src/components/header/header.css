@@ -265,3 +265,35 @@ button {
   transform: translateY(-3px);
   transition: background-color 0.3s ease;
 }
+
+/* Styles pour la position du chat */
+.chat {
+  position: absolute; /* Fixe le chat à une position spécifique sur la page */
+  bottom: -20rem; /* Distance du bas de la page */
+  right: 20px; /* Distance du côté droit de la page */
+  background-color: #2c2937; /* Fond légèrement transparent */
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Ombre pour donner du relief */
+  z-index: 1000; /* Assurez-vous que le chat est au-dessus des autres éléments */
+  font-size: 0.6em;
+  gap: 10px;
+  display: flex;
+  color: white;
+}
+
+.chat span {
+  font-size: 1.2em;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.chatBot {
+  height: 30px;
+  width: 30px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+

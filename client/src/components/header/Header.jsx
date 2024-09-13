@@ -19,6 +19,9 @@ import parse from 'autosuggest-highlight/parse';
 import { debounce } from '@mui/material/utils';
 import { AuthenticationContext } from '../../context/AuthenticationContext.jsx';
 import videoSrc from '../../assets/home_page_bg_video2.mp4';
+import chatBot from '../../assets/bot.png';
+import human1 from '../../assets/human.jpg';
+import { TypeAnimation } from 'react-type-animation';
 
 // Clé API Google Maps
 const GOOGLE_MAPS_API_KEY = "AIzaSyCZoVUq46vX7FuZjAh2l3h2dVZVb_ZMr6w";
@@ -95,7 +98,7 @@ function GoogleMaps({ setDestination }) {  // Ajout de setDestination comme prop
     return () => {
       active = false;
     };
-  }, [value, inputValue, fetch]);
+  }, [value, inputValue, fetch, autocompleteService]);
 
   return (
     <Autocomplete
@@ -162,6 +165,7 @@ function GoogleMaps({ setDestination }) {  // Ajout de setDestination comme prop
 
 // Fonction Header, en utilisant GoogleMaps
 function Header({ type }) {
+  const [typingStatus, setTypingStatus] = useState("human1");
   const [openDate, setOpenDate] = useState(false);
   const [destination, setDestination] = useState(""); // Utiliser setDestination pour mettre à jour
   console.log("Destination", destination);
@@ -269,7 +273,6 @@ function Header({ type }) {
   const handleTaxi = () => {
     navigate('/taxi');
   };
-
 
 
 
@@ -393,6 +396,8 @@ function Header({ type }) {
                     </button>
                   </div>
                 </div>
+
+
               </>
             )}
           </>
@@ -403,6 +408,26 @@ function Header({ type }) {
             <button className="headerBtn" onClick={() => navigate('/login')}>
               Log In
             </button>
+            <div className="chat">
+                  <img src={typingStatus === "human1" ? human1 : chatBot} alt="chatBot" className='chatBot' />
+                  <TypeAnimation
+                    sequence={[
+                      // Same substring at the start will only be typed out once, initially
+                      'USER: I need sun, wich destination you suggest me?',
+                      1500, () => { setTypingStatus("bot") },
+                      'BOT: The Canary Islands, Spain – Sunny all year round with stunning beaches.',
+                      1500, () => { setTypingStatus("human1") },
+                      'USER: I need a flight to Miami on budget from Brussels',
+                      1500, () => { setTypingStatus("bot") },
+                      'BOT:  Some of the cheapest flights involve layovers in cities like London or Lisbon',
+                      1500, () => { setTypingStatus("human1") },
+                    ]}
+                    wrapper="span"
+                    speed={50}
+                    repeat={Infinity}
+                    omitDeletionAnimation={true}
+                  />
+                </div>
           </div>
         )}
       </div>

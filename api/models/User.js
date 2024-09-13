@@ -1,48 +1,63 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const UserSchema = new Schema({
-  userName: {
-    type: String,
-    required: true,
-    unique: true,
-    maxlength: 50
+const UserSchema = new Schema(
+  {
+    userName: {
+      type: String,
+      required: true,
+      unique: true,
+      maxlength: 50,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      maxlength: 50,
+    },
+    img: {
+      type: String,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    bookings: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Booking",
+      },
+    ],
+    flightBookings: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "FlightBooking",
+      },
+    ],
+    taxiBookings: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Taxi",
+      },
+    ],
+    attractions: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Attraction",
+      },
+    ],
+    chats: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "UserChats",
+      },
+    ],
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    maxlength: 50
-  },
-  img:{
-    type: String,
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  isAdmin: {
-    type: Boolean,
-    default: false
-  },
-  bookings: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Booking'
-  }],
-  flightBookings: [{
-    type: Schema.Types.ObjectId,
-    ref: 'FlightBooking'
-  }],
-  taxiBookings: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Taxi'
-  }],
-  attractions: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Attraction'
-  }],
-
-}, { timestamps: true }
+  { timestamps: true }
 );
 
-export default mongoose.model('User', UserSchema);
+export default mongoose.model("User", UserSchema);

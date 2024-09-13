@@ -9,6 +9,10 @@ import { Provider } from 'react-redux'
 import { setupStore } from './redux/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PersistorProvider } from './context/PersistorContext';
+import { QueryClient, QueryClientProvider, } from '@tanstack/react-query';
+
+// Create a client
+const queryClient = new QueryClient()
 
 const userId = localStorage.getItem('userId'); // Obtenu lors de l'authentification
 
@@ -23,7 +27,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <AuthenticationContextProvider>
             <SearchContextProvider>
               <StripeProvider>
-                <App />
+                <QueryClientProvider client={queryClient}>
+                  <App />
+                </QueryClientProvider>
               </StripeProvider>
             </SearchContextProvider>
           </AuthenticationContextProvider>
