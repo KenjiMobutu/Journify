@@ -18,6 +18,7 @@ const Attractions = () => {
   const formattedSDate = dayjs(startdDates.$d).format('YYYY-MM-DD');
   const formattedEDate = dayjs(endDates.$d).format('YYYY-MM-DD');
   const [data, setData] = useState([]);
+  const rapidapiKey = import.meta.env.VITE_RAPIDAPI_KEY;
 
   console.log(data)
   console.log("selectedCity:", selectedCity);
@@ -31,7 +32,7 @@ const Attractions = () => {
         query: city
       },
       headers: {
-        'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+        'x-rapidapi-key': rapidapiKey,
         'x-rapidapi-host': 'booking-com15.p.rapidapi.com'
       }
     };
@@ -64,7 +65,7 @@ const Attractions = () => {
         languagecode: 'en-us'
       },
       headers: {
-        'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+        'x-rapidapi-key': rapidapiKey,
         'x-rapidapi-host': 'booking-com15.p.rapidapi.com'
       }
     };

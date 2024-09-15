@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBed, faPlane, faCar, faIcons, faTaxi, faCalendarDays, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBed, faPlane, faIcons, faTaxi, faCalendarDays, faUser } from '@fortawesome/free-solid-svg-icons';
 import "./header.css";
 import { DateRange } from 'react-date-range';
 import { useContext, useState, useEffect } from 'react';
@@ -22,42 +22,50 @@ import videoSrc from '../../assets/home_page_bg_video2.mp4';
 import chatBot from '../../assets/bot.png';
 import human1 from '../../assets/human.jpg';
 import { TypeAnimation } from 'react-type-animation';
+import { useRef } from 'react';
 
 // Clé API Google Maps
-const GOOGLE_MAPS_API_KEY = "AIzaSyCZoVUq46vX7FuZjAh2l3h2dVZVb_ZMr6w";
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 function loadScript(src, position, id) {
   if (!position) {
     return;
   }
 
+  // Vérifie si le script existe déjà pour éviter de le recharger
+  if (document.getElementById(id)) {
+    return;
+  }
+
   const script = document.createElement('script');
   script.setAttribute('async', '');
+  script.setAttribute('defer', '');  // Ajout de l'attribut defer pour une meilleure optimisation
   script.setAttribute('id', id);
   script.src = src;
   position.appendChild(script);
 }
 
 // Fonction GoogleMaps, déplacée hors de la fonction Header
-function GoogleMaps({ setDestination }) {  // Ajout de setDestination comme prop
+function GoogleMaps({ setDestination }) {
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState([]);
-  const loaded = useState(false);
+  const loaded = useRef(false);  // Utilisation de useRef pour stocker l'état de chargement
 
-  const autocompleteService = { current: null };
+  const autocompleteService = useRef(null);
 
-  if (typeof window !== 'undefined' && !loaded.current) {
-    if (!document.querySelector('#google-maps')) {
-      loadScript(
-        `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`,
-        document.querySelector('head'),
-        'google-maps',
-      );
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !loaded.current) {
+      if (!document.querySelector('#google-maps')) {
+        loadScript(
+          `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`,
+          document.querySelector('head'),
+          'google-maps'
+        );
+      }
+      loaded.current = true;
     }
-
-    loaded.current = true;
-  }
+  }, []);  // Charger le script une seule fois au montage du composant
 
   const fetch = debounce((request, callback) => {
     autocompleteService.current.getPlacePredictions(request, callback);
@@ -98,7 +106,7 @@ function GoogleMaps({ setDestination }) {  // Ajout de setDestination comme prop
     return () => {
       active = false;
     };
-  }, [value, inputValue, fetch, autocompleteService]);
+  }, [value, inputValue, fetch]);
 
   return (
     <Autocomplete
@@ -115,7 +123,6 @@ function GoogleMaps({ setDestination }) {  // Ajout de setDestination comme prop
       value={value}
       noOptionsText="No locations"
       onChange={(event, newValue) => {
-        // Extraire la première partie avant la virgule
         const firstPart = newValue ? newValue.description.split(',')[0] : '';
         setValue(newValue);
         setDestination(firstPart);  // Mettre à jour la destination avec la première valeur
@@ -165,10 +172,12 @@ function GoogleMaps({ setDestination }) {  // Ajout de setDestination comme prop
 
 // Fonction Header, en utilisant GoogleMaps
 function Header({ type }) {
+  const rapidapiKey = import.meta.env.VITE_RAPIDAPI_KEY;
   const [typingStatus, setTypingStatus] = useState("human1");
   const [openDate, setOpenDate] = useState(false);
-  const [destination, setDestination] = useState(""); // Utiliser setDestination pour mettre à jour
-  console.log("Destination", destination);
+  const [destination, setDestination] = useState(""); //setDestination pour mettre à jour
+  const [isSearching, setIsSearching] = useState(false); // Pour désactiver le bouton de recherche
+  const [errorMessage, setErrorMessage] = useState("");
   const [hotels, setHotels] = useState([]);
   // Initialiser les dates avec aujourd'hui et demain par défaut
   const [dates, setDates] = useState(() => {
@@ -202,6 +211,16 @@ function Header({ type }) {
   };
 
   const handleSearch = async () => {
+    // Vérification si la destination est vide
+    if (!destination) {
+      setErrorMessage("Please enter a destination");
+      return;
+    }
+
+    // Reset error message et commencer la recherche
+    setErrorMessage("");
+    setIsSearching(true); // Désactive le bouton et montre "Processing"
+
     if (!user) {
       navigate('/login');
       return;
@@ -214,7 +233,7 @@ function Header({ type }) {
       url: 'https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination',
       params: { query: destination },
       headers: {
-        'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+        'x-rapidapi-key': rapidapiKey,
         'x-rapidapi-host': 'booking-com15.p.rapidapi.com'
       }
     };
@@ -240,7 +259,7 @@ function Header({ type }) {
             departure_date: format(dates[0].endDate, "yyyy-MM-dd")   // Date de départ formatée
           },
           headers: {
-            'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+            'x-rapidapi-key': rapidapiKey,
             'x-rapidapi-host': 'booking-com15.p.rapidapi.com'
           }
         };
@@ -252,18 +271,18 @@ function Header({ type }) {
         navigate('/hotels', { state: { destination, dates, options, hotels: hotelResponse.data } });
       } else {
         console.error('Unexpected data format:', response.data);
+        setErrorMessage("Unable to find hotels for the destination");
       }
     } catch (error) {
       console.error('Error fetching hotels:', error);
+      setErrorMessage("Failed to find hotels for the destination");
+    } finally {
+      setIsSearching(false); // Réactive le bouton après la recherche
     }
   };
 
   const handleFlight = () => {
     navigate('/flights');
-  };
-
-  const handleCar = () => {
-    navigate('/car');
   };
 
   const handleAttraction = () => {
@@ -391,13 +410,13 @@ function Header({ type }) {
                     )}
                   </div>
                   <div className="headerSearchItem">
-                    <button className="headerBtn" onClick={handleSearch}>
-                      Search
+                    <button className="headerBtn" onClick={handleSearch} disabled={isSearching}>
+                      {isSearching ? "Processing..." : "Search"}
                     </button>
                   </div>
+                  {/* Affichage du message d'erreur */}
+                  {errorMessage && <p className="errorMessage">{errorMessage}</p>}
                 </div>
-
-
               </>
             )}
           </>
@@ -409,25 +428,25 @@ function Header({ type }) {
               Log In
             </button>
             <div className="chat">
-                  <img src={typingStatus === "human1" ? human1 : chatBot} alt="chatBot" className='chatBot' />
-                  <TypeAnimation
-                    sequence={[
-                      // Same substring at the start will only be typed out once, initially
-                      'USER: I need sun, wich destination you suggest me?',
-                      1500, () => { setTypingStatus("bot") },
-                      'BOT: The Canary Islands, Spain – Sunny all year round with stunning beaches.',
-                      1500, () => { setTypingStatus("human1") },
-                      'USER: I need a flight to Miami on budget from Brussels',
-                      1500, () => { setTypingStatus("bot") },
-                      'BOT:  Some of the cheapest flights involve layovers in cities like London or Lisbon',
-                      1500, () => { setTypingStatus("human1") },
-                    ]}
-                    wrapper="span"
-                    speed={50}
-                    repeat={Infinity}
-                    omitDeletionAnimation={true}
-                  />
-                </div>
+              <img src={typingStatus === "human1" ? human1 : chatBot} alt="chatBot" className='chatBot' />
+              <TypeAnimation
+                sequence={[
+                  // Same substring at the start will only be typed out once, initially
+                  'USER: I need sun, wich destination you suggest me?',
+                  1500, () => { setTypingStatus("bot") },
+                  'BOT: The Canary Islands, Spain – Sunny all year round with stunning beaches.',
+                  1500, () => { setTypingStatus("human1") },
+                  'USER: I need a flight to Miami on budget from Brussels',
+                  1500, () => { setTypingStatus("bot") },
+                  'BOT:  Some of the cheapest flights involve layovers in cities like London or Lisbon',
+                  1500, () => { setTypingStatus("human1") },
+                ]}
+                wrapper="span"
+                speed={50}
+                repeat={Infinity}
+                omitDeletionAnimation={true}
+              />
+            </div>
           </div>
         )}
       </div>

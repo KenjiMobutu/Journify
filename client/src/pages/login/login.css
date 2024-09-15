@@ -53,11 +53,57 @@
   border-radius: 5px;
   transition: border-color 0.3s ease;
 }
+.loginInputPassword {
+  padding: 12px 15px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s ease;
+  width: 100%;
+  height: 50px;
+}
 
 .loginInput:focus {
   border-color: #007bff;
   outline: none;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.passwordField {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.passwordField input {
+  width: 100%;
+  padding: 12px 40px 12px 10px; /* Espace pour l'icône à droite */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  background-color: #f8f8f8;
+}
+
+.passwordField input:focus {
+  border-color: #007bff;
+}
+
+.passwordField .MuiInputAdornment-root {
+  position: absolute;
+  right: 10px;
+}
+
+.passwordField .MuiSvgIcon-root {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.passwordField .MuiSvgIcon-root:hover {
+  color: #007bff;
 }
 
 /* Buttons */
@@ -67,7 +113,9 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
 }
 
 .loginButton {

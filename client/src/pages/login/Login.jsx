@@ -8,14 +8,18 @@ import { loginStart, loginSuccess, loginFailure } from '../../redux/authRedux.js
 import { useDispatch } from "react-redux";
 import { setupStore } from '../../redux/store';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 
-
-export default function Login() {
+export default function Login({ socket }) {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
-  console.log(apiUrl);
   const [credentials, setCredentials] = useState({ userName: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false); // État pour gérer l'affichage du mot de passe
   const { loading, error, dispatch } = useContext(AuthenticationContext);
   const navigate = useNavigate();
+  const { user } = useContext(AuthenticationContext);
 
   const dis = useDispatch();
 
@@ -23,19 +27,14 @@ export default function Login() {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
     dis(loginStart());
-    console.log(credentials);
     try {
-      //const res = await axios.post(`${apiUrl}/api/auth/login`, credentials, {withCredentials: true}); //Production
       const res = await axios.post(`/api/auth/login`, credentials, { withCredentials: true });
-      console.log(res.data.details._id);
       const userId = res.data.details._id;
-
-      // Stocker l'ID utilisateur dans localStorage
       localStorage.setItem('userId', userId);
       setupStore(userId);
-      console.log(localStorage.getItem('userId'));
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
       dis(loginSuccess({ userId: res.data.details._id }));
+      socket.emit('loginUser', res.data.details.userName);
       const redirectTo = location.state?.from || '/';
       navigate(redirectTo);
       window.location.reload();
@@ -43,6 +42,10 @@ export default function Login() {
       dispatch({ type: "LOGIN_FAILURE", payload: error.response.data });
       dis(loginFailure(error.response?.data || "An error occurred"));
     }
+  };
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword); // Inverser l'état d'affichage du mot de passe
   };
 
   return (
@@ -60,16 +63,23 @@ export default function Login() {
             id="userName"
             value={credentials.userName}
             onChange={(e) => setCredentials({ ...credentials, userName: e.target.value })}
-            className="loginInput"
+            className="loginInputUsername"
           />
-          <input
-            type="password"
-            placeholder="Password"
-            id="password"
-            value={credentials.password}
-            onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-            className="loginInput"
-          />
+          <div className="passwordField">
+            <input
+              type={showPassword ? "text" : "password"} // Basculer entre texte et mot de passe
+              placeholder="Password"
+              id="password"
+              value={credentials.password}
+              onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+              className="loginInputPassword"
+            />
+            <InputAdornment position="end">
+              <IconButton onClick={handleTogglePasswordVisibility}>
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          </div>
           <button type="submit" disabled={loading} className="loginButton">
             Login
           </button>
@@ -82,5 +92,3 @@ export default function Login() {
     </div>
   );
 }
-
-

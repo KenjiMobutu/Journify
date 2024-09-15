@@ -43,7 +43,7 @@ const Hotel = () => {
   const { user } = useContext(AuthenticationContext);
   const location = useLocation();
   const hotelId = location.pathname.split("/")[2];
-
+  const rapidapiKey = import.meta.env.VITE_RAPIDAPI_KEY;
   const { attractions } = location.state || {};
   const reviewScore = location.state?.reviewScore || "N/A";
 
@@ -166,7 +166,7 @@ const Hotel = () => {
         departure_date: format(new Date(dates[0].endDate), "yyyy-MM-dd"),
       },
       headers: {
-        'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+        'x-rapidapi-key': rapidapiKey,
         'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
       },
     };
@@ -179,7 +179,7 @@ const Hotel = () => {
         languagecode: 'en-us'
       },
       headers: {
-        'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+        'x-rapidapi-key': rapidapiKey,
         'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
       },
     };

@@ -3,11 +3,10 @@ import { errorResponse } from "./error.js";
 import e from "express";
 
 export const verifyToken = (req, res, next) => {
-  const token =
-    req.cookies.access_token || req.headers.authorization?.split(" ")[1];
+  const token = req.cookies.access_token || req.headers.authorization?.split(" ")[1];
   //const token = req.cookies.access_token;
-  console.log("Token SAFARI:", req.cookies);
-  console.log("Token:", token);
+  //console.log("Token SAFARI:", req.cookies);
+  //console.log("Token:", token);
   if (!token) {
     return next(errorResponse(401, "Access denied..."));
   }

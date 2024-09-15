@@ -37,10 +37,7 @@ const io = new Server(httpServer, {
 
 const connectToMongo = async () => {
   try {
-    await mongoose.connect(process.env.MONGO, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO);
   } catch (error) {
     console.log(error);
     throw error;
@@ -101,9 +98,33 @@ app.use((error, req, res, next) => {
   });
 });
 
+const users = {}; // Un objet pour stocker les utilisateurs et leurs socket.id
+
 // Gestion des connexions socket.io
 io.on("connection", (socket) => {
   console.log("A user connected!", socket.id);
+
+  // Lorsqu'un nouvel utilisateur se connecte
+  socket.on("loginUser", (username) => {
+    // Associer le socket.id à l'utilisateur
+    users[username] = socket.id;
+    console.log(`User logged: ${username} with socket ID ${socket.id}`);
+
+    for (let username in users) {
+      console.log(`User logged: ${username} with socket ID ${socket.id}`);
+    }
+  });
+
+  // Pour envoyer une notification à un utilisateur spécifique
+  socket.on("sendNotificationToUser", ({ targetUsername, message }) => {
+    const targetSocketId = users[targetUsername];
+    if (targetSocketId) {
+      socket.to(targetSocketId).emit("notification", message); // Envoi uniquement à l'utilisateur ciblé
+      console.log(`Notification sent to ${targetUsername}: ${message}`);
+    } else {
+      console.log(`User ${targetUsername} not found or not connected.`);
+    }
+  });
 
   // Lorsqu'un nouvel utilisateur s'inscrit
   socket.on("notificationRegister", (username) => {
@@ -136,11 +157,18 @@ io.on("connection", (socket) => {
   // Gestion de la déconnexion
   socket.on("disconnect", () => {
     console.log(`User with socketId ${socket.id} disconnected.`);
+    // Supprimer l'utilisateur de la liste des connectés
+    for (let username in users) {
+      if (users[username] === socket.id) {
+        delete users[username];
+        break;
+      }
+    }
   });
 });
 
 // Écoute du serveur sur le port 3000
 const PORT = process.env.PORT || 3000;
-httpServer.listen(3000, () => {
+httpServer.listen(PORT, () => {
   console.log('Express server listening on port "http://localhost:3000"');
 });

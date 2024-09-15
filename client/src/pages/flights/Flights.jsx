@@ -14,7 +14,7 @@ const Flights = () => {
   const [selectedArrival, setSelectedArrival] = useState(null);
   const [loadingDestinations, setLoadingDestinations] = useState(false); // État pour gérer le chargement du bouton "Search Destinations"
   const [loadingFlights, setLoadingFlights] = useState(false); // État pour gérer le chargement du bouton "Search Flights"
-
+  const rapidapiKey = import.meta.env.VITE_RAPIDAPI_KEY;
   const [depart, setDepart] = useState("");
   const [arrival, setArrival] = useState("");
   const [openDate, setOpenDate] = useState(false);
@@ -49,7 +49,7 @@ const Flights = () => {
         query: depart
       },
       headers: {
-        'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+        'x-rapidapi-key': rapidapiKey,
         'x-rapidapi-host': 'booking-com15.p.rapidapi.com'
       }
     };
@@ -61,7 +61,7 @@ const Flights = () => {
         query: arrival
       },
       headers: {
-        'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+        'x-rapidapi-key': rapidapiKey,
         'x-rapidapi-host': 'booking-com15.p.rapidapi.com'
       }
     };
@@ -102,7 +102,7 @@ const Flights = () => {
         currency_code: 'EUR'
       },
       headers: {
-        'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+        'x-rapidapi-key': rapidapiKey,
         'x-rapidapi-host': 'booking-com15.p.rapidapi.com'
       }
     };

@@ -55,9 +55,7 @@ const Navbar = () => {
     const fetchAdminStatus = async () => {
       try {
         const response = await axios.get(`/api/users/${user._id}`);
-        console.log("Admin status:", response.data.isAdmin);
         setIsAdmin(response.data.isAdmin);
-        console.log("Admin status:", response.data.isAdmin);
       } catch (error) {
         console.error("Failed to fetch admin status:", error);
       }
@@ -92,7 +90,6 @@ const Navbar = () => {
     navigate(`/profile/${user._id}`);
   }
   const quantity = useSelector((state) => state.cart.quantity);
-  console.log(quantity);
 
   return (
     <div className="navbar">

@@ -23,6 +23,7 @@ const List = () => {
   const [max, setMax] = useState(undefined);
   const [attractions, setAttractions] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
+  const rapidapiKey = import.meta.env.VITE_RAPIDAPI_KEY;
 
   //const { loading, data } = useFetch(`/api/hotels?city=${destination}&min=${min || 0}&max=${max || 999}`);
 
@@ -44,7 +45,7 @@ const List = () => {
       const response = await axios.get('https://booking-com15.p.rapidapi.com/api/v1/attraction/searchLocation', {
         params: { query: destination },
         headers: {
-          'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+          'x-rapidapi-key': rapidapiKey,
           'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
         }
       });
@@ -67,7 +68,7 @@ const List = () => {
           languagecode: 'en-us',
         },
         headers: {
-          'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+          'x-rapidapi-key': rapidapiKey,
           'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
         }
       });
@@ -85,7 +86,7 @@ const List = () => {
       const response = await axios.get('https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination', {
         params: { query: destination },
         headers: {
-          'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+          'x-rapidapi-key': rapidapiKey,
           'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
         }
       });
@@ -105,7 +106,7 @@ const List = () => {
               price_max: max || '9999',
             },
             headers: {
-              'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+              'x-rapidapi-key': rapidapiKey,
               'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
             }
           });
