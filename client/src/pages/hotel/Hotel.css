@@ -57,7 +57,7 @@
 .bookButtonUp {
   position: absolute;
   right: 10px;
-  top: 10px;
+  top: 200px;
   padding: 10px 20px;
   border-radius: 5px;
   font-size: 15px;
@@ -395,6 +395,42 @@
 
 .removeAttractionIcon:hover {
   color: #c0392b;
+}
+
+.closeFlightBtn{
+  position: relative;
+  top: 15px;
+  left: 10px;
+  font-size: 25px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+
+}
+
+.selectedFlightItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.selectedFlightInfo {
+  flex: 1; /* Occupe tout l'espace disponible */
+  display: flex;
+  font-size: 12px;
+  flex-direction: column; /* Les infos du vol en colonne */
+}
+
+.deleteFlightIcon {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+.removeFlightIcon {
+  color: #e74c3c;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 /* Responsive adjustments */

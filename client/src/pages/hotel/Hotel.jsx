@@ -12,17 +12,47 @@ import axios from "axios";
 import formatPrice from "../../utils/utils";
 import MoreBookings from "../../components/moreBookings/MoreBookings";
 import FlightComponent from "../../components/flightComponent/FlightComponent.jsx";
-import { addProduct } from "../../redux/cartRedux.js";
+import { addFlight, addProduct, setTotal } from "../../redux/cartRedux.js";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+
 const Hotel = () => {
   const [extraOptions, setExtraOptions] = useState({
     flight: false,
     attractions: false,
     taxi: false
   });
+  const [errors, setErrors] = useState({});
+  const [selectedFlight, setSelectedFlight] = useState([]);
+  console.log("Selected Flight 3: ", selectedFlight);
+
+  const handleAddFlight = (flight) => {
+    // Vérifie si le vol est déjà ajouté
+    console.log(flight.id);
+    if (selectedFlight.some(f => f.token === flight.token)) {
+      console.log("Flight already selected");
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        flight: "Flight already selected",
+        flightId: flight.token,  // Ajouter un message d'erreur spécifique pour le vol
+      }));
+      return;
+    }
+    // Ajoute le vol s'il n'est pas encore sélectionné
+    setSelectedFlight((prevSelectedFlights) => [...prevSelectedFlights, flight]);
+    setTotalPrice(totalPrice + flight.priceBreakdown.total.units);
+  };
+
   const handleMoreBookingsConfirm = (selectedOptions) => {
     setExtraOptions(selectedOptions);
     console.log("Selected Options:", selectedOptions);
+  };
+  // Ouvrir ou fermer le FlightComponent
+  const toggleFlightComponent = () => {
+    setExtraOptions((prevOptions) => ({
+      ...prevOptions,
+      flight: !prevOptions.flight,  // Inverser la valeur de flight pour afficher ou masquer
+    }));
   };
   const [slideIndex, setSlideIndex] = useState(0);
   const [data, setData] = useState(null);
@@ -90,10 +120,30 @@ const Hotel = () => {
 
     setTotalPrice(updatedPrice);
 
-    setAddedAttractions((prev) => [
-      ...prev,
-      { name: attraction.name, price: attractionPrice * ticketCount, index: selectedAttraction, ticketCount: ticketCount },
-    ]);
+    // Vérifiez si l'attraction a déjà été ajoutée
+    const existingAttraction = addedAttractions.find(att => att.index === selectedAttraction);
+
+    if (existingAttraction) {
+      // Mise à jour du nombre de tickets et du prix pour une attraction déjà ajoutée
+      const updatedAttractions = addedAttractions.map(att => {
+        if (att.index === selectedAttraction) {
+          return {
+            ...att,
+            ticketCount: att.ticketCount + ticketCount, // Ajout du nombre de tickets
+            price: att.price + attractionPrice * ticketCount // Ajustement du prix
+          };
+        }
+        return att;
+      });
+      setAddedAttractions(updatedAttractions);
+      setTotalPrice(totalPrice + attractionPrice * ticketCount); // Mise à jour du prix total
+    } else {
+      setAddedAttractions((prev) => [
+        ...prev,
+        { name: attraction.name, price: attractionPrice * ticketCount, index: selectedAttraction, ticketCount: ticketCount },
+      ]);
+      setTotalPrice(totalPrice + attractionPrice * ticketCount);
+    }
   };
 
   const handleTicketCountChange = (e, index) => {
@@ -104,8 +154,6 @@ const Hotel = () => {
     }));
   };
 
-
-
   const handleRemoveAttraction = (index) => {
     const attractionToRemove = addedAttractions.find(att => att.index === index);
     const updatedPrice = totalPrice - attractionToRemove.price;
@@ -113,6 +161,15 @@ const Hotel = () => {
     setTotalPrice(updatedPrice);
 
     setAddedAttractions((prev) => prev.filter(att => att.index !== index));
+  };
+
+  const handleRemoveFlight = (token) => {
+    const flightToRemove = selectedFlight.find(flight => flight.token === token);
+    const updatedPrice = totalPrice - flightToRemove.priceBreakdown.total.units;
+
+    setTotalPrice(updatedPrice);
+
+    setSelectedFlight((prev) => prev.filter(flight => flight.token !== token));
   };
 
   const handleClick = () => {
@@ -125,6 +182,7 @@ const Hotel = () => {
 
   const dispatch = useDispatch();
 
+
   const handleCart = () => {
     if (!hotel || !totalPrice) {
       console.error("Missing information in cart");
@@ -134,12 +192,19 @@ const Hotel = () => {
     dispatch(addProduct({
       product: data.data,
       attractions: addedAttractions || [],
-      flights: extraOptions.flight || [] ,
+      flights:selectedFlight || [],
       taxis: extraOptions.taxi || [],
       price: totalPrice
     }));
+    // if (selectedFlight.length > 0) {
+    //   dispatch(addFlight({
+    //     flights: selectedFlight || [],
+
+    //   }));
+    // }
 
   };
+
 
   useEffect(() => {
     localStorage.setItem("dates", JSON.stringify(dates));
@@ -264,17 +329,28 @@ const Hotel = () => {
                   <h3 className="roomsDescTitle">Rooms description:</h3>
                   <p className="roomsDesc">{firstRoom.description}</p>
                 </div>
-                <div>
+                <div >
                   <h2 className="hotelFacility">Facilities</h2>
-                  <ul className="hotelDescList">
-                    {data.data?.property_highlight_strip.map((facility, index) => (
-                      <li key={index} className="hotelDescListItem">{facility.name}</li>
-                    ))}
-                  </ul>
+                  {data.data?.property_highlight_strip && data.data.property_highlight_strip.length > 0 ? (
+                    <ul className="hotelDescList">
+                      {data.data.property_highlight_strip.map((facility, index) => (
+                        <li key={index} className="hotelDescListItem">{facility.name}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No facilities available for this property.</p>
+                  )}
                 </div>
 
                 <div className="moreBookingFlight">
-                  <FlightComponent />
+                  {extraOptions.flight && (
+                    <div>
+                      <div className="closeFlightBtn">
+                        <FontAwesomeIcon icon={faXmarkCircle} onClick={toggleFlightComponent} />
+                      </div>
+                      <FlightComponent selectFlight={handleAddFlight} errors={errors} />
+                    </div>
+                  )}
                 </div>
 
                 <div className="moreBookingTaxi">
@@ -287,7 +363,7 @@ const Hotel = () => {
                     <ul className="hotelAttractionsList">
                       {attractions.map((attraction, index) => {
                         const ticketCount = ticketCounts[index] || 1;  // Nombre de tickets sélectionnés ou 1 par défaut
-                        const totalPrice = attraction.representativePrice.publicAmount * ticketCount;
+                        const totalPrice = (attraction.representativePrice.publicAmount * ticketCount).toFixed(2);  // Prix total
 
                         return (
                           <li
@@ -336,12 +412,35 @@ const Hotel = () => {
                       <ul>
                         {addedAttractions.map((attraction, index) => (
                           <li key={index} className="addedAttractionItem">
-                            <span>{ticketCounts[attraction.index]} x {attraction.name} - {Math.ceil(attraction.price)}€ </span>
+                            <span>{attraction.ticketCount} x {attraction.name} - {Math.ceil(attraction.price)}€ </span>
                             <FontAwesomeIcon
                               icon={faTrashAlt}
                               className="removeAttractionIcon"
                               onClick={() => handleRemoveAttraction(attraction.index)}
                             />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {selectedFlight.length > 0 && (
+                    <div className="selectedFlight">
+                      <h3>Selected Flight:</h3>
+                      <ul>
+                        {selectedFlight.map((flight, index) => (
+                          <li key={index} className="selectedFlightItem">
+                            <div className="selectedFlightInfo">
+                              <span>{flight.segments[0].departureAirport.cityName} - {flight.segments[0].arrivalAirport.cityName} </span>
+                              <span>{flight.priceBreakdown.total.units}€</span>
+                            </div>
+                            <div className="deleteFlighticon">
+                              <FontAwesomeIcon
+                                icon={faTrashAlt}
+                                className="removeFlightIcon"
+                                onClick={() => handleRemoveFlight(flight.token)}
+                              />
+                            </div>
                           </li>
                         ))}
                       </ul>
@@ -357,18 +456,21 @@ const Hotel = () => {
             </div>
           </div>
         </div>
-      )}
-      {openPayment && <Reservation
-        setOpen={setOpenPayment}
-        hotelId={hotelId}
-        hotel={hotel}
-        nbRooms={options.room}
-        extraOptions={extraOptions}
-        addedAttractions={addedAttractions}
-        attractionPrice={totalPrice}
-      />}
+      )
+      }
+      {
+        openPayment && <Reservation
+          setOpen={setOpenPayment}
+          hotelId={hotelId}
+          hotel={hotel}
+          nbRooms={options.room}
+          extraOptions={extraOptions}
+          addedAttractions={addedAttractions}
+          attractionPrice={totalPrice}
+        />
+      }
       {openMoreBooking && <MoreBookings setOpen={setOpenMoreBooking} setOpenPayment={setOpenPayment} onConfirm={handleMoreBookingsConfirm} />}
-    </div>
+    </div >
   );
 }
 

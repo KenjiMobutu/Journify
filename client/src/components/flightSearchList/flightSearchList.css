@@ -107,3 +107,10 @@
 .btnSelectFlight:active {
   background-color: #00408d;
 }
+
+.flightErrorText {
+  font-size: 16px;
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}

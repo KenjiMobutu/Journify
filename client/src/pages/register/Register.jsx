@@ -25,7 +25,8 @@ const Register = ({ socket }) => {
     if (id) {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`${apiUrl}/api/users/${id}`);
+          //const response = await axios.get(`${apiUrl}/api/users/${id}`);
+          const response = await axios.get(`/api/users/${id}`);
           setUserData({ ...response.data, confirmPassword: response.data.password });
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -62,7 +63,7 @@ const Register = ({ socket }) => {
     }
 
     const user = { ...userData, img: imgUrl || undefined };
-
+    console.log(user);
     // Validation des données
     if (userData.password !== userData.confirmPassword) {
       setErrors(['Passwords do not match']);

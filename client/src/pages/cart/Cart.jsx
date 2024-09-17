@@ -1,15 +1,38 @@
 import { useSelector, useDispatch } from "react-redux";
 import Navbar from "../../components/navbar/Navbar"
 import "./cart.css"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
-import { removeProduct } from "../../redux/cartRedux.js";
+import { removeProduct, removeFlight, removeTaxi, resetCart, removeAttraction } from "../../redux/cartRedux.js";
 import { Link } from "react-router-dom";
+import attractionImg from '../../assets/attractions.png';
+import flightQrCode from '../../assets/flightQrCode.png';
 
 const Cart = () => {
   const [hotelPhoto, setHotelPhoto] = useState([]);
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+
+  // Fonction pour calculer le total dynamiquement
+  const calculateTotal = () => {
+    const hotelTotal = cart.products.reduce((sum, product) => sum + Math.round(product.product_price_breakdown.all_inclusive_amount.value), 0);
+    const attractionTotal = cart.attractions.reduce((sum, attraction) => sum + Math.round(attraction.price), 0);
+    const flightTotal = cart.flights.reduce((sum, flight) => {
+      const flightData = Array.isArray(flight.flights) ? flight.flights[0] : flight.flights || flight;
+      return sum + (flightData?.priceBreakdown?.total?.units || flightData?.flight.priceBreakdown?.total?.units || 0);
+    }, 0);
+    return hotelTotal + attractionTotal + flightTotal;
+  };
+
+  console.log(cart.flights.map((flight) => {
+    return flight;
+    // const flightData = Array.isArray(flight.flights) ? flight.flights[0] : flight.flights || flight;
+    // const segments = flightData.segments;
+    // return segments[0];
+  }));
+
+  console.log(cart);
+
 
   useEffect(() => {
     const newHotelPhotos = cart.products.reduce((photos, product) => {
@@ -27,6 +50,22 @@ const Cart = () => {
     dispatch(removeProduct(product));
   };
 
+  const handleDeleteFlight = (flight) => {
+    console.log(flight);
+    dispatch(removeFlight(flight));
+  };
+
+  const handleDeleteAttraction = (attraction) => {
+    console.log(attraction);
+    dispatch(removeAttraction(attraction));
+  }
+
+  const handleDeleteTaxi = (taxi) => { }
+
+  const handleResetCart = (cart) => {
+    dispatch(resetCart(cart));
+  }
+
   return (
     <div>
       <Navbar />
@@ -41,7 +80,7 @@ const Cart = () => {
           <div className="cartTopTexts">
             <p>Shopping Bag({cart.quantity})</p>
           </div>
-          <div className="cartTopButton">Checkout Now</div>
+          <div className="cartTopButton" onClick={() => handleResetCart(cart)}>Clear your basket</div>
         </div>
         <div className="cartBottom">
           <div className="cartLeft">
@@ -56,29 +95,36 @@ const Cart = () => {
                 cart.products.map((product, index) => (
                   <div className="cartProduct" key={product.id || index}>
                     {hotelPhoto[index] && (
-                      <img
-                        src={hotelPhoto[index].url_max300}
-                        alt={`Hotel photo ${index}`}
-                        className="hotelPhoto"
-                      />
+                      <div className="hotelImageContainer">
+                        <img
+                          src={hotelPhoto[index].url_max300}
+                          alt={`Hotel photo ${index}`}
+                          className="hotelPhoto"
+                        />
+                      </div>
                     )}
                     <div className="cartProductDetails">
-                      <div className="cartProductInfo">
+                      <div className="cartProductHeader">
                         <span className="cartProductName">
-                          <b>Product: </b> {product.hotel_name}
+                          <b>Hotel:</b> {product.hotel_name}
                         </span>
-                        <span className="cartProductSize">
-                          {Math.round(
-                            product.product_price_breakdown.all_inclusive_amount.value
-                          )}{" "}
-                          €
+                        <span className="cartProductPrice">
+                          <b>Total Price:</b>{" "}
+                          {Math.round(product.product_price_breakdown.all_inclusive_amount.value)} €
                         </span>
-                        <span className="cartProductSize">
-                          <b>Check-in: </b> {product.arrival_date}
-                        </span>
-                        <span className="cartProductSize">
-                          <b>Check-out: </b> {product.departure_date}
-                        </span>
+                      </div>
+                      <div className="cartProductBody">
+                        <div className="cartProductCheckInOut">
+                          <div className="checkIn">
+                            <b>Check-in:</b> {product.arrival_date}
+                          </div>
+                          <div className="checkOut">
+                            <b>Check-out:</b> {product.departure_date}
+                          </div>
+                        </div>
+                        <div className="cartProductInfo">
+                          <b>Room(s):</b> {product.rooms.length} room(s) booked
+                        </div>
                       </div>
                       <div className="cartDelete">
                         <button onClick={() => handleDeleteHotel(product)}>
@@ -90,36 +136,95 @@ const Cart = () => {
                 ))
               )}
               <hr></hr>
-              <div className="cartProduct">
-                <img
-                  src="https://images.unsplash.com/photo-1556740731-0a7b3b6e4d9e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                  alt=""
-                  className="cartProductImage"
-                />
-                <div className="cartProductDetails">
-                  <span className="cartProductName">
-                    <b>Product: </b> JESSIE THUNDER SHOES
-                  </span>
-                  <span className="cartProductId">
-                    <b>ID: </b> 93813718293
-                  </span>
-                  <span className="cartProductColor">
-                    <b>Color: </b> Black
-                  </span>
-                  <span className="cartProductSize">
-                    <b>Size: </b> 37.5
-                  </span>
+              {cart.attractions.map((attraction, index) => (
+                <div className="ticketContainer" key={attraction.id || index}>
+                  <div className="ticketHeader">
+                    <img src={attractionImg} alt="Attraction" className="attractionImg" />
+                    <span className="attractionName"><b>{attraction.name}</b></span>
+                  </div>
+
+                  <div className="ticketBody">
+                    <div className="ticketDetails">
+                      <div className="ticketInfo">
+                        <span className="cartProductPrice">
+                          <b>Price: </b>{attraction.price} €
+                        </span>
+                      </div>
+                      <div className="ticketInfo">
+                        <b>Ticket(s): </b>{attraction.ticketCount}
+                      </div>
+                    </div>
+
+                    <div className="ticketActions">
+                      <button onClick={() => handleDeleteAttraction(attraction)} className="deleteTicketButton">
+                        <DeleteForeverOutlinedIcon className="deleteIcon" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
+              <hr></hr>
+              {cart.flights.map((flight, index) => {
+                const flightData = (Array.isArray(flight.flights) ? flight.flights[0] : flight.flights) || flight;
+                const segments = flightData?.segments || flightData?.flight.segments || [];
+                if (segments.length === 0) return null;
+
+                return (
+                  <div className="flightTicket" key={flight.id || index}>
+                    <div className="flightTicketBody">
+                      <div className="flightRoute">
+                        <div className="flightDeparture">
+                          <div className="airportCode">{segments[0].departureAirport?.code}</div>
+                          <div className="airportName">{segments[0].departureAirport?.cityName}</div>
+                          <div className="departureTime">
+                            {new Intl.DateTimeFormat('en-GB', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            }).format(new Date(segments[0].departureTime))}
+                          </div>
+                        </div>
+                        <div className="flightArrow">→</div>
+                        <div className="flightArrival">
+                          <div className="airportCode">{segments[0].arrivalAirport?.code}</div>
+                          <div className="airportName">{segments[0].arrivalAirport?.cityName}</div>
+                          <div className="arrivalTime">
+                            {new Intl.DateTimeFormat('en-GB', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            }).format(new Date(segments[0].arrivalTime))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flightTicketFooter">
+                        <div className="flightPrice">
+                          <b>Price: </b>{flightData?.priceBreakdown?.total?.units || flightData?.flight.priceBreakdown?.total?.units || 'N/A'} €
+                        </div>
+                        <div className="deleteFlightButton">
+                          <button onClick={() => handleDeleteFlight(flight)}>
+                            <DeleteForeverOutlinedIcon className="cartTrash" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
             </div>
           </div>
           <div className="cartRight">
             <div className="cartInfo">
               <p className="cartInfoText">ORDER SUMMARY</p>
               <div className="cartInfoPrice">
-                <span>Total: {Math.round(cart.total)} €</span>
-
-                <span>Subtotal: {Math.round(cart.total)} €</span>
+                <span>Total: {Math.round(calculateTotal())} €</span>
+                <span>Subtotal: {Math.round(calculateTotal())} €</span>
               </div>
               <div className="cartInfoButton">
                 <button>Proceed To Checkout</button>

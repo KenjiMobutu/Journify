@@ -70,13 +70,99 @@
 }
 
 .cartProduct {
-  margin-top: 20px;
   display: flex;
-  justify-content: flex-start; /* Change from space-between to flex-start */
-  align-items: center;
+  flex-direction: row;
+  border: 2px solid #ddd;
+  border-radius: 10px;
   margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.cartProduct:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+.hotelImageContainer {
+  flex: 1;
+  margin-right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cartProductDetails {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
+.cartProductDetails {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cartProductHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.cartProductName {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.cartProductPrice {
+  font-size: 1.2rem;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.cartProductBody {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cartProductCheckInOut {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+.checkIn,
+.checkOut {
+  margin-bottom: 5px;
+}
+
+.cartProductInfo {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.cartDelete {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cartTrash {
+  font-size: 1.8rem;
+  color: #ff4d4d;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.cartTrash:hover {
+  transform: scale(1.2);
+  color: #ff0000;
+}
 .cartProductImage {
   width: 150px;
   height: 150px;
@@ -90,19 +176,26 @@
   object-fit: cover;
   border-radius: 8px;
 }
-.cartProductDetails {
-  display: flex;
-  justify-content: space-between;
-  margin-left: 20px;
-  align-items: center;
-  width: 100%;
-}
 
 .cartProductInfo {
   display: flex;
   flex-direction: column;
   align-items: flex-start; /* Align details to the left */
   gap: 10px; /* Add space between the details */
+}
+.cartProductHeader {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.cartProductBody {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.flightTime, .cartProductPrice, .cartProductTickets {
+  margin-bottom: 5px;
 }
 
 .cartDelete {
@@ -196,4 +289,200 @@
 
 .cartInfoButton button:hover {
   background-color: #218838;
+}
+
+.ticketContainer {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px;
+  width: 100%;
+  max-width: 700px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.ticketContainer:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  background-color: #f0f0f0;
+}
+
+.ticketHeader {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.attractionImg {
+  width: 10%;
+  height: 10%;
+  margin-right: 15px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.attractionName {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.ticketBody {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+}
+
+.ticketDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ticketInfo {
+  margin-bottom: 8px;
+}
+
+.ticketActions {
+  display: flex;
+  align-items: center;
+}
+
+.deleteTicketButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ff4d4d;
+}
+
+.deleteIcon {
+  font-size: 2rem !important;
+  transition: color 0.3s ease;
+}
+
+.deleteIcon:hover {
+  color: #ff0000;
+}
+
+
+.flightTicket {
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  background-color: #f7f7f7;
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 700px;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.flightTicket:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  background-color: #f0f0f0;
+}
+
+.flightTicketHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flightLogo img {
+  width: 50px;
+  height: auto;
+}
+
+.flightDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flightNumber {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.flightDate {
+  font-size: 14px;
+  color: #777;
+}
+
+.flightTicketBody {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flightRoute {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-right: 20px;
+}
+
+.flightDeparture, .flightArrival {
+  text-align: center;
+}
+
+.airportCode {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.airportName {
+  font-size: 16px;
+  color: #555;
+}
+
+.flightArrow {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+}
+
+.flightTicketFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.flightPrice {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.deleteFlightButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.deleteFlightButton:hover .cartTrash {
+  color: red;
+}
+
+.deleteFlightButton .cartTrash {
+  color: #777;
+  font-size: 24px;
+}
+
+.flightLogo{
+  width: 50px;
+  height: auto;
 }
