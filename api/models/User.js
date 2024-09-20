@@ -56,6 +56,36 @@ const UserSchema = new Schema(
         ref: "UserChats",
       },
     ],
+    blocked: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Friend",
+      },
+    ],
+    groups: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Group",
+      },
+    ],
+    groupMembers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "GroupMember",
+      },
+    ],
+    friendChats: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "FriendChat",
+      },
+    ],
   },
   { timestamps: true }
 );

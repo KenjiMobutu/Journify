@@ -1,0 +1,198 @@
+.friendChat {
+  flex: 2;
+  border-left: 1px solid rgba(221, 221, 221, 0.21);
+  border-right: 1px solid rgba(221, 221, 221, 0.21);
+  height: 90vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #1e1e2f; /* Ajoute une couleur de fond pour le chat */
+}
+
+.friendChatTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Aligne l'utilisateur à gauche et les icônes à droite */
+  padding: 20px;
+  border-bottom: 1px solid rgba(221, 221, 221, 0.21);
+}
+
+.friendChat .user {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.friendChat .user img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.friendChat .texts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: white;
+}
+
+.friendChat .texts span {
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.friendChat .texts p {
+
+  font-size: 20px;
+  font-weight: 300;
+  color: #e8e1e1;
+}
+
+.friendChat .icons {
+  display: flex;
+  gap: 20px;
+}
+
+.friendChat .icons img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.friendChat .center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.friendChat .center .texts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 300;
+  padding: 15px;
+  max-width: 100%;
+}
+
+.friendChat .center .texts img {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+}
+
+.message {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  max-width: 70%;
+  background-color: #2f2f3f;
+  color: white;
+  align-self: flex-start;
+  height: 3rem;
+}
+
+.message.own {
+
+  background-color: #5183fe;
+  color: white;
+  align-self: flex-end;
+}
+
+.message .texts {
+  color: white;
+  font-size: 12px;
+}
+
+.friendChat .bottom {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: auto;
+  border-top: 1px solid rgba(221, 221, 221, 0.21);
+  background-color: #2a2a3b;
+}
+
+.friendChat .bottom .icons {
+  display: flex;
+  gap: 20px;
+}
+
+.friendChat .bottom img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.friendChat .bottom input {
+  flex: 1;
+  background-color: rgba(17, 25, 40, 0.5);
+  border: none;
+  outline: none;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.friendChat .bottom input:disabled {
+  cursor: not-allowed;
+}
+
+.friendChat .bottom .emoji {
+  position: relative;
+}
+
+.friendChat .bottom .emoji .picker {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+}
+
+.friendChat .bottom .sendButton {
+  background-color: #5183fe;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.friendChat .bottom .sendButton:disabled {
+  background-color: #5182feb4;
+  cursor: not-allowed;
+}
+
+.createdAt{
+  display: flex;
+  justify-content: flex-end;
+  font-size: 10px;
+  color: #b3b3b3;
+  margin-left: 10px;
+}
+
+.textsTop{
+  color: white;
+}
+
+.textsTop span{
+  font-size: 22px;
+  color: white;
+}
+
+.textsTop p{
+  font-size: 12px;
+  color: white;
+}

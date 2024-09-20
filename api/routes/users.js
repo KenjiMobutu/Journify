@@ -1,16 +1,25 @@
-import express from 'express';
-import { createUser,
-          updateUser,
-          deleteUser,
-          getUser,
-          getAllUsers,
-          getUserBookings,
-          getUserFlightBookings,
-          getUserTaxiBookings,
-          getUserAttractions,
-          deleteBooking
-        } from '../controllers/userController.js';
-import { verifyAdmin, verifyToken, verifyUser } from '../utils/verifyToken.js';
+import express from "express";
+import {
+  createUser,
+  updateUser,
+  deleteUser,
+  getUser,
+  getAllUsers,
+  getUserBookings,
+  getUserFlightBookings,
+  getUserTaxiBookings,
+  getUserAttractions,
+  deleteBooking,
+  getUserChats,
+  getByUsername,
+  addFriends,
+  getAllFriends,
+  updateUserChat,
+  findUserChatById,
+  postUserChatMessage,
+  findUserFriends,
+} from "../controllers/userController.js";
+import { verifyAdmin, verifyToken, verifyUser } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
@@ -27,41 +36,47 @@ router.get("/me", verifyToken, async (req, res) => {
   }
 });
 
-// router.get("/checkToken", verifyToken, (req, res, next) => {
-//   res.send("Token is valid");
-//   //res.status(200).json(req.user);
-// });
-
 router.get("/checkUser/:id", verifyUser, (req, res, next) => {
   res.send("User is verified");
 });
-
-// router.get("/checkAdmin/:id", verifyAdmin, (req, res, next) => {
-//   res.send("Admin is verified");
-// });
 
 //CREATE
 //Voir authController.js
 
 //UPDATE
-router.put('/:id', verifyUser, updateUser);
+router.put("/:id", verifyUser, updateUser);
 
 //DELETE
-router.delete('/:id', verifyUser, deleteUser);
+router.delete("/:id", verifyUser, deleteUser);
+// Gestion des messages
+router.post("/messages", verifyUser, postUserChatMessage);
 
-//GET
-router.get('/:id', verifyUser, getUser);
+// ADD Friend
+router.post("/friends/add", verifyToken, addFriends);
+router.get("/friends", verifyAdmin, getAllFriends);
+router.get("/userFriends/:id", verifyUser, findUserFriends);
+router.get("/findUserChat/:userId/:friendId", verifyUser, findUserChatById);
+router.put("/updateUserChat/:id", verifyUser, updateUserChat);
 
-//GET ALL
-router.get('/', verifyAdmin, getAllUsers);
+//get user by username
+router.get("/search/:userName", verifyUser, getByUsername);
 
-// GET USER BOOKINGS
-router.get('/:id/bookings', verifyUser, getUserBookings);
-router.get('/:id/flightBookings', verifyUser, getUserFlightBookings);
-router.get('/:id/taxiBookings', verifyUser, getUserTaxiBookings);
-router.get('/:id/attractionBookings', verifyUser, getUserAttractions);
+// Gestion des réservations d'un utilisateur
+router.get("/:id/bookings", verifyUser, getUserBookings);
+router.get("/:id/flightBookings", verifyUser, getUserFlightBookings);
+router.get("/:id/taxiBookings", verifyUser, getUserTaxiBookings);
+router.get("/:id/attractionBookings", verifyUser, getUserAttractions);
 
 //DELETE A BOOKING
 router.delete("/:userId/bookings/:id", verifyUser, deleteBooking);
+
+//GET ALL
+router.get("/", verifyAdmin, getAllUsers);
+
+//GET
+router.get("/:id", verifyUser, getUser);
+
+//Get user chats
+router.get("/chats/:id", verifyUser, getUserChats);
 
 export default router;

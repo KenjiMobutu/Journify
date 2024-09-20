@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import cartReducer from "./cartRedux";
 import authReducer from "./authRedux";
 import notifReducer from "./notifRedux";
+import selectedChatReducer from './chatRedux';
 import {
   persistStore,
   persistReducer,
@@ -20,7 +21,7 @@ const getPersistConfig = (userId) => ({
   storage,
 });
 
-const rootReducer = combineReducers({ cart: cartReducer, auth: authReducer, notif: notifReducer });
+const rootReducer = combineReducers({ cart: cartReducer, auth: authReducer, notif: notifReducer, selectedChat: selectedChatReducer, });
 
 export const setupStore = (userId) => {
   const persistConfig = getPersistConfig(userId); // Récupération de la configuration de persistance basée sur l'utilisateur

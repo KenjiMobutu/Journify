@@ -109,7 +109,7 @@ const Navbar = () => {
   }
 
   const handleAddUser = () => {
-    navigate('/addUser');
+    navigate('/friends');
   };
 
   const quantity = useSelector((state) => state.cart.quantity);

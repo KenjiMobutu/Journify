@@ -154,6 +154,25 @@ io.on("connection", (socket) => {
     io.emit("notification", message);
   });
 
+  // Gestion de l'événement 'joinChat'
+  socket.on("joinChat", ({ chatId, userId }) => {
+    // Joindre l'utilisateur à la "room" du chatId
+    socket.join(chatId);
+    console.log(`User with ID ${userId} joined chat room ${chatId}`);
+
+    // Informer les autres utilisateurs dans la "room"
+    socket.to(chatId).emit("userJoined", {
+      userId,
+      message: `User ${userId} has joined the chat.`,
+    });
+  });
+
+  // Gestion des messages envoyés à une "room"
+  socket.on("message", ({ chatId, message, userId }) => {
+    // Émettre le message à tous les utilisateurs dans la "room"
+    io.to(chatId).emit("newMessage", { userId, message });
+  });
+
   // Gestion de la déconnexion
   socket.on("disconnect", () => {
     console.log(`User with socketId ${socket.id} disconnected.`);
