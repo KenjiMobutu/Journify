@@ -364,3 +364,45 @@ export const deleteFriend = async (req, res, next) => {
     next(err);
   }
 };
+
+// Delete user chat
+export const deleteUserChat = async (req, res, next) => {
+  try {
+    const { userId, friendId } = req.params;
+
+    // Rechercher et supprimer le chat
+    await FriendChat.findOneAndDelete({
+      members: { $all: [userId, friendId] },
+    });
+
+    res.status(200).json({ message: "Chat deleted" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateUserStatus = async (req, res) => {
+  try {
+    const { userId, status } = req.body;
+
+    // Valider si le statut est dans les options valides
+    if (!["online", "offline", "do_not_disturb", "away"].includes(status)) {
+      return res.status(400).json({ message: "Statut non valide." });
+    }
+
+    // Mettre à jour le statut de l'utilisateur
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { status: status },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    res.status(200).json({ message: "Statut mis à jour avec succès", user });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la mise à jour du statut", error });
+  }
+};

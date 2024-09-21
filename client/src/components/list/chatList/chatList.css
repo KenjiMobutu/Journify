@@ -1,105 +1,109 @@
 .chatList {
   flex: 1;
   overflow: scroll;
-  .search {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
+}
 
-    .searchBar {
-      flex: 1;
-      background-color: rgba(47, 66, 102, 0.5);
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      border-radius: 10px;
-      padding: 10px;
+.search {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
 
-      input {
-        background-color: transparent;
-        border: none;
-        outline: none;
-        color: white;
-        flex: 1;
-        height: 25px;
-        padding: 10px;
+.searchBar {
+  flex: 1;
+  background-color: rgba(47, 66, 102, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-radius: 10px;
+  padding: 10px;
+}
 
-      }
+.searchBar input {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  flex: 1;
+  height: 25px;
+  padding: 10px;
+}
 
-      img {
-        width: 20px;
-        height: 20px;
-      }
-    }
+.searchBar img {
+  width: 20px;
+  height: 20px;
+}
 
-    .add {
-      width: 36px;
-      height: 36px;
-      background-color: rgba(17, 25, 40, 0.5);
-      padding: 10px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-  }
+.add {
+  width: 36px;
+  height: 36px;
+  background-color: rgba(17, 25, 40, 0.5);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
 
-  .item {
-    display: flex;
-    align-items: center;
-    padding: 15px 20px;
-    cursor: pointer;
-    border-bottom: 1px solid #dddddd35;
-    background-color: #1f2937;
-    border-radius: 10px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    margin-bottom: 10px;
-    position: relative;
-    margin: 10px;
-    overflow: scroll;
-  }
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #dddddd35;
+  background-color: #1f2937;
+  border-radius: 10px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 10px;
+  position: relative;
+  margin: 10px;
+  height: 15%;
+}
 
-  .item:hover {
-    background-color: #2d3748;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
+.item:hover {
+  background-color: #2d3748;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
-  .item img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 15px;
-    position: relative;
-    right: 40%;
-  }
+.chatItemContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.chatAvatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+}
 
-  .item .texts {
-    flex: 1; /* Le texte prend toute la place restante */
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
+.chatTextContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-  .item .texts span {
-    font-weight: 600;
-    font-size: 16px;
-    color: #f9fafb;
-    bottom: 50px;
-  }
+.friendUsername {
+  font-weight: 600;
+  font-size: 16px;
+  color: #fbfaf9;
+}
 
-  .item .texts p {
-    font-size: 14px;
-    font-weight: 400;
-    color: #a0aec0;
-  }
+.friendLastMessage {
+  font-size: 14px;
+  font-weight: 400;
+  color: #a0aec0;
+  margin-top: 5px;
+}
 
-  .unread-indicator {
-    width: 12px;
-    height: 12px;
-    background-color: #f56565;
-    border-radius: 50%;
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-  }
+.unread-indicator {
+  width: 12px;
+  height: 12px;
+  background-color: #f56565;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 }

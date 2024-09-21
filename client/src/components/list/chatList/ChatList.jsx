@@ -1,5 +1,5 @@
 import "./chatList.css";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
 import { AuthenticationContext } from "../../../context/AuthenticationContext";
 import ChatContext from "../../../context/ChatContext.jsx";
 import minus from '../../../assets/minus.png';
@@ -11,7 +11,8 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { selectChat } from "../../../redux/chatRedux.js";
 
-const ChatList = ({userFriends}) => {
+
+const ChatList = ({ userFriends, fetchUserFriends }) => {
   const dispatch = useDispatch();
   const [input, setInput] = useState("");
   const [addMode, setAddMode] = useState(false);
@@ -19,48 +20,30 @@ const ChatList = ({userFriends}) => {
   const { chats, setSelectedChat, setChats } = useContext(ChatContext);
   console.log(userFriends);
 
+  const fetchChats = useCallback(async () => {
+    console.log("Fetching chats...");
+    try {
+      const items = userFriends;
+      const promises = items?.map(async (item) => {
+        const friendId = item.user._id === user._id ? item.friend._id : item.user._id;
+        const userResponse = await fetch(`/api/users/${friendId}`);
+        const usr = await userResponse.json();
+        const messagesResponse = await axios.get(`/api/users/findUserChat/${user._id}/${friendId}`);
+        const messages = messagesResponse.data.messages;
+        const lastMessage = messages.length > 0 ? messages[messages.length - 1] : { content: "Aucun message", createdAt: 0 };
+        return { ...item, friend: usr, lastMessage: lastMessage.content, lastMessageTime: lastMessage.createdAt };
+      });
+      const chatData = await Promise.all(promises);
+      chatData.sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
+      setChats(chatData);
+    } catch (err) {
+      console.error("Erreur lors du chargement des chats:", err);
+    }
+  }, [user._id, userFriends, setChats]);
+
   useEffect(() => {
-    const fetchChats = async () => {
-      try {
-        // const response = await fetch(`/api/users/userFriends/${user._id}`);
-        // const data = await response.json();
-        if (!userFriends || userFriends.length === 0) {
-          console.log("No user friends available");
-          return;
-        }
-        const items = userFriends; // Récupérer les amis de l'utilisateur
-        console.log(items);
-        const promises = items.map(async (item) => {
-          const friendId = item.user._id === user._id ? item.friend._id : item.user._id;
-
-          // Fetch the friend's data
-          const userResponse = await fetch(`/api/users/${friendId}`);
-          const usr = await userResponse.json();
-
-          // Fetch messages for this chat
-          const messagesResponse = await axios.get(`/api/users/findUserChat/${user._id}/${friendId}`);
-          const messages = messagesResponse.data.messages;
-
-          // Get the last message if exists and its timestamp
-          const lastMessage = messages.length > 0 ? messages[messages.length - 1] : { content: "Aucun message", createdAt: 0 };
-
-          // Return the item with the friend data and the last message
-          return { ...item, friend: usr, lastMessage: lastMessage.content, lastMessageTime: lastMessage.createdAt };
-        });
-
-        const chatData = await Promise.all(promises);
-
-        // Trier les chats par l'horodatage du dernier message immédiatement après récupération
-        chatData.sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
-
-        // Mettre à jour l'état avec les chats triés
-        setChats(chatData);
-      } catch (err) {
-        console.error("Erreur lors du chargement des chats:", err);
-      }
-    };
     fetchChats();
-  }, [user._id, setChats, userFriends]);
+  }, [user._id, setChats, userFriends, fetchChats]);
 
   const filteredChats = chats?.filter((c) =>
     c?.friend?.userName?.toLowerCase().includes(input.toLowerCase())
@@ -75,12 +58,18 @@ const ChatList = ({userFriends}) => {
       return item;
     });
 
-    // Trier les chats après sélection du chat (optionnel)
+    // Trier les chats après sélection du chat
     updatedChats.sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
 
     dispatch(selectChat(chat));
     setSelectedChat(chat);
     setChats(updatedChats);
+  };
+
+  // Fonction de rappel appelée après l'ajout d'un nouvel ami
+  const handleFriendAdded = async () => {
+    console.log("Friend added");
+    await fetchUserFriends(); // Rafraîchir la liste des chats
   };
 
   return (
@@ -101,33 +90,39 @@ const ChatList = ({userFriends}) => {
           onClick={() => setAddMode((prev) => !prev)}
         />
       </div>
+      {addMode && <AddUser onFriendAdded={handleFriendAdded} />}
       {filteredChats?.map((chat) => (
         <div
           className={`item ${!chat.isSeen ? 'unread' : ''}`}
           key={chat.chatId || chat.friend._id}
           onClick={() => handleSelect(chat)}
         >
-          <img
-            src={
-              chat.friend.blocked?.includes(user._id)
-                ? avatar
-                : chat.friend.img || avatar
-            }
-            alt="friend avatar"
-          />
-          <div className="texts">
-            <span>
-              {chat.friend.blocked?.includes(user._id)
-                ? "Utilisateur"
-                : chat.friend.userName}
-            </span>
-            <p>{chat.lastMessage}</p> {/* Afficher le dernier message ici */}
+          <div className="chatItemContainer">
+            <img
+              className="chatAvatar"
+              src={
+                chat.friend.blocked?.includes(user._id)
+                  ? avatar
+                  : chat.friend.img || avatar
+              }
+              alt="friend avatar"
+            />
+            <div className="chatTextContainer">
+              <div className="friendUsername">
+                <span>
+                  {chat.friend.blocked?.includes(user._id)
+                    ? "Utilisateur"
+                    : chat.friend.userName}
+                </span>
+              </div>
+              <div className="friendLastMessage">
+                <p>{chat.lastMessage}</p> {/* Afficher le dernier message ici */}
+              </div>
+            </div>
           </div>
           {!chat.isSeen && <div className="unread-indicator"></div>}
         </div>
       ))}
-
-      {addMode && <AddUser />}
     </div>
   );
 };

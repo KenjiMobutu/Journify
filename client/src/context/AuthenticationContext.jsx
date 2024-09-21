@@ -13,7 +13,8 @@ const AuthenticationReducer = (state, action) => {
   switch (action.type) {
     case "LOGIN_START":
       return {
-        user: null,
+        //user: null,
+        ...state,
         loading: true,
         error: null,
       };
@@ -35,6 +36,11 @@ const AuthenticationReducer = (state, action) => {
         loading: false,
         error: null,
       };
+    case "UPDATE_STATUS":
+      return {
+        ...state,
+        user: { ...state.user, status: action.payload }, // Mise à jour du statut utilisateur
+      };
     default:
       return state;
   }
@@ -47,7 +53,7 @@ const AuthenticationProvider = ({ children }) => {
   }, [state.user]);
 
   return (
-    <AuthenticationContext.Provider value={{ user: state.user, loading: state.loading, error: state.error, dispatch }}>
+    <AuthenticationContext.Provider value={{ ...state, dispatch }}>
       {children}
     </AuthenticationContext.Provider>
   );

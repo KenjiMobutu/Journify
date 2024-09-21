@@ -12,6 +12,7 @@
   background-color: #f7f7f7;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .friend-management h2,
@@ -153,23 +154,39 @@ li .btn-remove:hover {
   justify-content: center;
   align-items: center;
   color: white;
+  position: relative;
 }
 
 .foundUserTitle {
   font-size: 24px;
   font-weight: 300;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
 }
 
 .foundUserTitleClose {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -10px; /* Place le bouton en haut */
+  right: -10px;
   font-size: 24px;
   font-weight: 300;
-  position: relative;
-  left: 190%;
-  bottom: 20px;
+  margin-left: auto;
   background-color: rgba(8, 40, 98, 0.781);
-  padding: 5px;
-
+  padding: 15px;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
   cursor: pointer;
+}
+
+.foundUserTitleClose:hover {
+  background-color: rgba(8, 40, 98, 0.981);
 }
 
 .foundUser {

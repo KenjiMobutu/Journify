@@ -9,9 +9,11 @@ import Notification from "../../components/notification/Notification";
 import { useEffect, useState } from "react";
 import avatar from '../../assets/nobody.png';
 import axios from "axios";
+import ChatContext from "../../context/ChatContext.jsx";
 
 const Friend = ({ socket }) => {
   const { user } = useContext(AuthenticationContext);
+  const { setSelectedChat } = useContext(ChatContext);
   const chatId = null;
   const [userFriends, setUserFriends] = useState([]);
   const [searchInput, setSearchInput] = useState(""); // Pour stocker l'input de recherche
@@ -98,8 +100,11 @@ const Friend = ({ socket }) => {
     try {
       // Requête pour supprimer l'ami
       await axios.delete(`/api/users/friends/delete/${user._id}/${friendId}`);
+      // supprimer le chat
+      await axios.delete(`/api/users/deleteUserChat/${user._id}/${friendId}`);
       // Après suppression, mettre à jour la liste d'amis
       fetchUserFriends();
+      setSelectedChat(null);
     } catch (err) {
       console.error(err);
     }
@@ -143,7 +148,7 @@ const Friend = ({ socket }) => {
               </div>
             )}
             <ul id="friend-list">
-              {userFriends.map((friend) => (
+              {userFriends?.map((friend) => (
                 <li key={friend.friend._id}>
                   <img src={friend.friend.img || avatar} alt="" className="friendImg" />
                   <span>{friend.friend.userName}</span>
@@ -185,11 +190,11 @@ const Friend = ({ socket }) => {
       <div className="chat-container">
         {user ? (
           <>
-            <ChatProvider>
-              <List userFriends={userFriends}/>
+
+              <List userFriends={userFriends} fetchUserFriends={fetchUserFriends}/>
               <Chat socket={socket} />
               <Detail />
-            </ChatProvider>
+
           </>
         ) : (
           "Please login to chat"

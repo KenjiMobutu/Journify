@@ -196,3 +196,15 @@
   font-size: 12px;
   color: white;
 }
+
+.noChat, .noMessages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #ccc;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 20px;
+  text-align: center;
+}

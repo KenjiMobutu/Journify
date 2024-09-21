@@ -10,6 +10,7 @@ import { setupStore } from './redux/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PersistorProvider } from './context/PersistorContext';
 import { QueryClient, QueryClientProvider, } from '@tanstack/react-query';
+import { ChatProvider } from './context/ChatContext';
 
 // Create a client
 const queryClient = new QueryClient()
@@ -28,7 +29,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <SearchContextProvider>
               <StripeProvider>
                 <QueryClientProvider client={queryClient}>
-                  <App />
+                  <ChatProvider>
+                    <App />
+                  </ChatProvider>
                 </QueryClientProvider>
               </StripeProvider>
             </SearchContextProvider>

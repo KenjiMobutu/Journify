@@ -14,11 +14,11 @@ const UserInfo = () => {
         <img src={user.img || "./avatar.png"} alt="" />
         <h2>{user.userName}</h2>
       </div>
-      <div className="icons">
+      {/* <div className="icons">
         <img src={more} alt="" />
         <img src={video} alt="" />
         <img src={edit }alt="" />
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { AuthenticationContext } from "../../../../context/AuthenticationContext";
 import axios from "axios";
 
-const AddUser = () => {
+const AddUser = ({ onFriendAdded }) => {
   const [searchInput, setSearchInput] = useState(""); // Pour stocker l'input de recherche
   const [findUser, setFindUser] = useState(null); // Pour stocker l'utilisateur trouvé
   const [error, setError] = useState(null); // Pour gérer les erreurs
@@ -39,11 +39,12 @@ const AddUser = () => {
         user: user._id,
         friend: findUser._id,
       });
-      alert(`${findUser.userName} has been added as your friend!`);
+      //alert(`${findUser.userName} has been added as your friend!`);
 
       // Réinitialiser après ajout
       setFindUser(null);
       setSearchInput("");
+      onFriendAdded();
     } catch (err) {
       console.error(err);
       setError("An error occurred while adding the user.");

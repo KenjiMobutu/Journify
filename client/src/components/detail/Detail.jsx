@@ -1,26 +1,43 @@
 import React from 'react'
 import './detail.css'
-import { useContext } from 'react';
+import {  useState, useEffect, useContext } from 'react';
 import { AuthenticationContext } from "../../context/AuthenticationContext";
 import arrowUp from '../../assets/arrowUp.png';
 import arrowDown from '../../assets/arrowDown.png';
 import download from '../../assets/download.png';
+import axios from 'axios';
 
 const Detail = () => {
 
-  const {user} = useContext(AuthenticationContext);
+  const { user, dispatch} = useContext(AuthenticationContext);
   const isCurrentUserBlocked = null;
   const isReceiverBlocked = null;
-  const handleBlock = () => {}
+  const handleBlock = () => { }
+  console.log(user.status);
 
-
+  const handleStatusChange = (newStatus) => {
+    dispatch({
+      type: "UPDATE_STATUS",
+      payload: newStatus, // Envoyer le nouveau statut
+    });
+  };
 
   return (
     <div className="detail">
       <div className="user">
         <img src={user?.img || "./avatar.png"} alt="" />
         <h2>{user?.userName}</h2>
-        <p>Lorem ipsum dolor sit amet.</p>
+        <span className={`status-icon ${user?.status}`}></span>
+        <select
+          className="status-selector"
+          value={user?.status || "online"}
+          onChange={(e) => handleStatusChange(e.target.value)}
+        >
+          <option value="online">En ligne</option>
+          <option value="offline">Hors ligne</option>
+          <option value="do_not_disturb">Ne pas déranger</option>
+          <option value="away">Absent</option>
+        </select>
       </div>
       <div className="info">
         <div className="option">
@@ -75,7 +92,7 @@ const Detail = () => {
                 />
                 <span>photo_2024_2.png</span>
               </div>
-              <img src={download}  alt="" className="icon" />
+              <img src={download} alt="" className="icon" />
             </div>
             <div className="photoItem">
               <div className="photoDetail">

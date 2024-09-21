@@ -111,3 +111,39 @@
     }
   }
 }
+
+.status-icon {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-icon.online {
+  background-color: green;
+}
+
+.status-icon.offline {
+  background-color: gray;
+}
+
+.status-icon.do_not_disturb {
+  background-color: red;
+}
+
+.status-icon.away {
+  background-color: yellow;
+}
+
+.status-selector {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  padding: 5px;
+  margin-left: 10px;
+}
+
+.status-selector option {
+  color: black;
+}

@@ -26,6 +26,11 @@ const UserSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    status: {
+      type: String,
+      enum: ["online", "offline", "do_not_disturb", "away"],
+      default: "offline",
+    },
     bookings: [
       {
         type: Schema.Types.ObjectId,

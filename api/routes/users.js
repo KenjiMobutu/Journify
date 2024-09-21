@@ -19,6 +19,8 @@ import {
   postUserChatMessage,
   findUserFriends,
   deleteFriend,
+  deleteUserChat,
+  updateUserStatus
 } from "../controllers/userController.js";
 import { verifyAdmin, verifyToken, verifyUser } from "../utils/verifyToken.js";
 
@@ -59,6 +61,8 @@ router.delete("/friends/delete/:userId/:friendId", verifyUser, deleteFriend);
 router.get("/userFriends/:id", verifyUser, findUserFriends);
 router.get("/findUserChat/:userId/:friendId", verifyUser, findUserChatById);
 router.put("/updateUserChat/:id", verifyUser, updateUserChat);
+router.delete("/deleteUserChat/:userId/:friendId", verifyUser, deleteUserChat);
+router.put('/status', verifyToken, updateUserStatus);
 
 //get user by username
 router.get("/search/:userName", verifyUser, getByUsername);
