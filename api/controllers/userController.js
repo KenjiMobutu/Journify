@@ -345,3 +345,22 @@ export const postUserChatMessage = async (req, res, next) => {
     next(err);
   }
 };
+
+// Delete friend
+export const deleteFriend = async (req, res, next) => {
+  try {
+    const { userId, friendId } = req.params;
+
+    // Rechercher et supprimer la relation d'amitié
+    await Friend.findOneAndDelete({
+      $or: [
+        { user: userId, friend: friendId },
+        { user: friendId, friend: userId },
+      ],
+    });
+
+    res.status(200).json({ message: "Friend deleted" });
+  } catch (err) {
+    next(err);
+  }
+};

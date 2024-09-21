@@ -11,21 +11,25 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { selectChat } from "../../../redux/chatRedux.js";
 
-const ChatList = () => {
+const ChatList = ({userFriends}) => {
   const dispatch = useDispatch();
   const [input, setInput] = useState("");
   const [addMode, setAddMode] = useState(false);
   const { user } = useContext(AuthenticationContext);
   const { chats, setSelectedChat, setChats } = useContext(ChatContext);
+  console.log(userFriends);
 
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        const response = await fetch(`/api/users/userFriends/${user._id}`);
-        const data = await response.json();
-
-        const items = data; // Récupérer les amis de l'utilisateur
-
+        // const response = await fetch(`/api/users/userFriends/${user._id}`);
+        // const data = await response.json();
+        if (!userFriends || userFriends.length === 0) {
+          console.log("No user friends available");
+          return;
+        }
+        const items = userFriends; // Récupérer les amis de l'utilisateur
+        console.log(items);
         const promises = items.map(async (item) => {
           const friendId = item.user._id === user._id ? item.friend._id : item.user._id;
 
@@ -56,7 +60,7 @@ const ChatList = () => {
       }
     };
     fetchChats();
-  }, [user._id, setChats]);
+  }, [user._id, setChats, userFriends]);
 
   const filteredChats = chats?.filter((c) =>
     c?.friend?.userName?.toLowerCase().includes(input.toLowerCase())

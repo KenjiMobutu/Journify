@@ -28,7 +28,7 @@ const Friend = ({ socket }) => {
       console.error("Erreur lors du chargement des amis:", err);
     }
   };
-  
+
   // Fonction pour gérer la recherche de l'utilisateur
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -93,6 +93,18 @@ const Friend = ({ socket }) => {
 
   }, [user._id, user]);
 
+  // Fonction pour gérer la suppression d'un ami
+  const handleDeleteFriend = async (friendId) => {
+    try {
+      // Requête pour supprimer l'ami
+      await axios.delete(`/api/users/friends/delete/${user._id}/${friendId}`);
+      // Après suppression, mettre à jour la liste d'amis
+      fetchUserFriends();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <div className="friend-group-container">
@@ -113,7 +125,7 @@ const Friend = ({ socket }) => {
           {/* Affiche un message d'erreur si besoin */}
           {error && <p className="errorMessage">{error}</p>}
           <div className="friend-list">
-            <h3>Mes amis</h3>
+            <h3>MY FRIENDS</h3>
             {/* Affiche les informations de l'utilisateur trouvé */}
             {findUser && (
               <div className="findUser">
@@ -135,6 +147,9 @@ const Friend = ({ socket }) => {
                 <li key={friend.friend._id}>
                   <img src={friend.friend.img || avatar} alt="" className="friendImg" />
                   <span>{friend.friend.userName}</span>
+                  <div className="deleteFriend">
+                    <button className="btn-delete" onClick={() => handleDeleteFriend(friend.friend._id)}>Delete</button>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -171,7 +186,7 @@ const Friend = ({ socket }) => {
         {user ? (
           <>
             <ChatProvider>
-              <List />
+              <List userFriends={userFriends}/>
               <Chat socket={socket} />
               <Detail />
             </ChatProvider>

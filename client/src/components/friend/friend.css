@@ -89,6 +89,23 @@ li .btn-remove:hover {
   background-color: #ff3333;
 }
 
+.deleteFriend {
+  margin-left: auto; /* Assure que le bouton est collé à droite */
+}
+
+.btn-delete {
+  background-color: #ff5c5c;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  background-color: #ff3838;
+}
+
 .chat-container {
   display: flex;
   justify-content: space-between;
@@ -106,6 +123,18 @@ li .btn-remove:hover {
   width: 90%;
   height: 90vh;
   overflow: hidden;
+}
+#friend-list {
+  list-style: none;
+  padding: 0;
+}
+
+#friend-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Place le bouton à droite */
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 
 .friendImg {
