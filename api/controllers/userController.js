@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import Friend from "../models/Friend.js";
 import Message from "../models/Message.js";
 import FriendChat from "../models/FriendChat.js";
+import Group from "../models/Group.js";
 import bcrypt from "bcryptjs";
 
 // Create User
@@ -266,10 +267,10 @@ export const findUserFriends = async (req, res, next) => {
     // Rechercher les relations d'amitié où l'utilisateur est soit le 'user', soit le 'friend'
     const friends = await Friend.find({
       $or: [
-        { user: id },   // L'utilisateur est le principal
-        { friend: id }  // L'utilisateur est l'ami
-      ]
-    }).populate("user friend");  // Populer à la fois 'user' et 'friend'
+        { user: id }, // L'utilisateur est le principal
+        { friend: id }, // L'utilisateur est l'ami
+      ],
+    }).populate("user friend"); // Populer à la fois 'user' et 'friend'
 
     res.status(200).json(friends);
   } catch (err) {
@@ -403,6 +404,79 @@ export const updateUserStatus = async (req, res) => {
 
     res.status(200).json({ message: "Statut mis à jour avec succès", user });
   } catch (error) {
-    res.status(500).json({ message: "Erreur lors de la mise à jour du statut", error });
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la mise à jour du statut", error });
+  }
+};
+
+// Create group
+export const createGroup = async (req, res, next) => {
+  try {
+    const { groupName, members, creatorId } = req.body;
+
+    // Créer un groupe avec le nom et les membres fournis
+    const newGroup = await Group.create({
+      groupName,
+      members,
+      creatorId,
+    });
+
+    res.status(201).json(newGroup);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get user groups
+export const getUserGroups = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+
+    // Rechercher les groupes où l'utilisateur est membre ou créateur
+    const groups = await Group.find({
+      $or: [
+        { members: userId }, // L'utilisateur est membre du groupe
+        { creatorId: userId }, // L'utilisateur est le créateur du groupe
+      ],
+    }).populate("members", "userName img"); // Optionnel : pour peupler les membres avec des informations supplémentaires
+
+    res.status(200).json(groups);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Delete group
+export const deleteGroup = async (req, res, next) => {
+  try {
+    const { groupId } = req.params;
+    await Group.findByIdAndDelete(groupId);
+    res.status(200).json({ message: "Groupe supprimé" });
+  }
+  catch (err) {
+    next(err);
+  }
+}
+
+// Delete member from group
+export const deleteMemberGroup = async (req, res, next) => {
+  try {
+    const { groupId, userId } = req.params;
+
+    // Rechercher et mettre à jour le groupe
+    // const group = await Group.findById(groupId);
+    // group.members.pull(userId);
+    // await group.save();
+    // Retirer le membre du groupe
+    await Group.findByIdAndUpdate(
+      groupId,
+      { $pull: { members: userId } },
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Membre supprimé du groupe" });
+  } catch (err) {
+    next(err);
   }
 };

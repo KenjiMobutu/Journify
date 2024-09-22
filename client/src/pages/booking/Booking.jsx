@@ -1,48 +1,45 @@
 import "./booking.css";
 import PropTypes from 'prop-types';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { AuthenticationContext } from '../../context/AuthenticationContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from "../../components/navbar/Navbar";
-import { useLocation } from "react-router-dom";
-import { add, format } from "date-fns";
+import { format } from "date-fns";
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
-import { useState } from 'react';
+
 
 const Booking = ({ socket }) => {
   const token = localStorage.getItem('access_token');
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const location = useLocation();
-  const { startDate, endDate, adults, children, rooms, hotel, price, addedAttractions, attractionPrice } = location.state || {};
-  const [paymentSuccess, setPaymentSuccess] = useState(false);  // État pour le succès du paiement
-  const [paymentIntentId, setPaymentIntentId] = useState('');  // État pour l'ID du paiement
-  const [showConfirmation, setShowConfirmation] = useState(false);  // État pour afficher la confirmation
-  const [buttonDisabled, setButtonDisabled] = useState(false);  // État pour désactiver le bouton
-  const [buttonText, setButtonText] = useState('Payer');  // Texte du bouton
+  const { startDate, endDate, adults, children, rooms, hotel, price, addedAttractions, attractionPrice, selectedFlight } = location.state || {};
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentIntentId, setPaymentIntentId] = useState('');
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [buttonText, setButtonText] = useState('Payer');
   const { user } = useContext(AuthenticationContext);
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
-  const validatedPrice = Number(price) || 0; // Assure que price est un nombre, sinon 0
-  const validatedAttractionPrice = Number(attractionPrice) || 0; // Assure que attractionPrice est un nombre, sinon 0
-  console.log("validatedATTPrice", validatedAttractionPrice);
+  console.log(location.state);
+  console.log("FLIGHT", selectedFlight);
 
-  const attractionCost = validatedAttractionPrice - validatedPrice;
-  console.log("attractionCost", attractionCost);
+  // Redirect if user is not logged in
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
 
-  // Format dates to dd/MM/yyyy
-  const formattedStartDate = format(startDate, "dd/MM/yyyy");
-  const formattedEndDate = format(endDate, "dd/MM/yyyy");
+  // Calculate validated prices
+  const validatedPrice = Number(price) || 0;
+  const validatedAttractionPrice = Math.round(Number(attractionPrice)) || 0;
 
-  // Calculer le nombre de nuits
-  const timeDifference = new Date(endDate).getTime() - new Date(startDate).getTime();
-  const numberOfNights = timeDifference / (1000 * 3600 * 24);
+  const formattedStartDate = format(new Date(startDate), "dd/MM/yyyy");
+  const formattedEndDate = format(new Date(endDate), "dd/MM/yyyy");
 
-  if (!user) {
-    // Redirige l'utilisateur vers la page de connexion si non authentifié
-    navigate('/login');
-    return null;
-  }
+  const numberOfNights = (new Date(endDate) - new Date(startDate)) / (1000 * 3600 * 24);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,14 +52,16 @@ const Booking = ({ socket }) => {
     const cardElement = elements.getElement(CardElement);
 
     try {
-      setButtonDisabled(true);  // Désactiver le bouton pendant le traitement du paiement
+      setButtonDisabled(true);
 
-      // Créer un Payment Intent et récupérer le client_secret
+      // Fetch payment intent
       const paymentIntentRes = await fetch(`/api/hotels/create-payment-intent`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        credentials: 'include',
-        body: JSON.stringify({ amount: validatedAttractionPrice * 100 }) // Convertir le prix en centimes
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ amount: validatedAttractionPrice * 100 })
       });
 
       if (!paymentIntentRes.ok) {
@@ -70,8 +69,6 @@ const Booking = ({ socket }) => {
       }
 
       const paymentIntentData = await paymentIntentRes.json();
-
-      // Vérification du client_secret
       if (!paymentIntentData.clientSecret) {
         throw new Error("Failed to retrieve client secret from payment intent response.");
       }
@@ -87,22 +84,19 @@ const Booking = ({ socket }) => {
       });
 
       if (error) {
-        console.error('Payment error:', error);
-        setButtonDisabled(false);  // Réactiver le bouton en cas d'erreur
-        return; // Arrêtez l'exécution si une erreur de paiement se produit
-      } else {
-        // Paiement réussi, mettre à jour l'ID du PaymentIntent
-        setPaymentIntentId(paymentIntent.id);
+        throw new Error(`Payment error: ${error.message}`);
       }
 
-      // Enregistrez la réservation après la réussite du paiement
-      const response = await fetch(`/api/hotels/${hotel.hotel_id}/bookings`, {
+      // Set payment intent id on success
+      setPaymentIntentId(paymentIntent.id);
+
+      // Send booking details after payment success
+      const bookingResponse = await fetch(`/api/hotels/${hotel.hotel_id}/bookings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        credentials: 'include',
         body: JSON.stringify({
           paymentIntentId: paymentIntent.id,
           _id: user._id,
@@ -113,10 +107,10 @@ const Booking = ({ socket }) => {
           checkOut: endDate,
           adultsCount: adults,
           childrenCount: children,
-          rooms: rooms,
+          rooms,
           hotel: hotel._id,
           totalCost: price,
-          numberOfNights: numberOfNights,
+          numberOfNights: Math.round(numberOfNights),
           address: hotel.address,
           zip: hotel.zip || '',
           city: hotel.city_trans,
@@ -124,61 +118,76 @@ const Booking = ({ socket }) => {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Failed to book: ${response.statusText}`);
+      if (!bookingResponse.ok) {
+        throw new Error(`Failed to book: ${bookingResponse.statusText}`);
       }
 
-      await response.json();
+      await bookingResponse.json();
 
-      // Paiement pour les attractions
-      if (addedAttractions.length > 0) {
-        try {
-          for (const attraction of addedAttractions) {
-            const attractionResponse = await fetch(`/api/payment/attraction`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-              credentials: 'include',
-              body: JSON.stringify({
-                paymentIntentId: paymentIntent.id, // Utilisation correcte de l'ID après sa définition
-                _id: user._id,
-                userName: user.userName,
-                userEmail: user.email,
-                name: attraction.name,
-                description: attraction.description,
-                startDate: attraction.startDate,
-                endDate: attraction.endDate,
-                city: attraction.city,
-                price: attraction.price,
-                ticketCount: attraction.ticketCount,
-              }),
-            });
-            await attractionResponse.json();
-            if (!attractionResponse.ok) {
-              throw new Error('Payment failed for attraction');
-            }
-          }
+      // Handle payment for attractions and flights
+      await handleExtraPayments(paymentIntent.id, token, user, addedAttractions, selectedFlight);
 
-        } catch (error) {
-          console.error('Error during attraction payment process:', error);
-        }
-      }
+      // Payment success actions
+      setPaymentSuccess(true);
+      setButtonText('Paid');
+      setShowConfirmation(true);
+      socket?.emit("notificationBooking", `${user.userName} made a new booking.`);
 
-      // Gestion du succès du paiement
-      setPaymentSuccess(true);  // Marquer le paiement comme réussi
-      setButtonText('Paid');  // Changer le texte du bouton
-      setShowConfirmation(true);  // Afficher la fenêtre de confirmation
-      socket?.emit("notificationBooking", user.userName + " made a new booking.");  // Envoyer une notification de nouvelle réservation
-      // Masquer la confirmation après 5 secondes
-      setTimeout(() => {
-        setShowConfirmation(false);
-      }, 5000);
-
+      setTimeout(() => setShowConfirmation(false), 5000);
     } catch (err) {
-      console.error('Error during payment or booking:', err);
-      setButtonDisabled(false);  // Réactiver le bouton en cas d'erreur
+      console.error(err.message);
+    } finally {
+      setButtonDisabled(false);
+    }
+  };
+
+  // Handle payment for attractions and flights
+  const handleExtraPayments = async (paymentIntentId, token, user, addedAttractions, selectedFlight) => {
+    try {
+      for (const attraction of addedAttractions) {
+        const attractionResponse = await fetch(`/api/payment/attraction`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            paymentIntentId,
+            _id: user._id,
+            userName: user.userName,
+            userEmail: user.email,
+            ...attraction,
+          }),
+        });
+        if (!attractionResponse.ok) throw new Error('Payment failed for attraction');
+      }
+
+      for (const flight of selectedFlight) {
+        const flightResponse = await fetch(`/api/payment/bookings`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            paymentIntentId,
+            _id: user._id,
+            userName: user.userName,
+            userEmail: user.email,
+            departureAirport: flight.segments[0].departureAirport.cityName,
+            arrivalAirport: flight.segments[0].arrivalAirport.cityName,
+            departureDate: flight.segments[0].departureTime,
+            arrivalDate: flight.segments[0].arrivalTime,
+            adultsCount: adults,
+            childrenCount: children,
+            cabinClass: flight.segments[0].legs[0].cabinClass,
+            totalCost: flight.priceBreakdown.total.units,
+          }),
+        });
+        if (!flightResponse.ok) throw new Error('Payment failed for flight');
+      }
+    } catch (error) {
+      console.error(error.message);
     }
   };
 
@@ -257,6 +266,24 @@ const Booking = ({ socket }) => {
                       </div>
                     ))}
                   </div>
+                )}
+              </div>
+              <div className="addedFlights">
+                {selectedFlight?.length > 0 && (
+                <div className="addedFlightsList">
+                  <div className="addedFlightsTitle">Added Flights</div>
+                  {selectedFlight.map((flight, index) => (
+                  <div key={index} className="addedFlightsItem">
+                    <div className="addedFlightDetails">
+                      <span>{flight.segments[0].departureAirport.cityName} - {flight.segments[0].arrivalAirport.cityName}</span>
+                      <span>{format(new Date(flight.segments[0].departureTime), "dd/MM/yyyy HH:mm")} - {format(new Date(flight.segments[0].arrivalTime), "dd/MM/yyyy HH:mm")}</span>
+                    </div>
+                    <div className="addedFlightsPrice">
+                      <span>{flight.priceBreakdown.total.units}€</span>
+                    </div>
+                  </div>
+                  ))}
+                </div>
                 )}
               </div>
             </div>

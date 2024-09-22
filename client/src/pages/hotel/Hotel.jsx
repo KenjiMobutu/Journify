@@ -270,7 +270,7 @@ const Hotel = () => {
     } catch (error) {
       console.error("Error fetching hotel details:", error);
     }
-  }, [dates, options, hotelId]);
+  }, [dates, options, hotelId, rapidapiKey, days]);
 
   useEffect(() => {
     if (dates.length > 0 && options.adult !== undefined && options.children !== undefined && options.room !== undefined) {
@@ -467,6 +467,7 @@ const Hotel = () => {
           extraOptions={extraOptions}
           addedAttractions={addedAttractions}
           attractionPrice={totalPrice}
+          selectedFlight={selectedFlight}
         />
       }
       {openMoreBooking && <MoreBookings setOpen={setOpenMoreBooking} setOpenPayment={setOpenPayment} onConfirm={handleMoreBookingsConfirm} />}

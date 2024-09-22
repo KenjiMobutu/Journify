@@ -24,15 +24,15 @@ const BookingSchema = new Schema({
   },
   adultsCount: {
     type: Number,
-    required: true
+
   },
   childrenCount: {
     type: Number,
-    required: true
+
   },
   rooms: {
     type: Number,
-    required: true
+    
   },
   totalCost: {
     type: Number,

@@ -1,4 +1,5 @@
 import express from "express";
+import User from "../models/User.js";
 import {
   createUser,
   updateUser,
@@ -20,7 +21,11 @@ import {
   findUserFriends,
   deleteFriend,
   deleteUserChat,
-  updateUserStatus
+  updateUserStatus,
+  createGroup,
+  getUserGroups,
+  deleteGroup,
+  deleteMemberGroup
 } from "../controllers/userController.js";
 import { verifyAdmin, verifyToken, verifyUser } from "../utils/verifyToken.js";
 
@@ -63,6 +68,10 @@ router.get("/findUserChat/:userId/:friendId", verifyUser, findUserChatById);
 router.put("/updateUserChat/:id", verifyUser, updateUserChat);
 router.delete("/deleteUserChat/:userId/:friendId", verifyUser, deleteUserChat);
 router.put('/status', verifyToken, updateUserStatus);
+router.post('/groups/create', verifyToken, createGroup);
+router.get('/userGroups/:userId', verifyUser, getUserGroups);
+router.delete('/groups/delete/:groupId', verifyToken, deleteGroup);
+router.delete('/groups/delete/:groupId/:userId', verifyToken, deleteMemberGroup);
 
 //get user by username
 router.get("/search/:userName", verifyUser, getByUsername);

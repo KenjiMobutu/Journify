@@ -28,15 +28,14 @@ const FlightBookingSchema = new Schema({
   },
   adultsCount: {
     type: Number,
-    required: true
+
   },
   childrenCount: {
     type: Number,
-    required: true
+    
   },
   cabinClass: {
     type: String,
-    required: true
   },
   totalCost: {
     type: Number,

@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 
-function Reservation({ setOpen, hotelId, hotel, nbRooms, addedAttractions, attractionPrice }) {
+function Reservation({ setOpen, hotelId, hotel, nbRooms, addedAttractions, attractionPrice, selectedFlight }) {
   // Define the PropTypes for the Reservation component
   // Add prop type validation
   Reservation.propTypes = {
@@ -19,6 +19,7 @@ function Reservation({ setOpen, hotelId, hotel, nbRooms, addedAttractions, attra
     nbRooms: PropTypes.number.isRequired,
     addedAttractions: PropTypes.array.isRequired,
     attractionPrice: PropTypes.number.isRequired,
+    selectedFlight: PropTypes.object.isRequired,
   };
 
   const { dates: contextDates, options: contextOptions } = useContext(SearchContext);
@@ -104,10 +105,10 @@ function Reservation({ setOpen, hotelId, hotel, nbRooms, addedAttractions, attra
       price: totalPrice,
       addedAttractions: addedAttractions,
       attractionPrice: attractionPrice,
+      selectedFlight: selectedFlight,
     };
 
     setOpen(false);
-    //navigate(`/hotels/${hotelId}/booking?${queryParams}`);
     navigate(`/hotels/${hotelId}/booking`, { state: reservationData }); //envoyer les données de la réservation via le state
   };
 

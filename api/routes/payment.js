@@ -9,6 +9,7 @@ import { createFlightBooking,
         deleteTaxiBooking,
         createAttractionBooking,
         getAttractionBookings,
+        deleteAttractionBooking
       } from '../controllers/payController.js';
 import Stripe from 'stripe';
 
@@ -51,6 +52,6 @@ router.post("/attraction", verifyToken, createAttractionBooking)
 router.get("/attraction", verifyAdmin, getAttractionBookings);
 
 //Delete an attraction booking
-//router.delete("/attraction/:id", verifyAdmin, deleteAttractionBooking);
+router.delete("/attraction/:id", verifyAdmin, deleteAttractionBooking);
 
 export default router;

@@ -79,12 +79,6 @@ const UserSchema = new Schema(
         ref: "Group",
       },
     ],
-    groupMembers: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "GroupMember",
-      },
-    ],
     friendChats: [
       {
         type: Schema.Types.ObjectId,

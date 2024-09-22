@@ -1,7 +1,7 @@
 import "./list.css"
 import Userinfo from "../../components/list/userInfo/UserInfo.jsx"
 import ChatList from "../../components/list/chatList/ChatList.jsx"
-const List = ({userFriends, fetchUserFriends}) => {
+const ListChat = ({userFriends, fetchUserFriends}) => {
   return (
     <div className='list'>
       <Userinfo />
@@ -10,4 +10,4 @@ const List = ({userFriends, fetchUserFriends}) => {
   )
 }
 
-export default List
+export default ListChat

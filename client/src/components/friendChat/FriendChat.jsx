@@ -218,7 +218,6 @@ const FriendChat = ({ socket }) => {
             style={{ display: "none" }}
             onChange={handleImg}
           />
-          <img src={mic} alt="Microphone" />
         </div>
         <input
           type="text"

@@ -35,7 +35,7 @@ const Profile = () => {
           <div className="left">
             <div className="editButton" onClick={handleEdit}>Edit</div>
             <h1 className="title">Information</h1>
-            <div className="item">
+            <div className="itemProfile">
               <img src={data.img || "https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
                 alt=""
                 className="itemImg"

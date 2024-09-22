@@ -66,6 +66,24 @@ const MyBookings = () => {
     }
   };
 
+  const handleFlightCancel = async (id) => {
+    try {
+      await axios.delete(`/api/payment/bookings/${id}`);
+      setFlights((prev) => prev.filter((flight) => flight._id !== id));
+    } catch (error) {
+      console.error('Error cancelling the flight:', error);
+    }
+  };
+
+  const handleAttractionCancel = async (id) => {
+    try {
+      await axios.delete(`/api/payment/attraction//${id}`);
+      setAttractions((prev) => prev.filter((attraction) => attraction._id !== id));
+    } catch (error) {
+      console.error('Error cancelling the attraction:', error);
+    }
+  };
+
   const isCancelable = (date) => {
     console.log(date);
     const today = new Date();
@@ -179,7 +197,7 @@ const MyBookings = () => {
                           {isCancelable(flight.departureDate) && (
                             <button
                               className="cancelButton"
-                              onClick={() => handleCancel(flight._id, 'flight')}
+                              onClick={() => handleFlightCancel(flight._id, 'flight')}
                             >
                               Cancel Flight
                             </button>
@@ -240,18 +258,6 @@ const MyBookings = () => {
                       <div className="booking" key={index}>
                         <div className="bookingTitle">{attraction.name}</div>
                         <div className="bookingDetails">
-                          {/* <div className="bookingDetail">
-                            <label>Location</label>
-                            <span>{attraction.city}</span>
-                          </div>
-                          <div className="bookingDetail">
-                            <label>Start Date</label>
-                            <span>{new Date(attraction.startDate).toLocaleDateString()}</span>
-                          </div>
-                          <div className="bookingDetail">
-                            <label>End Date</label>
-                            <span>{new Date(attraction.endDate).toLocaleDateString()}</span>
-                          </div> */}
                           <div className="bookingDetail">
                             <label>Price</label>
                             <span>{attraction.price} €</span>
@@ -260,14 +266,14 @@ const MyBookings = () => {
                             <label>Ticket(s)</label>
                             <span>{attraction.ticketCount}</span>
                           </div>
-                          {isCancelable(attraction.startDate) && (
-                            <button
-                              className="cancelButton"
-                              onClick={() => handleCancel(attraction._id, 'attraction')}
-                            >
-                              Cancel Booking
-                            </button>
-                          )}
+
+                          <button
+                            className="cancelButton"
+                            onClick={() => handleAttractionCancel(attraction._id, 'attraction')}
+                          >
+                            Cancel Booking
+                          </button>
+
                         </div>
                       </div>
                     ))}

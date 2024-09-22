@@ -6,12 +6,15 @@ import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined
 import { removeProduct, removeFlight, removeTaxi, resetCart, removeAttraction } from "../../redux/cartRedux.js";
 import { Link } from "react-router-dom";
 import attractionImg from '../../assets/attractions.png';
-import flightQrCode from '../../assets/flightQrCode.png';
+import Payment from "../../components/payment/Payment";
 
 const Cart = () => {
   const [hotelPhoto, setHotelPhoto] = useState([]);
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  const [openPayment, setOpenPayment] = useState(false);
+
+  console.log(cart);
 
   // Fonction pour calculer le total dynamiquement
   const calculateTotal = () => {
@@ -65,6 +68,11 @@ const Cart = () => {
   const handleResetCart = (cart) => {
     dispatch(resetCart(cart));
   }
+
+  const handleClick = () => {
+    setOpenPayment(true);
+  };
+
 
   return (
     <div>
@@ -227,12 +235,13 @@ const Cart = () => {
                 <span>Subtotal: {Math.round(calculateTotal())} €</span>
               </div>
               <div className="cartInfoButton">
-                <button>Proceed To Checkout</button>
+                <button onClick={handleClick} >Proceed To Checkout</button>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {openPayment && <Payment setOpenPayment={setOpenPayment} totalPrice={Math.round(calculateTotal())} cart={cart}/>}
     </div>
   );
 };

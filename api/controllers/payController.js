@@ -183,3 +183,16 @@ export const getAttractionBookings = async (req, res, next) => {
     next(err);
   }
 };
+
+//DELETE an attraction booking
+export const deleteAttractionBooking = async (req, res, next) => {
+  try {
+    const booking = await Attraction.findByIdAndDelete(req.params.id);
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+    res.status(200).json(booking);
+  } catch (err) {
+    next(err);
+  }
+};

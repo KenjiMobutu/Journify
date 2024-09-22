@@ -2,13 +2,17 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const groupSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  groupName: { type: String, required: true },
   creatorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  description: { type: String },
+  members: [
+    {type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,}
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 
