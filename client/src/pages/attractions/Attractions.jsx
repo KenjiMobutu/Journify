@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import axios from "axios";
 import AttractionSearchList from "../../components/attractionSearchList/AttractionSearchList";
 
-const Attractions = () => {
+const Attractions = ({socket}) => {
   const [city, setCity] = useState("");
   const [cityOptions, setCityOptions] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -81,7 +81,7 @@ const Attractions = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar socket={socket}/>
       <div className="Attractions">
         <div className="AttractionsContainer">
           <div className="searchWrapperAttraction">

@@ -13,6 +13,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import Group from "./models/Group.js";
 
 const app = express();
 
@@ -105,10 +106,11 @@ io.on("connection", (socket) => {
   console.log("A user connected!", socket.id);
 
   // Lorsqu'un nouvel utilisateur se connecte
-  socket.on("loginUser", (username) => {
+  socket.on("loginUser", (userId, userName) => {
     // Associer le socket.id à l'utilisateur
-    users[username] = socket.id;
-    console.log(`User logged: ${username} with socket ID ${socket.id}`);
+    users[userId] = socket.id;
+    socket.join(userId);
+    console.log(`User logged: ${userName} ${userId} with socket ID ${socket.id}`);
 
     for (let username in users) {
       console.log(`User logged: ${username} with socket ID ${socket.id}`);
@@ -173,13 +175,53 @@ io.on("connection", (socket) => {
     io.to(chatId).emit("newMessage", { userId, message });
   });
 
+  // Écouter l'événement d'envoi de message
+  socket.on("sendMessage", async (messageData) => {
+    console.log("Message received:", messageData);
+    const { chatId, senderId, receiverId, content, isGroup } = messageData;
+
+    // Envoyer le message à la "room" du chat
+    io.to(chatId).emit("receiveMessage", messageData);
+
+    // Si c'est un message de groupe, envoyer aux membres du groupe
+    if (isGroup) {
+      const group = await Group.findById(chatId).populate("members"); // Assurez-vous que le groupe est peuplé avec les membres
+      // Envoyer une notification à chaque membre du groupe, sauf l'expéditeur
+      group.members.forEach((member) => {
+        if (member._id.toString() !== senderId) {
+          const targetSocketId = users[member._id.toString()];
+          if (targetSocketId) {
+            io.to(targetSocketId).emit("notification", {
+              senderId,
+              content: `Nouveau message dans le groupe ${group.groupName}`,
+            });
+          }
+        }
+      });
+    } else {
+      // Si c'est un message privé, notifier l'ami directement
+      if (receiverId !== senderId) {
+        const targetSocketId = users[receiverId];
+        if (targetSocketId) {
+          io.to(targetSocketId).emit("notification", {
+            senderId,
+            content: `Nouveau message de ${senderId}`,
+          });
+        }
+      }
+    }
+
+    // Envoyer le message à l'utilisateur ou au groupe
+    io.to(chatId).emit("receiveMessage", messageData);
+  });
+
   // Gestion de la déconnexion
   socket.on("disconnect", () => {
     console.log(`User with socketId ${socket.id} disconnected.`);
     // Supprimer l'utilisateur de la liste des connectés
-    for (let username in users) {
-      if (users[username] === socket.id) {
-        delete users[username];
+    for (let userId in users) {
+      if (users[userId] === socket.id) {
+        delete users[userId];
         break;
       }
     }

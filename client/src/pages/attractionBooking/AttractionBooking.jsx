@@ -129,7 +129,7 @@ const AttractionBooking = ({ socket }) => {
 
   return (
     <>
-      <Navbar />
+      <Navbar socket={socket} />
       <div className="attBookingContainer">
         <div className="bookingAttContainer">
           <div className="detailsAttBookings">

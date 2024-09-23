@@ -7,7 +7,7 @@ import FlightSearchList from "../../components/flightSearchList/FlightSearchList
 import axios from "axios";
 
 
-const Flights = () => {
+const Flights = ({socket}) => {
   const [departOptions, setDepartOptions] = useState([]);
   const [arrivalOptions, setArrivalOptions] = useState([]);
   const [selectedDepart, setSelectedDepart] = useState(null);
@@ -119,7 +119,7 @@ const Flights = () => {
 
   return (
     <div className="flights">
-      <Navbar />
+      <Navbar socket={socket}/>
       <div className="flightsContainer">
         <div className="listContainerflight">
           <div className="listWrapperflight">

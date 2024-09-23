@@ -16,7 +16,7 @@ import { addFlight, addProduct, setTotal } from "../../redux/cartRedux.js";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
-const Hotel = () => {
+const Hotel = ({socket}) => {
   const [extraOptions, setExtraOptions] = useState({
     flight: false,
     attractions: false,
@@ -280,7 +280,7 @@ const Hotel = () => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar socket={socket}/>
       {!data ? (
         "Loading..."
       ) : (

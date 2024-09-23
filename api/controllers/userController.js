@@ -272,7 +272,28 @@ export const findUserFriends = async (req, res, next) => {
       ],
     }).populate("user friend"); // Populer à la fois 'user' et 'friend'
 
-    res.status(200).json(friends);
+    // Créer une nouvelle structure où seul l'ami est renvoyé
+    const filteredFriends = friends.map(friend => {
+      // Si l'utilisateur connecté est dans le champ `user`, renvoyer `friend`
+      if (friend.user._id.toString() === id) {
+        return {
+          _id: friend._id,
+          friend: friend.friend, // L'ami est dans le champ `friend`
+          status: friend.status,
+          createdAt: friend.createdAt,
+        };
+      } else {
+        // Sinon, l'ami est dans le champ `user`
+        return {
+          _id: friend._id,
+          friend: friend.user, // L'ami est dans le champ `user`
+          status: friend.status,
+          createdAt: friend.createdAt,
+        };
+      }
+    });
+
+    res.status(200).json(filteredFriends);
   } catch (err) {
     next(err);
   }

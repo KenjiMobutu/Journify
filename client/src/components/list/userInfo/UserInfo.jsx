@@ -4,6 +4,7 @@ import { AuthenticationContext } from "../../../context/AuthenticationContext";
 import more from '../../../assets/more.png';
 import video from '../../../assets/video.png';
 import edit from '../../../assets/edit.png';
+import nobody from '../../../assets/nobody.png';
 
 const UserInfo = () => {
   const { user } = useContext(AuthenticationContext);
@@ -11,7 +12,7 @@ const UserInfo = () => {
   return (
     <div className='userInfo'>
       <div className="user">
-        <img src={user.img || "./avatar.png"} alt="" />
+        <img src={user.img || nobody} alt="" />
         <h2>{user.userName}</h2>
       </div>
       {/* <div className="icons">

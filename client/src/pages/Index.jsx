@@ -8,7 +8,7 @@ import Chat from "../components/chat/Chat";
 import { useContext } from "react";
 import { AuthenticationContext } from "../context/AuthenticationContext";
 
-export default function Index() {
+export default function Index({ socket }) {
   const [openAi, setOpenAi] = useState(false);
   const { user } = useContext(AuthenticationContext);
 
@@ -16,7 +16,7 @@ export default function Index() {
   return (
     <div>
       <div className="homeContainer">
-        <Navbar />
+        <Navbar socket={socket} />
         <Header />
         <Newsletter />
         {user && (

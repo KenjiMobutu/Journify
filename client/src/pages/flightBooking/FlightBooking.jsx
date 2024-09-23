@@ -144,7 +144,7 @@ const FlightBooking = ({socket}) => {
 
   return (
     <>
-      <Navbar />
+      <Navbar socket={socket}/>
       <div className="flightBookingContainer">
         <div className="bookingFlightContainer">
 

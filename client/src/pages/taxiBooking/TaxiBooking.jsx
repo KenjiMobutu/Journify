@@ -148,7 +148,7 @@ const TaxiBooking = ({socket}) => {
 
   return (
     <>
-      <Navbar />
+      <Navbar socket={socket}/>
       <div className="taxiBookingContainer">
         <div className="bookingTaxiContainer">
           <div className="detailsTaxiBooking">

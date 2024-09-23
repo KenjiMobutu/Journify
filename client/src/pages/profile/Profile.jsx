@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 
 
-const Profile = () => {
+const Profile = ({socket}) => {
   const token = localStorage.getItem('access_token');
   const location = useLocation();
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -28,7 +28,7 @@ const Profile = () => {
 
   return (
     <>
-    <Navbar />
+    <Navbar socket={socket}/>
     <div className='profile'>
       <div className="profileContainer">
         <div className="top">

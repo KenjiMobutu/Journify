@@ -4,6 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import SearchContextProvider from './context/SearchContext'
 import AuthenticationContextProvider from './context/AuthenticationContext'
+import { SocketProvider } from './context/SocketContext';
 import { StripeProvider } from './context/StripeContext.jsx'
 import { Provider } from 'react-redux'
 import { setupStore } from './redux/store'
@@ -26,6 +27,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <PersistGate loading={null} persistor={persistor}>
         <PersistorProvider persistor={persistor}>
           <AuthenticationContextProvider>
+          <SocketProvider>
             <SearchContextProvider>
               <StripeProvider>
                 <QueryClientProvider client={queryClient}>
@@ -35,6 +37,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 </QueryClientProvider>
               </StripeProvider>
             </SearchContextProvider>
+          </SocketProvider>
           </AuthenticationContextProvider>
         </PersistorProvider>
       </PersistGate>

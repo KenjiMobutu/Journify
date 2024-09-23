@@ -6,6 +6,7 @@ import arrowUp from '../../assets/arrowUp.png';
 import arrowDown from '../../assets/arrowDown.png';
 import download from '../../assets/download.png';
 import axios from 'axios';
+import nobody from '../../assets/nobody.png';
 
 const Detail = () => {
 
@@ -25,7 +26,7 @@ const Detail = () => {
   return (
     <div className="detail">
       <div className="user">
-        <img src={user?.img || "./avatar.png"} alt="" />
+        <img src={user?.img || nobody} alt="" />
         <h2>{user?.userName}</h2>
         <span className={`status-icon ${user?.status}`}></span>
         <select

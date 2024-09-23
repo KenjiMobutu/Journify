@@ -32,6 +32,7 @@ const Friend = ({ socket }) => {
   const [groupError, setGroupError] = useState("");
 
   console.log(groups);
+  console.log(userFriends);
 
   // Récupérer les groupes de l'utilisateur
   const fetchUserGroups = useCallback(async () => {

@@ -7,7 +7,7 @@ import minus from '../../../assets/minus.png';
 import plus from '../../../assets/plus.png';
 import search from '../../../assets/search.png';
 import AddUser from "./addUser/AddUser";
-import avatar from '../../../assets/nobody.png';
+import nobody from '../../../assets/nobody.png';
 import groupIcon from '../../../assets/group.png';
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -30,7 +30,8 @@ const ChatList = ({ userFriends, fetchUserFriends, groups }) => {
     try {
       const items = userFriends;
       const promises = items?.map(async (item) => {
-        const friendId = item.user._id === user._id ? item.friend._id : item.user._id;
+        console.log("Item:", item);
+        const friendId = item.friend._id;
         const userResponse = await fetch(`/api/users/${friendId}`);
         const usr = await userResponse.json();
         const messagesResponse = await axios.get(`/api/users/findUserChat/${user._id}/${friendId}`);
@@ -137,8 +138,8 @@ const ChatList = ({ userFriends, fetchUserFriends, groups }) => {
               className="chatAvatar"
               src={
                 chat.friend.blocked?.includes(user._id)
-                  ? avatar
-                  : chat.friend.img || avatar
+                  ? nobody
+                  : chat.friend.img || nobody
               }
               alt="friend avatar"
             />

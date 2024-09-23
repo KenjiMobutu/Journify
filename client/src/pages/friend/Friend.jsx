@@ -5,7 +5,7 @@ import Friends from '../../components/friend/Friend'
 const Friend = ({socket}) => {
   return (
     <div>
-      <Navbar />
+      <Navbar socket={socket}/>
       <Friends socket={socket}/>
     </div>
   )

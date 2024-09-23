@@ -193,7 +193,7 @@ const Booking = ({ socket }) => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar socket={socket}/>
       {user ? (
         <div className="bookingContainer">
           <div className="detailsB">

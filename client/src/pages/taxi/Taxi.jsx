@@ -11,7 +11,7 @@ import axios from "axios";
 import TaxiSearchList from "../../components/taxiSearchList/TaxiSearchList";
 
 
-const Taxi = () => {
+const Taxi = ({socket}) => {
   const [departOptions, setDepartOptions] = useState([]);
   const [arrivalOptions, setArrivalOptions] = useState([]);
   const [selectedDepart, setSelectedDepart] = useState(null);
@@ -104,7 +104,7 @@ const Taxi = () => {
 
   return (
     <div className="taxi">
-      <Navbar />
+      <Navbar socket={socket}/>
       <div className="taxiContainer">
         <div className="listWrapperTaxi">
           <div className="listSearchTaxi">

@@ -34,7 +34,7 @@ export default function Login({ socket }) {
       setupStore(userId);
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
       dis(loginSuccess({ userId: res.data.details._id }));
-      socket.emit('loginUser', res.data.details.userName);
+      socket.emit('loginUser', res.data.details._id, res.data.details.userName);
       const redirectTo = location.state?.from || '/';
       navigate(redirectTo);
       window.location.reload();

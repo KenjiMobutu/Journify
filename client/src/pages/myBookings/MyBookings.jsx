@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../../components/navbar/Navbar";
 import axios from 'axios';
 
-const MyBookings = () => {
+const MyBookings = ({socket}) => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem('access_token');
   const [bookings, setBookings] = useState([]);
@@ -101,7 +101,7 @@ const MyBookings = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar socket={socket}/>
       <div className="myBookings">
         <div className="bookings">
           <div className="bookingsTitle">My Bookings</div>

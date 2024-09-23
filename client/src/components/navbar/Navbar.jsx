@@ -28,7 +28,7 @@ import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import { incrementQuantity, decrementQuantity } from "../../redux/notifRedux.js";
 
 
-const Navbar = () => {
+const Navbar = ({ socket }) => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
   const persistor = usePersistor();
@@ -36,6 +36,7 @@ const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const token = localStorage.getItem('access_token');
   const dis = useDispatch();
+  const [notifications, setNotifications] = useState([]);
 
   const addNotification = () => {
     dis(incrementQuantity()); // Ajoute une notification
@@ -115,6 +116,22 @@ const Navbar = () => {
   const quantity = useSelector((state) => state.cart.quantity);
   const notificationsQuantity = useSelector((state) => state.notif.quantity);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('notification', (data) => {
+        console.log('Received notification:', data);
+        dispatch(addNotification(data));
+        dispatch(incrementQuantity()); // Incrémente le compteur de notifications
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('notification');
+      }
+    };
+  }, [socket, dispatch]);
+
   return (
     <div className="navbar">
       <div className="navContainer">
@@ -158,13 +175,13 @@ const Navbar = () => {
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
                 <MenuItem onClick={handleProfile}>
-                  <AccountCircleOutlinedIcon className="accountIcon"/> Profile
+                  <AccountCircleOutlinedIcon className="accountIcon" /> Profile
                 </MenuItem>
                 <MenuItem onClick={handleBookings}>
                   <AirplaneTicketOutlinedIcon className="bookingTickets" /> My bookings
                 </MenuItem>
                 <MenuItem onClick={handleAddUser}>
-                  <PersonAddAltOutlinedIcon className="bookingTickets"/> Add a friend
+                  <PersonAddAltOutlinedIcon className="bookingTickets" /> Add a friend
                 </MenuItem>
                 <Divider />
                 {isAdmin && (
@@ -210,7 +227,15 @@ const Navbar = () => {
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
                 {/* logique pour afficher les notifications */}
-                <MenuItem>No new notifications</MenuItem>
+                {notifications.length > 0 ? (
+                  notifications.map((notif, index) => (
+                    <MenuItem key={index}>
+                      {notif.content}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem>Aucune nouvelle notification</MenuItem>
+                )}
               </Menu>
             </React.Fragment>
             <button onClick={addNotification}>+</button>

@@ -9,7 +9,7 @@ import useFetch from "../../hooks/useFetch";
 import axios from "axios";
 import { SearchContext } from '../../context/SearchContext.jsx';
 
-const List = () => {
+const List = ({socket}) => {
   const research = useLocation();
   const navigate = useNavigate();
   const { dispatch } = useContext(SearchContext);
@@ -124,7 +124,7 @@ const List = () => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar socket={socket}/>
       <div className="listContainer">
         <div className="listWrapper">
           <div className="listSearch">

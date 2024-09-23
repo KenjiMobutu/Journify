@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const notifSlice = createSlice({
   name: "notif",
   initialState: {
+    notifications: [],
     message: "",
     type: "",
     quantity: 0, // Quantité de notifications
@@ -27,6 +28,12 @@ const notifSlice = createSlice({
     resetQuantity: (state) => {
       state.quantity = 0; // Réinitialiser la quantité de notifications à 0
     },
+    addNotification: (state, action) => {
+      state.notifications.push(action.payload);
+    },
+    clearNotifications: (state) => {
+      state.notifications = [];
+    },
   },
 });
 
@@ -36,6 +43,8 @@ export const {
   incrementQuantity,
   decrementQuantity,
   resetQuantity,
+  addNotification,
+  clearNotifications
 } = notifSlice.actions;
 
 export default notifSlice.reducer;

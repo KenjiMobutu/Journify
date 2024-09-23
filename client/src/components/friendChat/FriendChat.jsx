@@ -163,20 +163,20 @@ const FriendChat = ({ socket }) => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat.messages, img]);
 
-  // useEffect(() => {
-  //   if (selectedChat?.isGroup) {
-  //     // Si c'est un groupe, récupérer les messages du groupe
-  //     const fetchGroupChat = async () => {
-  //       try {
-  //         const response = await axios.get(`/api/groups/${selectedChat._id}/messages`);
-  //         setMessages(response.data);
-  //       } catch (error) {
-  //         console.error('Erreur lors de la récupération des messages du groupe :', error);
-  //       }
-  //     };
-  //     fetchGroupChat();
-  //   }
-  // }, [selectedChat]);
+  useEffect(() => {
+    if (selectedChat?.isGroup) {
+      // Si c'est un groupe, récupérer les messages du groupe
+      const fetchGroupChat = async () => {
+        try {
+          const response = await axios.get(`/api/groups/${selectedChat._id}/messages`);
+          setMessages(response.data);
+        } catch (error) {
+          console.error('Erreur lors de la récupération des messages du groupe :', error);
+        }
+      };
+      fetchGroupChat();
+    }
+  }, [selectedChat]);
 
   return (
     <div className="friendChat">

@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import attractionImg from '../../assets/attractions.png';
 import Payment from "../../components/payment/Payment";
 
-const Cart = () => {
+const Cart = ({socket}) => {
   const [hotelPhoto, setHotelPhoto] = useState([]);
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
@@ -76,7 +76,7 @@ const Cart = () => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar socket={socket}/>
       <div className="cartContainer">
         <div className="cartTitle">
           <h1>YOUR ORDER</h1>
