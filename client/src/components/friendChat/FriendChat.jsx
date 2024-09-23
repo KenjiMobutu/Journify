@@ -4,7 +4,6 @@ import { AuthenticationContext } from "../../context/AuthenticationContext";
 import { format } from "timeago.js";
 import EmojiPicker from 'emoji-picker-react';
 import camera from '../../assets/camera.png';
-import mic from '../../assets/mic.png';
 import emojiIcon from '../../assets/emoji.png';
 import ChatContext from "../../context/ChatContext";
 
@@ -23,8 +22,10 @@ const FriendChat = ({ socket }) => {
   const [isCurrentUserBlocked, setIsCurrentUserBlocked] = useState(false);
   const [isReceiverBlocked, setIsReceiverBlocked] = useState(false);
   const { selectedChat, setChats, chats, updateLastMessage } = useContext(ChatContext);
-  const friendId = selectedChat?.friend._id;
+  const friendId = selectedChat?.friend?._id;
   const chatId = selectedChat?._id;
+
+  console.log('selectedChat:', selectedChat);
 
   const endRef = useRef(null);
 
@@ -63,6 +64,9 @@ const FriendChat = ({ socket }) => {
   useEffect(() => {
     const fetchChat = async () => {
       try {
+        if (selectedChat?.isGroup) {
+          const response = await axios.get(`api/users/findGroupChat/${selectedChat._id}/${user._id}`);
+        }
         const response = await axios.get(`api/users/findUserChat/${user._id}/${friendId}`);
         setChat(response.data);
         setMessages(response.data.messages);
@@ -159,23 +163,52 @@ const FriendChat = ({ socket }) => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat.messages, img]);
 
+  // useEffect(() => {
+  //   if (selectedChat?.isGroup) {
+  //     // Si c'est un groupe, récupérer les messages du groupe
+  //     const fetchGroupChat = async () => {
+  //       try {
+  //         const response = await axios.get(`/api/groups/${selectedChat._id}/messages`);
+  //         setMessages(response.data);
+  //       } catch (error) {
+  //         console.error('Erreur lors de la récupération des messages du groupe :', error);
+  //       }
+  //     };
+  //     fetchGroupChat();
+  //   }
+  // }, [selectedChat]);
+
   return (
     <div className="friendChat">
       {selectedChat ? (
         <>
           <div className="friendChatTop">
-            <div className="user">
-              <img src={friend?.img || avatar} alt="Friend avatar" />
-              <div className="textsTop">
-                <span>{friend?.userName || "Utilisateur"}</span>
-                <p>{friend?.status || "Hors ligne"}</p> {/* Affiche le statut */}
+            {selectedChat?.isGroup ? (
+              <div className="groupInfo">
+                <h3>{selectedChat.groupName}</h3>
+                <div className="groupMembers">
+                  <p><strong>Membres du groupe :</strong></p>
+                  {selectedChat?.members?.map((member) => (
+                    <div key={member._id} className="groupMember">
+                      <img src={member.img || avatar} alt="Member avatar" />
+                      <span>{member.userName}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="user">
+                <img src={friend?.img || avatar} alt="Friend avatar" />
+                <div className="textsTop">
+                  <span>{friend?.userName || "Utilisateur"}</span>
+                  <p>{friend?.status || "Hors ligne"}</p> {/* Affiche le statut */}
+                </div>
+              </div>)}
           </div>
 
           <div className="center">
             {chat?.messages?.length > 0 ? (
-              chat.messages.map((message, index) => (
+              chat?.messages?.map((message, index) => (
                 <div
                   className={message.senderId === user._id ? "message own" : "message"}
                   key={index}

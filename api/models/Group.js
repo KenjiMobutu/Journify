@@ -9,11 +9,11 @@ const groupSchema = new mongoose.Schema({
     required: true,
   },
   members: [
-    {type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,}
+    { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   ],
   createdAt: { type: Date, default: Date.now },
+  img: { type: String, default: "" },
+  isGroup: { type: Boolean, default: true },
 });
 
 const Group = mongoose.model("Group", groupSchema);

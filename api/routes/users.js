@@ -25,7 +25,9 @@ import {
   createGroup,
   getUserGroups,
   deleteGroup,
-  deleteMemberGroup
+  deleteMemberGroup,
+  getGroupById,
+  findGroupChatById,
 } from "../controllers/userController.js";
 import { verifyAdmin, verifyToken, verifyUser } from "../utils/verifyToken.js";
 
@@ -65,11 +67,13 @@ router.get("/friends", verifyAdmin, getAllFriends);
 router.delete("/friends/delete/:userId/:friendId", verifyUser, deleteFriend);
 router.get("/userFriends/:id", verifyUser, findUserFriends);
 router.get("/findUserChat/:userId/:friendId", verifyUser, findUserChatById);
+router.get("/findGroupChat/:groupId/:userId", verifyToken, findGroupChatById );
 router.put("/updateUserChat/:id", verifyUser, updateUserChat);
 router.delete("/deleteUserChat/:userId/:friendId", verifyUser, deleteUserChat);
 router.put('/status', verifyToken, updateUserStatus);
 router.post('/groups/create', verifyToken, createGroup);
 router.get('/userGroups/:userId', verifyUser, getUserGroups);
+router.get('/groups/:groupId', verifyToken, getGroupById);
 router.delete('/groups/delete/:groupId', verifyToken, deleteGroup);
 router.delete('/groups/delete/:groupId/:userId', verifyToken, deleteMemberGroup);
 

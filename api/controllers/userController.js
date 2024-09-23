@@ -300,6 +300,28 @@ export const findUserChatById = async (req, res, next) => {
   }
 };
 
+export const findGroupChatById = async (req, res, next) => {
+  try {
+    const { userId, groupId } = req.params;
+    let chat = await Message.findOne({
+      senderId: userId,
+      groupId: groupId,
+    }).populate({ path: "messages", options: { sort: { createdAt: 1 } } });
+
+    if (!chat) {
+      chat = new Message({
+        senderId: userId,
+        groupId: groupId,
+        content: "",
+      });
+      await chat.save();
+    }
+    res.status(200).json(chat);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 // Update user chat by chat id
 export const updateUserChat = async (userId, update) => {
   try {
@@ -453,11 +475,10 @@ export const deleteGroup = async (req, res, next) => {
     const { groupId } = req.params;
     await Group.findByIdAndDelete(groupId);
     res.status(200).json({ message: "Groupe supprimé" });
-  }
-  catch (err) {
+  } catch (err) {
     next(err);
   }
-}
+};
 
 // Delete member from group
 export const deleteMemberGroup = async (req, res, next) => {
@@ -476,6 +497,20 @@ export const deleteMemberGroup = async (req, res, next) => {
     );
 
     res.status(200).json({ message: "Membre supprimé du groupe" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get group by id
+export const getGroupById = async (req, res, next) => {
+  try {
+    const { groupId } = req.params;
+    const group = await Group.findById(groupId).populate(
+      "members",
+      "userName img"
+    );
+    res.status(200).json(group);
   } catch (err) {
     next(err);
   }

@@ -371,7 +371,7 @@ const Friend = ({ socket }) => {
       <div className="chat-container">
         {user ? (
           <>
-            <ListChat userFriends={userFriends} fetchUserFriends={fetchUserFriends} />
+            <ListChat userFriends={userFriends} fetchUserFriends={fetchUserFriends} groups={groups}/>
             <Chat socket={socket} />
             <Detail />
           </>
