@@ -49,24 +49,6 @@ const MoreBookings = ({ setOpen, setOpenPayment, onConfirm }) => {
             />
             <span>Flight</span>
           </label>
-          <label className="moreBookingsButton">
-            <input
-              type="checkbox"
-              value="attractions"
-              checked={selectedOptions.attractions}
-              onChange={() => handleOptionChange("attractions")}
-            />
-            <span>Attractions</span>
-          </label>
-          <label className="moreBookingsButton">
-            <input
-              type="checkbox"
-              value="taxi"
-              checked={selectedOptions.taxi}
-              onChange={() => handleOptionChange("taxi")}
-            />
-            <span>Taxi</span>
-          </label>
         </div>
         <span className="moreBookingsText">to your reservation?</span>
         <div className="moreBookingsActions">

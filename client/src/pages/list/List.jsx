@@ -24,6 +24,7 @@ const List = ({socket}) => {
   const [attractions, setAttractions] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
   const rapidapiKey = import.meta.env.VITE_RAPIDAPI_KEY;
+  console.log("!!!Hotels:", hotels);
 
   //const { loading, data } = useFetch(`/api/hotels?city=${destination}&min=${min || 0}&max=${max || 999}`);
 

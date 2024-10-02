@@ -5,6 +5,8 @@ import { AuthenticationContext } from '../../context/AuthenticationContext';
 import { Link } from "react-router-dom";
 import Navbar from "../../components/navbar/Navbar";
 import axios from 'axios';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const MyBookings = ({socket}) => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -58,30 +60,75 @@ const MyBookings = ({socket}) => {
   console.log("TAXI:", taxis);
 
   const handleCancel = async (id, type) => {
-    try {
-      await axios.delete(`/api/users/${user._id}/bookings/${id}`);
-      setBookings((prev) => prev.filter((booking) => booking._id !== id));
-    } catch (error) {
-      console.error('Error cancelling the booking:', error);
-    }
+    confirmAlert({
+      title: 'Confirm cancellation',
+      message: 'Do you really want to cancel your booking ?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.delete(`/api/users/${user._id}/bookings/${id}`);
+              setBookings((prev) => prev.filter((booking) => booking._id !== id));
+            } catch (error) {
+              console.error('Error cancelling the booking:', error);
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ]
+    });
   };
 
   const handleFlightCancel = async (id) => {
-    try {
-      await axios.delete(`/api/payment/bookings/${id}`);
-      setFlights((prev) => prev.filter((flight) => flight._id !== id));
-    } catch (error) {
-      console.error('Error cancelling the flight:', error);
-    }
+    confirmAlert({
+      title: 'Confirm cancellation',
+      message: 'Do you really want to cancel your booking ?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.delete(`/api/payment/bookings/${id}`);
+              setFlights((prev) => prev.filter((flight) => flight._id !== id));
+            } catch (error) {
+              console.error('Error cancelling the flight:', error);
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ]
+    });
   };
 
   const handleAttractionCancel = async (id) => {
-    try {
-      await axios.delete(`/api/payment/attraction//${id}`);
-      setAttractions((prev) => prev.filter((attraction) => attraction._id !== id));
-    } catch (error) {
-      console.error('Error cancelling the attraction:', error);
-    }
+    confirmAlert({
+      title: 'Confirm cancellation',
+      message: 'Do you really want to cancel your booking ?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.delete(`/api/payment/attraction//${id}`);
+              setAttractions((prev) => prev.filter((attraction) => attraction._id !== id));
+            } catch (error) {
+              console.error('Error cancelling the attraction:', error);
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ]
+    });
   };
 
   const isCancelable = (date) => {

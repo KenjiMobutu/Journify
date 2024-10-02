@@ -10,6 +10,11 @@ const INITIAL_STATE = {
 export const AuthenticationContext = createContext(INITIAL_STATE);
 
 const AuthenticationReducer = (state, action) => {
+  if (!action || !action.type) {
+    console.error("Action is missing 'type' property or action is undefined", action);
+    return state;
+  }
+  
   switch (action.type) {
     case "LOGIN_START":
       return {

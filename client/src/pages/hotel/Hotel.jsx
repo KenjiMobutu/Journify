@@ -15,8 +15,10 @@ import FlightComponent from "../../components/flightComponent/FlightComponent.js
 import { addFlight, addProduct, setTotal } from "../../redux/cartRedux.js";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import Alert from '@mui/material/Alert';
+import CheckIcon from '@mui/icons-material/Check';
 
-const Hotel = ({socket}) => {
+const Hotel = ({ socket }) => {
   const [extraOptions, setExtraOptions] = useState({
     flight: false,
     attractions: false,
@@ -66,6 +68,7 @@ const Hotel = ({socket}) => {
   const [selectedAttraction, setSelectedAttraction] = useState(null);
   const [ticketCounts, setTicketCounts] = useState({});
   const [openFlight, setOpenFlight] = useState(false);  // État pour ouvrir les vols
+  const [confirmationVisible, setConfirmationVisible] = useState(false);
   console.log(ticketCounts);
   const [addedAttractions, setAddedAttractions] = useState([]); // Stocker les attractions ajoutées
   console.log("Added ATTRACTIONS", addedAttractions);
@@ -192,16 +195,17 @@ const Hotel = ({socket}) => {
     dispatch(addProduct({
       product: data.data,
       attractions: addedAttractions || [],
-      flights:selectedFlight || [],
+      flights: selectedFlight || [],
       taxis: extraOptions.taxi || [],
       price: totalPrice
     }));
-    // if (selectedFlight.length > 0) {
-    //   dispatch(addFlight({
-    //     flights: selectedFlight || [],
 
-    //   }));
-    // }
+    // Afficher la confirmation
+    setConfirmationVisible(true);
+
+    setTimeout(() => {
+      setConfirmationVisible(false);
+    }, 3000);
 
   };
 
@@ -280,7 +284,7 @@ const Hotel = ({socket}) => {
 
   return (
     <div>
-      <Navbar socket={socket}/>
+      <Navbar socket={socket} />
       {!data ? (
         "Loading..."
       ) : (
@@ -450,7 +454,9 @@ const Hotel = ({socket}) => {
                     {totalPrice ? `${Math.floor(totalPrice)}€ (${days} Nights)` : "Price not available"}
                   </span>
                   <button onClick={handleClick} className="hotelDescPriceBook">Book now</button>
-                  <button onClick={handleCart} className="hotelDescPriceBook">Add to cart</button>
+                  <button onClick={handleCart} className="hotelDescPriceBook">
+                    Add to cart
+                  </button>
                 </div>
               </div>
             </div>
@@ -471,6 +477,17 @@ const Hotel = ({socket}) => {
         />
       }
       {openMoreBooking && <MoreBookings setOpen={setOpenMoreBooking} setOpenPayment={setOpenPayment} onConfirm={handleMoreBookingsConfirm} />}
+
+      <div>
+        {/* Afficher l'alerte si visible */}
+        {confirmationVisible && (
+          <div className="confirmationVisibility">
+            <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+              Élément ajouté au panier avec succès.
+            </Alert>
+          </div>
+        )}
+      </div>
     </div >
   );
 }

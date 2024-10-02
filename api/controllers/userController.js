@@ -4,6 +4,8 @@ import Message from "../models/Message.js";
 import FriendChat from "../models/FriendChat.js";
 import Group from "../models/Group.js";
 import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
+import e from "express";
 
 // Create User
 export const createUser = async (req, res, next) => {
@@ -321,25 +323,51 @@ export const findUserChatById = async (req, res, next) => {
   }
 };
 
+// Get group chat by chat id
+export const findGroupChat = async (req, res, next) => {
+  try {
+    const { chatId } = req.params;
+    const chat = await FriendChat.findById(chatId).populate({
+      path: "messages",
+     // Populate the user name for each message
+      options: { sort: { createdAt: 1 } }, // Sort messages by creation time
+    });
+    res.status(200).json(chat);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 export const findGroupChatById = async (req, res, next) => {
   try {
-    const { userId, groupId } = req.params;
-    let chat = await Message.findOne({
-      senderId: userId,
-      groupId: groupId,
-    }).populate({ path: "messages", options: { sort: { createdAt: 1 } } });
+    const { chatId } = req.params;
+    const { userId, friendIds } = req.body; // Assumer que friendIds est un tableau d'IDs d'amis
+    if (!userId || !friendIds || !friendIds.length) {
+      return res.status(400).json({ message: "User ID or Friend IDs are missing." });
+    }
+    const objectIds = friendIds.map(id => new mongoose.Types.ObjectId(id));
+
+    // Chercher le chat par son ID et trier les messages par date de création (du plus ancien au plus récent)
+    let chat = await FriendChat.findOne({
+      _id: chatId
+    }).populate({
+      path: "messages",
+      populate: { path: "sender", select: "userName" }, // Populer le nom de l'utilisateur pour chaque message
+      options: { sort: { createdAt: 1 } }, // Trier les messages
+    });
 
     if (!chat) {
-      chat = new Message({
-        senderId: userId,
-        groupId: groupId,
-        content: "",
+      // Si aucun chat n'existe, créer un nouveau chat avec les membres (user + friends)
+      chat = new FriendChat({
+        members: [new mongoose.Types.ObjectId(userId), ...objectIds], // Ajouter l'utilisateur et tous les amis dans 'members'
+        messages: []
       });
       await chat.save();
     }
     res.status(200).json(chat);
   } catch (err) {
     console.error(err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
@@ -356,12 +384,10 @@ export const updateUserChat = async (userId, update) => {
 // Post user chat message
 export const postUserChatMessage = async (req, res, next) => {
   try {
-    const { senderId, receiverId, content, createdAt, img } = req.body;
+    const { chatId, senderId, receiverId, content, createdAt, img } = req.body;
 
     // Find or create a chat between the two users
-    let chat = await FriendChat.findOne({
-      members: { $all: [senderId, receiverId] },
-    });
+    let chat = await FriendChat.findById(chatId);
 
     if (!chat) {
       chat = new FriendChat({ members: [senderId, receiverId] });
@@ -536,3 +562,24 @@ export const getGroupById = async (req, res, next) => {
     next(err);
   }
 };
+
+// Get group messages
+export const getGroupMessages = async (req, res, next) => {
+  try {
+    const { chatId } = req.params;
+
+    // Trouver le chat et peupler les messages et les membres
+    const chat = await FriendChat.findById(chatId).populate({
+      path: "messages",
+      populate: { path: "sender", select: "userName" },
+    }).populate("members", "userName");
+
+    if (!chat) {
+      return res.status(404).json({ message: 'Chat not found' });
+    }
+
+    res.status(200).json(chat.messages);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+}

@@ -432,7 +432,20 @@
   cursor: pointer;
   transition: color 0.3s ease;
 }
-
+.confirmationVisibility {
+  position: fixed; /* Permet de fixer l'élément par rapport à la fenêtre */
+  top: 50%; /* Positionner l'élément au centre verticalement */
+  left: 50%; /* Positionner l'élément au centre horizontalement */
+  transform: translate(-50%, -50%); /* Centrer parfaitement l'élément */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white; /* Couleur de fond pour l'alerte */
+  padding: 20px; /* Espacement intérieur */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Ombre pour l'esthétique */
+  border-radius: 10px; /* Coins arrondis */
+  z-index: 1000; /* Assure que l'alerte soit au-dessus d'autres éléments */
+}
 /* Responsive adjustments */
 @media (max-width: 1024px) {
   .hotelAttractionsListItem {

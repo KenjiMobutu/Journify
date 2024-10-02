@@ -26,6 +26,7 @@ import Cookies from 'js-cookie';
 import { useDispatch } from "react-redux";
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import { incrementQuantity, decrementQuantity } from "../../redux/notifRedux.js";
+import PropTypes from 'prop-types';
 
 
 const Navbar = ({ socket }) => {
@@ -88,6 +89,22 @@ const Navbar = ({ socket }) => {
     }
   }, [user, apiUrl]);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('notification', (message) => {
+        console.log('Received notification:', message);
+        setNotifications((prev) => [...prev, message]); // Ajouter la nouvelle notification
+      });
+    }
+
+    // Nettoyage lors de la déconnexion du socket
+    return () => {
+      if (socket) {
+        socket.off('notification');
+      }
+    };
+  }, [socket]);
+
   const handleLogout = async () => {
     try {
       dispatch(logout()); // Réinitialiser l'état d'authentification
@@ -130,7 +147,7 @@ const Navbar = ({ socket }) => {
         socket.off('notification');
       }
     };
-  }, [socket, dispatch]);
+  }, [socket, dispatch, addNotification]);
 
   return (
     <div className="navbar">
@@ -238,8 +255,6 @@ const Navbar = ({ socket }) => {
                 )}
               </Menu>
             </React.Fragment>
-            <button onClick={addNotification}>+</button>
-            <button onClick={() => dis(decrementQuantity())}> -</button>
 
             <Link to="/cart" >
               <Badge badgeContent={quantity} color="primary" anchorOrigin={{ vertical: 'top', horizontal: 'right', }}>

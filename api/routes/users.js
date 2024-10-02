@@ -28,6 +28,8 @@ import {
   deleteMemberGroup,
   getGroupById,
   findGroupChatById,
+  getGroupMessages,
+  findGroupChat,
 } from "../controllers/userController.js";
 import { verifyAdmin, verifyToken, verifyUser } from "../utils/verifyToken.js";
 
@@ -67,13 +69,15 @@ router.get("/friends", verifyAdmin, getAllFriends);
 router.delete("/friends/delete/:userId/:friendId", verifyUser, deleteFriend);
 router.get("/userFriends/:id", verifyUser, findUserFriends);
 router.get("/findUserChat/:userId/:friendId", verifyUser, findUserChatById);
-router.get("/findGroupChat/:groupId/:userId", verifyToken, findGroupChatById );
+router.get("/findGroupChat/:chatId", verifyToken, findGroupChat );
+router.post("/findGroupChat/:chatId", verifyToken, findGroupChatById );
 router.put("/updateUserChat/:id", verifyUser, updateUserChat);
 router.delete("/deleteUserChat/:userId/:friendId", verifyUser, deleteUserChat);
 router.put('/status', verifyToken, updateUserStatus);
 router.post('/groups/create', verifyToken, createGroup);
 router.get('/userGroups/:userId', verifyUser, getUserGroups);
 router.get('/groups/:groupId', verifyToken, getGroupById);
+router.get('/groups/:chatId/messages', verifyToken, getGroupMessages);
 router.delete('/groups/delete/:groupId', verifyToken, deleteGroup);
 router.delete('/groups/delete/:groupId/:userId', verifyToken, deleteMemberGroup);
 
