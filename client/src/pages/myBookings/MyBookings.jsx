@@ -12,6 +12,7 @@ const MyBookings = ({socket}) => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem('access_token');
   const [bookings, setBookings] = useState([]);
+  console.log("BOOKINGS:", bookings);
   const [flights, setFlights] = useState([]);
   const [taxis, setTaxis] = useState([]);
   const [attractions, setAttractions] = useState([]);

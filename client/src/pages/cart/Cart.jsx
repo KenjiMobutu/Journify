@@ -131,7 +131,10 @@ const Cart = ({socket}) => {
                           </div>
                         </div>
                         <div className="cartProductInfo">
-                          <b>Room(s):</b> {product.rooms.length} room(s) booked
+                          <b>Room(s):</b> {product.options.room} room(s) booked
+                        </div>
+                        <div className="cartProductInfo">
+                          <b>Number of guest:</b> {product.options.adult} guest(s)
                         </div>
                       </div>
                       <div className="cartDelete">

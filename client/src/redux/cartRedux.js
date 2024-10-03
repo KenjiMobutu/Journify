@@ -48,8 +48,20 @@ const cartSlice = createSlice({
       const hasTaxis = action.payload.taxis && action.payload.taxis.length > 0;
 
       // Ajouter le produit (hôtel)
+      // if (action.payload.product) {
+      //   state.products.push(action.payload.product);
+      //   state.quantity += 1;
+      // }
       if (action.payload.product) {
-        state.products.push(action.payload.product);
+        state.products.push({
+          ...action.payload.product,
+          // Ajout des options supplémentaires (chambres, adultes, enfants)
+          options: {
+            room: action.payload.options?.room || 1,
+            adult: action.payload.options?.adult || 1,
+            children: action.payload.options?.children || 0,
+          },
+        });
         state.quantity += 1;
       }
 

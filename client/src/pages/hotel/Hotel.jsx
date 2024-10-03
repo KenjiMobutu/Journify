@@ -86,6 +86,7 @@ const Hotel = ({ socket }) => {
 
   const [dates] = useState(contextDates.length ? contextDates : storedDates);
   const [options] = useState(contextOptions.adult !== undefined ? contextOptions : storedOptions);
+  console.log("OPTIONS", options);
   const hotel = data?.data;
   const days = useMemo(() => {
     const mmsPerDay = 1000 * 60 * 60 * 24;
@@ -197,7 +198,12 @@ const Hotel = ({ socket }) => {
       attractions: addedAttractions || [],
       flights: selectedFlight || [],
       taxis: extraOptions.taxi || [],
-      price: totalPrice
+      price: totalPrice,
+      options: {
+        room: options.room,
+        adult: options.adult,
+        children: options.children,
+      },
     }));
 
     // Afficher la confirmation
