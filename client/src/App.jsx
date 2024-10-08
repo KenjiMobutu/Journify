@@ -18,9 +18,13 @@ import TaxiBooking from "./pages/taxiBooking/TaxiBooking";
 import AttractionBooking from "./pages/attractionBooking/AttractionBooking";
 import Cart from "./pages/cart/Cart";
 import Friend from "./pages/friend/Friend";
+import { useContext } from "react";
+import { AuthenticationContext } from "./context/AuthenticationContext";
+
 
 function App() {
   const [socket, setSocket] = useState(null);
+  const { user } = useContext(AuthenticationContext);
 
   useEffect(() => {
     const newSocket = io("http://localhost:3000");
@@ -28,6 +32,12 @@ function App() {
 
     return () => newSocket.close();
   }, []);
+
+  useEffect(() => {
+    if (socket && user) {
+      socket.emit('loginUser', user._id, user.userName);
+    }
+  }, [socket, user]);
 
   return (
     <BrowserRouter>

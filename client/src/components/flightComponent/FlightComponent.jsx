@@ -5,8 +5,9 @@ import { DateRange } from "react-date-range"
 import FlightSearchList from "../../components/flightSearchList/FlightSearchList";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 
-const FlightComponent = ({ selectFlight, errors }) => {
+const FlightComponent = ({ selectFlight, errors, city, bookDates}) => {
   const [departOptions, setDepartOptions] = useState([]);
   const [arrivalOptions, setArrivalOptions] = useState([]);
   const [selectedDepart, setSelectedDepart] = useState(null);
@@ -15,7 +16,7 @@ const FlightComponent = ({ selectFlight, errors }) => {
   const [loadingFlights, setLoadingFlights] = useState(false); // État pour gérer le chargement du bouton "Search Flights"
   const rapidapiKey = import.meta.env.VITE_RAPIDAPI_KEY;
   const [depart, setDepart] = useState("");
-  const [arrival, setArrival] = useState("");
+  const [arrival, setArrival] = useState(city || "");
   const [openDate, setOpenDate] = useState(false);
   const [data, setData] = useState([]);
   const dispatch = useDispatch();
@@ -44,6 +45,17 @@ const FlightComponent = ({ selectFlight, errors }) => {
     sort: 'BEST',
     cabinClass: 'ECONOMY',
   });
+
+  useEffect(() => {
+    if (city) {
+      console.log("City:", city);
+      console.log("Book Dates:", bookDates);
+      setArrival(city);
+      setDates(bookDates);
+    }
+
+  }, [bookDates, city]);
+
 
   const handleSearch = async () => {
     setLoadingDestinations(true); // Définir le chargement sur true
@@ -138,7 +150,7 @@ const FlightComponent = ({ selectFlight, errors }) => {
               </div>
               <div className="listSearchItemflight">
                 <label>To</label>
-                <input type="text" placeholder="to: Miami" onChange={e => setArrival(e.target.value)} />
+                <input type="text" value={arrival} placeholder="to: Miami" onChange={e => setArrival(e.target.value)} />
               </div>
               <button onClick={handleSearch} className="destinationSearchButtonflight">
                 {loadingDestinations ? "Processing..." : "Search Destinations"}

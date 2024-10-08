@@ -13,10 +13,6 @@ const notifSlice = createSlice({
       state.message = action.payload.message;
       state.type = action.payload.type;
     },
-    clearNotif: (state) => {
-      state.message = "";
-      state.type = "";
-    },
     incrementQuantity: (state) => {
       state.quantity += 1; // Incrémentation de la quantité de notifications
     },
@@ -25,14 +21,14 @@ const notifSlice = createSlice({
         state.quantity -= 1; // Décrémentation de la quantité si elle est supérieure à 0
       }
     },
-    resetQuantity: (state) => {
-      state.quantity = 0; // Réinitialiser la quantité de notifications à 0
-    },
     addNotification: (state, action) => {
       state.notifications.push(action.payload);
     },
     clearNotifications: (state) => {
+      state.message = "";
+      state.type = "";
       state.notifications = [];
+      state.quantity = 0; // Réinitialiser la quantité de notifications à 0
     },
   },
 });

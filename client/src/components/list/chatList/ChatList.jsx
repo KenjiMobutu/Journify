@@ -16,7 +16,7 @@ import { selectGroup } from "../../../redux/chatRedux.js";
 
 
 
-const ChatList = ({ userFriends, fetchUserFriends, groups }) => {
+const ChatList = ({ userFriends, fetchUserFriends, groups, socket }) => {
   const dispatch = useDispatch();
   const [input, setInput] = useState("");
   const [addMode, setAddMode] = useState(false);
@@ -31,7 +31,7 @@ const ChatList = ({ userFriends, fetchUserFriends, groups }) => {
       const items = userFriends;
       const promises = items?.map(async (item) => {
         console.log("Item:", item);
-        const friendId = item.friend._id;
+        const friendId = item?.friend?._id;
         const userResponse = await fetch(`/api/users/${friendId}`);
         const usr = await userResponse.json();
         const messagesResponse = await axios.get(`/api/users/findUserChat/${user._id}/${friendId}`);
@@ -74,6 +74,7 @@ const ChatList = ({ userFriends, fetchUserFriends, groups }) => {
     dispatch(selectChat(chat));
     setSelectedChat(chat);
     setChats(updatedChats);
+    socket.emit("joinChat", { chatId: chat.chatId, userId: user._id });
   };
 
   const handleSelectGroup = async (group) => {

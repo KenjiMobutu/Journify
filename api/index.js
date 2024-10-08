@@ -169,6 +169,8 @@ io.on("connection", (socket) => {
     });
   });
 
+
+
   // Gestion des messages envoyés à une "room"
   socket.on("message", ({ chatId, message, userId }) => {
     // Émettre le message à tous les utilisateurs dans la "room"

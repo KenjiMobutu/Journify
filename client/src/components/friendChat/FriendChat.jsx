@@ -6,6 +6,8 @@ import EmojiPicker from 'emoji-picker-react';
 import camera from '../../assets/camera.png';
 import emojiIcon from '../../assets/emoji.png';
 import ChatContext from "../../context/ChatContext";
+import { useDispatch } from "react-redux";
+import { addNotification, incrementQuantity, decrementQuantity, setNotif, clearNotif, clearNotifications } from "../../redux/notifRedux.js";
 
 import axios from "axios";
 import avatar from '../../assets/nobody.png';
@@ -25,7 +27,7 @@ const FriendChat = ({ socket }) => {
   const friendId = selectedChat?.friend?._id;
   const friendIds = selectedChat?.members?.map((member) => member._id);
   const chatId = selectedChat?._id;
-
+  const dis = useDispatch();
   console.log('selectedChat:', selectedChat);
 
   const endRef = useRef(null);
@@ -37,7 +39,7 @@ const FriendChat = ({ socket }) => {
       socket?.on('receiveMessage', (newMessage) => {
         setChat((prevChat) => ({
           ...prevChat,
-          messages: [...prevChat.messages, newMessage],
+          messages: [...(prevChat?.messages || []), newMessage],
         }));
       });
 
@@ -113,7 +115,7 @@ const FriendChat = ({ socket }) => {
         chatId,
         senderId: user._id,
         receiverId: selectedChat.isGroup
-          ? selectedChat.members.map(member => member._id) // Si c'est un groupe, on envoie à tous les membres
+          ? null // Si c'est un groupe, on envoie à tous les membres
           : [friendId], // Si c'est un message privé, on l'envoie à un seul ami
         content: text.trim(),
         img: imgUrl,
@@ -122,6 +124,7 @@ const FriendChat = ({ socket }) => {
       const msg = await axios.post(`/api/users/messages`, messageData);
       const savedMessage = msg.data;
       socket?.emit("sendMessage", savedMessage);
+
 
       // Mise à jour du dernier message du chat
       updateLastMessage(chatId, savedMessage.content);
@@ -202,7 +205,23 @@ const FriendChat = ({ socket }) => {
         socket.off('newMessage');
       };
     }
-  }, [socket]);
+  }, [socket]);useEffect(() => {
+    if (socket) {
+      socket.on('notification', (data) => {
+        console.log('Received notification:', data);
+        dis(addNotification(data));
+        dis(incrementQuantity()); // Incrémente le compteur de notifications
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('notification');
+      }
+    };
+  }, [socket, dis]);
+
+
 
   return (
     <div className="friendChat">

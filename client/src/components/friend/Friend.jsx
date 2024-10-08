@@ -282,12 +282,12 @@ const Friend = ({ socket }) => {
 
             <ul className="friend-list">
               {userFriends?.map((friend) => (
-                <li key={friend.friend._id} className="friend-item">
+                <li key={friend?.friend?._id} className="friend-item">
                   <div className="friend-info">
-                    <img src={friend.friend.img || avatar} alt="" className="friend-avatar" />
-                    <span>{friend.friend.userName}</span>
+                    <img src={friend?.friend?.img || avatar} alt="" className="friend-avatar" />
+                    <span>{friend?.friend?.userName}</span>
                   </div>
-                  <button className="btn-delete" onClick={() => handleDeleteFriend(friend.friend._id)}>Supprimer</button>
+                  <button className="btn-delete" onClick={() => handleDeleteFriend(friend?.friend?._id)}>Supprimer</button>
                 </li>
               ))}
             </ul>
@@ -308,27 +308,27 @@ const Friend = ({ socket }) => {
             />
             <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: '#1b1b2f', borderRadius: '10px' }}>
               {userFriends?.map((friend) => {
-                const labelId = friend.friend.userName;
+                const labelId = friend?.friend?.userName;
                 return (
                   <ListItem
-                    key={friend.friend._id}
+                    key={friend?.friend?._id}
                     disablePadding
                   >
                     <ListItemButton
-                      onClick={() => handleAddMember(friend.friend._id)}  // Gère le clic sur l'élément
+                      onClick={() => handleAddMember(friend?.friend?._id)}  // Gère le clic sur l'élément
                       sx={{ cursor: 'pointer' }}  // Change le curseur pour indiquer que l'élément est cliquable
                     >
                       <ListItemAvatar>
                         <Avatar
-                          alt={friend.friend.userName}
-                          src={friend.friend.img || avatar}
+                          alt={friend?.friend?.userName}
+                          src={friend?.friend?.img || avatar}
                         />
                       </ListItemAvatar>
-                      <ListItemText id={labelId} primary={friend.friend.userName} sx={{ color: 'white' }} />
+                      <ListItemText id={labelId} primary={friend?.friend?.userName} sx={{ color: 'white' }} />
                       <Checkbox
                         edge="end"
-                        checked={groupMembers.includes(friend.friend._id)}  // Met à jour l'état de la checkbox
-                        onChange={() => handleAddMember(friend.friend._id)}  // Gère le clic sur la checkbox
+                        checked={groupMembers.includes(friend?.friend?._id)}  // Met à jour l'état de la checkbox
+                        onChange={() => handleAddMember(friend?.friend?._id)}  // Gère le clic sur la checkbox
                         inputProps={{ 'aria-labelledby': labelId }}
                         onClick={(e) => e.stopPropagation()}  // Empêche la propagation du clic vers le ListItemButton
                         sx={{ color: 'white' }}
@@ -372,7 +372,7 @@ const Friend = ({ socket }) => {
       <div className="chat-container">
         {user ? (
           <>
-            <ListChat userFriends={userFriends} fetchUserFriends={fetchUserFriends} groups={groups}/>
+            <ListChat userFriends={userFriends} fetchUserFriends={fetchUserFriends} groups={groups} socket={socket}/>
             <Chat socket={socket} />
             <Detail />
           </>

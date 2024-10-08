@@ -385,10 +385,12 @@ export const updateUserChat = async (userId, update) => {
 export const postUserChatMessage = async (req, res, next) => {
   try {
     const { chatId, senderId, receiverId, content, createdAt, img } = req.body;
-
+    console.log(chatId);
     // Find or create a chat between the two users
-    let chat = await FriendChat.findById(chatId);
-
+     let chat = await FriendChat.findOne({
+      members: { $all: [senderId, ...receiverId] },
+    });
+    console.log(chat);
     if (!chat) {
       chat = new FriendChat({ members: [senderId, receiverId] });
       await chat.save();

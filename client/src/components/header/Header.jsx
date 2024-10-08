@@ -225,8 +225,9 @@ function Header({ type }) {
       navigate('/login');
       return;
     }
-    dispatch({ type: "NEW_SEARCH", payload: { destination, dates, options } });
+    dispatch({ type: "NEW_SEARCH", payload: { city:destination, dates, options } });
     console.log("Handle search button clicked");
+    
 
     const params = {
       method: 'GET',
@@ -292,6 +293,26 @@ function Header({ type }) {
   const handleTaxi = () => {
     navigate('/taxi');
   };
+
+  useEffect(() => {
+    const savedCity = localStorage.getItem("city");
+    if (savedCity) {
+      dispatch({
+        type: "NEW_SEARCH",
+        payload: {
+          city: savedCity,
+          dates: dates,
+          options: options,
+        },
+      });
+    }
+  }, [dates, dispatch, options]);
+
+  useEffect(() => {
+    if (destination) {
+      localStorage.setItem("city", destination);
+    }
+  }, [destination]);
 
 
 

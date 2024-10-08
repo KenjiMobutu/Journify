@@ -25,8 +25,10 @@ import { logout } from '../../redux/authRedux.js';
 import Cookies from 'js-cookie';
 import { useDispatch } from "react-redux";
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
-import { incrementQuantity, decrementQuantity } from "../../redux/notifRedux.js";
+import { addNotification, incrementQuantity, decrementQuantity, setNotif, clearNotif, clearNotifications } from "../../redux/notifRedux.js";
 import PropTypes from 'prop-types';
+import { useCallback } from "react";
+
 
 
 const Navbar = ({ socket }) => {
@@ -37,11 +39,11 @@ const Navbar = ({ socket }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const token = localStorage.getItem('access_token');
   const dis = useDispatch();
-  const [notifications, setNotifications] = useState([]);
 
-  const addNotification = () => {
-    dis(incrementQuantity()); // Ajoute une notification
-  };
+  const notifications = useSelector((state) => state.notif.notifications);
+  console.log('Notifications:', notifications);
+
+
 
 
   // états distincts pour chaque menu
@@ -89,21 +91,6 @@ const Navbar = ({ socket }) => {
     }
   }, [user, apiUrl]);
 
-  useEffect(() => {
-    if (socket) {
-      socket.on('notification', (message) => {
-        console.log('Received notification:', message);
-        setNotifications((prev) => [...prev, message]); // Ajouter la nouvelle notification
-      });
-    }
-
-    // Nettoyage lors de la déconnexion du socket
-    return () => {
-      if (socket) {
-        socket.off('notification');
-      }
-    };
-  }, [socket]);
 
   const handleLogout = async () => {
     try {
@@ -116,6 +103,10 @@ const Navbar = ({ socket }) => {
     } catch (error) {
       console.error('Failed to logout:', error);
     }
+  }
+
+  const handleClearNotif = () => {
+    dis(clearNotifications());
   }
 
   const handleBookings = () => {
@@ -137,8 +128,8 @@ const Navbar = ({ socket }) => {
     if (socket) {
       socket.on('notification', (data) => {
         console.log('Received notification:', data);
-        dispatch(addNotification(data));
-        dispatch(incrementQuantity()); // Incrémente le compteur de notifications
+        dis(addNotification(data));
+        dis(incrementQuantity()); // Incrémente le compteur de notifications
       });
     }
 
@@ -147,7 +138,7 @@ const Navbar = ({ socket }) => {
         socket.off('notification');
       }
     };
-  }, [socket, dispatch, addNotification]);
+  }, [socket, dis]);
 
   return (
     <div className="navbar">
@@ -247,9 +238,13 @@ const Navbar = ({ socket }) => {
                 {notifications.length > 0 ? (
                   notifications.map((notif, index) => (
                     <MenuItem key={index}>
-                      {notif.content}
+                      {notif.content || notif}
+
                     </MenuItem>
                   ))
+                  // <MenuItem>
+                  //   <button onClick={handleClearNotif}>Clear notifications</button>
+                  // </MenuItem>
                 ) : (
                   <MenuItem>Aucune nouvelle notification</MenuItem>
                 )}

@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Alert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check';
+import Taxi from "../../components/taxi/Taxi.jsx";
 
 const Hotel = ({ socket }) => {
   const [extraOptions, setExtraOptions] = useState({
@@ -56,6 +57,15 @@ const Hotel = ({ socket }) => {
       flight: !prevOptions.flight,  // Inverser la valeur de flight pour afficher ou masquer
     }));
   };
+
+  // Ouvrir ou fermer le TaxiComponent
+  const toggleTaxiComponent = () => {
+    setExtraOptions((prevOptions) => ({
+      ...prevOptions,
+      taxi: !prevOptions.taxi,  // Inverser la valeur de taxi pour afficher ou masquer
+    }));
+  };
+
   const [slideIndex, setSlideIndex] = useState(0);
   const [data, setData] = useState(null);
   const [totalPrice, setTotalPrice] = useState(null);
@@ -79,14 +89,16 @@ const Hotel = ({ socket }) => {
   const rapidapiKey = import.meta.env.VITE_RAPIDAPI_KEY;
   const { attractions } = location.state || {};
   const reviewScore = location.state?.reviewScore || "N/A";
-
-  const { dates: contextDates, options: contextOptions } = useContext(SearchContext);
+  const { city } = useContext(SearchContext);
+  const {  dates: contextDates, options: contextOptions } = useContext(SearchContext);
   const storedDates = JSON.parse(localStorage.getItem("dates")) || [];
   const storedOptions = JSON.parse(localStorage.getItem("options")) || { adult: 1, children: 0, room: 1 };
-
+  //const storedCity = JSON.parse(localStorage.getItem("city")) || "";
   const [dates] = useState(contextDates.length ? contextDates : storedDates);
   const [options] = useState(contextOptions.adult !== undefined ? contextOptions : storedOptions);
-  console.log("OPTIONS", options);
+  //const [city] = useState(city || storedCity);
+  console.log("storedOptions", city);
+  console.log("OPTIONS", dates[0]);
   const hotel = data?.data;
   const days = useMemo(() => {
     const mmsPerDay = 1000 * 60 * 60 * 24;
@@ -111,6 +123,9 @@ const Hotel = ({ socket }) => {
     setOpen(true);
     setSlideIndex(index);
   };
+  useEffect(() => {
+    console.log("City: ", city); // Affiche la ville de destination dans la console
+  }, [city]);
 
   const handleAttractionSelect = (index) => {
     setSelectedAttraction(index);
@@ -358,12 +373,20 @@ const Hotel = ({ socket }) => {
                       <div className="closeFlightBtn">
                         <FontAwesomeIcon icon={faXmarkCircle} onClick={toggleFlightComponent} />
                       </div>
-                      <FlightComponent selectFlight={handleAddFlight} errors={errors} />
+                      <FlightComponent selectFlight={handleAddFlight} errors={errors} city={city} bookDates={dates}/>
                     </div>
                   )}
                 </div>
 
                 <div className="moreBookingTaxi">
+                  {extraOptions.taxi && (
+                    <div>
+                      <div className="closeFlightBtn">
+                        <FontAwesomeIcon icon={faXmarkCircle} onClick={toggleTaxiComponent} />
+                      </div>
+                      <Taxi city={city} bookDates={dates} street={data.data?.address} zip={data.data?.zip} taxiCity={data.data?.city}/>
+                    </div>
+                  )}
 
                 </div>
 
