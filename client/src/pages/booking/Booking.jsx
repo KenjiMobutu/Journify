@@ -131,7 +131,7 @@ const Booking = ({ socket }) => {
       setPaymentSuccess(true);
       setButtonText('Paid');
       setShowConfirmation(true);
-      socket?.emit("notificationBooking", `${user.userName} made a new booking.`);
+      socket?.emit("notificationBooking", { userName: user.userName, userId: user._id });
 
       setTimeout(() => setShowConfirmation(false), 5000);
     } catch (err) {

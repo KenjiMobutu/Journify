@@ -43,9 +43,6 @@ const Navbar = ({ socket }) => {
   const notifications = useSelector((state) => state.notif.notifications);
   console.log('Notifications:', notifications);
 
-
-
-
   // états distincts pour chaque menu
   const [anchorElAccount, setAnchorElAccount] = useState(null);
   const [anchorElNotifications, setAnchorElNotifications] = useState(null);
@@ -123,22 +120,39 @@ const Navbar = ({ socket }) => {
 
   const quantity = useSelector((state) => state.cart.quantity);
   const notificationsQuantity = useSelector((state) => state.notif.quantity);
+  const handleNotificationClick = (notif) => {
+    if (notif.content.includes("message")) {
+      navigate("/friends");
+    }
 
+    if (notif.content.includes("booking")) {
+      navigate("/myBookings");
+    }
+
+  };
   useEffect(() => {
+    const handleNotification = (data) => {
+      console.log('Received notification:', data);
+      dis(addNotification(data));
+      dis(incrementQuantity()); // Incrémente le compteur de notifications
+    };
+    console.log('Socket:', socket);
     if (socket) {
-      socket.on('notification', (data) => {
-        console.log('Received notification:', data);
-        dis(addNotification(data));
-        dis(incrementQuantity()); // Incrémente le compteur de notifications
-      });
+      socket.on('notification', handleNotification);
     }
 
     return () => {
       if (socket) {
-        socket.off('notification');
+        socket.off('notification', handleNotification); // Nettoie l'écouteur de notification
       }
     };
   }, [socket, dis]);
+
+  useEffect(() => {
+    if (socket && user) {
+      socket.emit('loginUser', user._id, user.userName);
+    }
+  }, [socket, user]);
 
   return (
     <div className="navbar">
@@ -219,7 +233,12 @@ const Navbar = ({ socket }) => {
                     aria-haspopup="true"
                     aria-expanded={openNotifications ? 'true' : undefined}
                   >
-                    <Badge badgeContent={notificationsQuantity} color="primary" anchorOrigin={{ vertical: 'top', horizontal: 'right', }} className="badgeNotif">
+                    <Badge
+                      badgeContent={notificationsQuantity}
+                      color="primary"
+                      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                      className="badgeNotif"
+                    >
                       <NotificationsOutlinedIcon className="notifications" style={{ fontSize: 32, color: 'white' }} />
                     </Badge>
                   </IconButton>
@@ -234,20 +253,29 @@ const Navbar = ({ socket }) => {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
-                {/* logique pour afficher les notifications */}
+                {/* Afficher les notifications */}
                 {notifications.length > 0 ? (
-                  notifications.map((notif, index) => (
-                    <MenuItem key={index}>
-                      {notif.content || notif}
-
+                  <>
+                    {notifications
+                      .slice()
+                      .reverse()
+                      .map((notif, index) => (
+                        <MenuItem
+                          key={index}
+                          onClick={() => handleNotificationClick(notif)}  // Ajoutez l'événement onClick ici
+                        >
+                          {notif.content || notif}
+                        </MenuItem>
+                      ))}
+                    {/* Ajoutez un bouton pour effacer les notifications */}
+                    <MenuItem>
+                      <button onClick={handleClearNotif}>Clear notifications</button>
                     </MenuItem>
-                  ))
-                  // <MenuItem>
-                  //   <button onClick={handleClearNotif}>Clear notifications</button>
-                  // </MenuItem>
+                  </>
                 ) : (
                   <MenuItem>Aucune nouvelle notification</MenuItem>
                 )}
+
               </Menu>
             </React.Fragment>
 

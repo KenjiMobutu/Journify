@@ -82,6 +82,25 @@ export const deleteFlightBooking = async (req, res, next) => {
   }
 };
 
+//UPDATE a flight booking
+export const updateFlightBooking = async (req, res, next) => {
+  try {
+    const booking = await FlightBooking.findByIdAndUpdate(
+      req.params.id,
+      { canceled: true }, // Met à jour uniquement le champ 'canceled'
+      { new: true } // Retourne le document mis à jour
+    );
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.status(200).json(booking);
+  } catch (err) {
+    next(err);
+  }
+}
+
 //TAXIS
 
 // Créer une réservation de taxi
@@ -196,3 +215,22 @@ export const deleteAttractionBooking = async (req, res, next) => {
     next(err);
   }
 };
+
+//UPDATE an attraction booking
+export const updateAttractionBooking = async (req, res, next) => {
+  try {
+    const booking = await Attraction.findByIdAndUpdate(
+      req.params.id,
+      { canceled: true }, // Met à jour uniquement le champ 'canceled'
+      { new: true } // Retourne le document mis à jour
+    );
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.status(200).json(booking);
+  } catch (err) {
+    next(err);
+  }
+}

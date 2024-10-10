@@ -6,6 +6,7 @@ import Group from "../models/Group.js";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import e from "express";
+import Booking from "../models/Booking.js";
 
 // Create User
 export const createUser = async (req, res, next) => {
@@ -77,7 +78,8 @@ export const getAllUsers = async (req, res, next) => {
 export const getUserBookings = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).populate("bookings");
-    res.status(200).json(user.bookings);
+    const nonCanceledHotels = user.bookings.filter(booking => !booking.canceled);
+    res.status(200).json(nonCanceledHotels);
   } catch (err) {
     next(err);
   }
@@ -95,11 +97,30 @@ export const deleteBooking = async (req, res, next) => {
   }
 };
 
+//Update a user booking
+export const updateBooking = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const booking = await Booking.findByIdAndUpdate(
+      req.params.id,
+      {canceled: true},
+      {new: true});
+
+      if (!booking) {
+        return res.status(404).json({ message: "Booking not found" });
+      }
+    res.status(200).json(booking);
+  } catch (err) {
+    next(err);
+  }
+}
+
 // Get User Flight Bookings
 export const getUserFlightBookings = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).populate("flightBookings");
-    res.status(200).json(user.flightBookings);
+    const nonCanceledFlights = user.flightBookings.filter( flight => !flight.canceled);
+    res.status(200).json(nonCanceledFlights);
   } catch (err) {
     next(err);
   }
@@ -118,8 +139,14 @@ export const getUserTaxiBookings = async (req, res, next) => {
 // Get User Attractions
 export const getUserAttractions = async (req, res, next) => {
   try {
+    // Trouver l'utilisateur et peupler les attractions
     const user = await User.findById(req.params.id).populate("attractions");
-    res.status(200).json(user.attractions);
+
+    // Filtrer les attractions pour ne garder que celles qui ne sont pas annulées
+    const nonCanceledAttractions = user.attractions.filter(attraction => !attraction.canceled);
+
+    // Renvoyer les attractions non annulées
+    res.status(200).json(nonCanceledAttractions);
   } catch (err) {
     next(err);
   }

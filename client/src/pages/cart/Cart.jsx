@@ -7,6 +7,7 @@ import { removeProduct, removeFlight, removeTaxi, resetCart, removeAttraction } 
 import { Link } from "react-router-dom";
 import attractionImg from '../../assets/attractions.png';
 import Payment from "../../components/payment/Payment";
+import { confirmAlert } from 'react-confirm-alert';
 
 const Cart = ({socket}) => {
   const [hotelPhoto, setHotelPhoto] = useState([]);
@@ -24,7 +25,8 @@ const Cart = ({socket}) => {
       const flightData = Array.isArray(flight.flights) ? flight.flights[0] : flight.flights || flight;
       return sum + (flightData?.priceBreakdown?.total?.units || flightData?.flight.priceBreakdown?.total?.units || 0);
     }, 0);
-    return hotelTotal + attractionTotal + flightTotal;
+    const taxiTotal = cart.taxis.reduce((sum, taxi) => sum + Math.round(taxi.price), 0);
+    return hotelTotal + attractionTotal + flightTotal + taxiTotal;
   };
 
   console.log(cart.flights.map((flight) => {
@@ -49,21 +51,74 @@ const Cart = ({socket}) => {
   }, [cart.products]);
 
   const handleDeleteHotel = (product) => {
-    console.log(product);
-    dispatch(removeProduct(product));
+    confirmAlert({
+      title: 'Confirm to delete',
+      message: 'Are you sure to delete this hotel?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick:() => dispatch(removeProduct(product))
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ]
+    });
   };
 
   const handleDeleteFlight = (flight) => {
-    console.log(flight);
-    dispatch(removeFlight(flight));
+    confirmAlert({
+      title: 'Confirm to delete',
+      message: 'Are you sure to delete this flight?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick:() => dispatch(removeFlight(flight))
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ]
+    });
   };
 
   const handleDeleteAttraction = (attraction) => {
-    console.log(attraction);
-    dispatch(removeAttraction(attraction));
+    confirmAlert({
+      title: 'Confirm to delete',
+      message: 'Are you sure to delete this attraction?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick:() => dispatch(removeAttraction(attraction))
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ]
+    });
   }
 
-  const handleDeleteTaxi = (taxi) => { }
+  const handleDeleteTaxi = (taxi) => {
+    confirmAlert({
+      title: 'Confirm to delete',
+      message: 'Are you sure to delete this taxi?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick:() => dispatch(removeTaxi(taxi))
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ]
+    });
+
+  }
+
 
   const handleResetCart = (cart) => {
     dispatch(resetCart(cart));
@@ -226,6 +281,55 @@ const Cart = ({socket}) => {
                     </div>
                   </div>
                 );
+              })}
+              <hr></hr>
+              {cart.taxis.map((taxi, index) => {
+                return (
+                  <div className="taxiTicket" key={taxi.id || index}>
+                    <div className="taxiTicketBody">
+                      <div className="taxiRoute">
+                        <div className="taxiDeparture">
+                          <div className="taxiName">{taxi.journeys[0]?.pickupLocation?.city}</div>
+                          <div className="taxiName">{taxi.journeys[0]?.pickupLocation?.description}</div>
+                          <div className="departureTime">
+                            {new Intl.DateTimeFormat('en-GB', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            }).format(new Date(taxi.journeys[0]?.requestedPickupDateTime))}
+                          </div>
+                        </div>
+                        <div className="taxiArrow">→</div>
+                        <div className="taxiArrival">
+                          <div className="taxiName">{taxi.journeys[0]?.dropOffLocation?.city}</div>
+                          <div className="taxiName">{taxi.journeys[0]?.dropOffLocation?.description}</div>
+                        </div>
+                      </div>
+
+                      <div className="taxiTicketFooter">
+                        <div className="taxiPrice">
+                          <b>Price: </b>{Math.round(taxi.price)} €
+                        </div>
+                        <div className="taxiDistance">
+                          <b>Distance: </b>
+                        {taxi?.taxi?.drivingDistance} km
+                        </div>
+                        <div className="taxiDuration">
+                          <b>Duration: </b>
+                          {taxi?.taxi?.duration} min.
+                        </div>
+                        <div className="deleteTaxiButton">
+                          <button onClick={() => handleDeleteTaxi(taxi)}>
+                            <DeleteForeverOutlinedIcon className="cartTrash" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+
               })}
 
             </div>

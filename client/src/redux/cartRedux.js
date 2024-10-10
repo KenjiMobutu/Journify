@@ -106,6 +106,22 @@ const cartSlice = createSlice({
       }
 
     },
+    addTaxi: (state, action) => {
+      // Vérifie si le taxi est déjà dans le tableau taxis
+      const taxiExists = state.taxis.some(
+        (taxi) => taxi.id === action.payload.id );
+      if (!taxiExists) {
+        // Ajoute le taxi seulement s'il n'existe pas déjà
+        state.quantity += 1;
+        state.taxis.push(action.payload);
+        // Si le prix est une chaîne, on le convertit en nombre
+        const taxiPrice = parseFloat(action.payload.price) || 0;
+        state.total += taxiPrice;
+      } else {
+        console.log("Taxi already exists in cart");
+      }
+    },
+
     removeProduct: (state, action) => {
       const productIndex = state.products.findIndex(
         (product) => product.id === action.payload.id
@@ -200,6 +216,7 @@ export const {
   addProduct,
   removeProduct,
   addFlight,
+  addTaxi,
   removeFlight,
   removeTaxi,
   resetCart,

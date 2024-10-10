@@ -32,7 +32,7 @@ const FlightBookingSchema = new Schema({
   },
   childrenCount: {
     type: Number,
-    
+
   },
   cabinClass: {
     type: String,
@@ -42,6 +42,10 @@ const FlightBookingSchema = new Schema({
     required: true
   },
   paid: {
+    type: Boolean,
+    default: false
+  },
+  canceled: {
     type: Boolean,
     default: false
   },

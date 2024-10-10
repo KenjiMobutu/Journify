@@ -25,8 +25,10 @@ const Hotel = ({ socket }) => {
     attractions: false,
     taxi: false
   });
+  const currentCart = useSelector((state) => state.cart);
   const [errors, setErrors] = useState({});
   const [selectedFlight, setSelectedFlight] = useState([]);
+  const [selectedTaxi, setSelectedTaxi] = useState([]);
   console.log("Selected Flight 3: ", selectedFlight);
 
   const handleAddFlight = (flight) => {
@@ -44,6 +46,22 @@ const Hotel = ({ socket }) => {
     // Ajoute le vol s'il n'est pas encore sélectionné
     setSelectedFlight((prevSelectedFlights) => [...prevSelectedFlights, flight]);
     setTotalPrice(totalPrice + flight.priceBreakdown.total.units);
+  };
+
+  const handleAddTaxi = (taxi) => {
+    console.log("Selected Taxi:", taxi);
+    if(selectedTaxi.some(t => t.resultId === taxi.resultId)) {
+      console.log("Taxi already selected");
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        taxi: "Taxi already selected",
+        taxiId: taxi.resultId,
+      }));
+      return;
+    }
+    setSelectedTaxi((prevSelectedTaxis) => [...prevSelectedTaxis, taxi]);
+    setTotalPrice(totalPrice + taxi.price.amount);
+
   };
 
   const handleMoreBookingsConfirm = (selectedOptions) => {
@@ -90,7 +108,7 @@ const Hotel = ({ socket }) => {
   const { attractions } = location.state || {};
   const reviewScore = location.state?.reviewScore || "N/A";
   const { city } = useContext(SearchContext);
-  const {  dates: contextDates, options: contextOptions } = useContext(SearchContext);
+  const { dates: contextDates, options: contextOptions } = useContext(SearchContext);
   const storedDates = JSON.parse(localStorage.getItem("dates")) || [];
   const storedOptions = JSON.parse(localStorage.getItem("options")) || { adult: 1, children: 0, room: 1 };
   //const storedCity = JSON.parse(localStorage.getItem("city")) || "";
@@ -191,6 +209,15 @@ const Hotel = ({ socket }) => {
     setSelectedFlight((prev) => prev.filter(flight => flight.token !== token));
   };
 
+  const handleRemoveTaxi = (resultId) => {
+    const taxiToRemove = selectedTaxi.find(taxi => taxi.resultId === resultId);
+    const updatedPrice = totalPrice - taxiToRemove.price.amount;
+
+    setTotalPrice(updatedPrice);
+
+    setSelectedTaxi((prev) => prev.filter(taxi => taxi.resultId !== resultId));
+  };
+
   const handleClick = () => {
     if (user) {
       setOpenMoreBooking(true);
@@ -207,6 +234,8 @@ const Hotel = ({ socket }) => {
       console.error("Missing information in cart");
       return;
     }
+    console.log(currentCart)
+
 
     dispatch(addProduct({
       product: data.data,
@@ -373,7 +402,7 @@ const Hotel = ({ socket }) => {
                       <div className="closeFlightBtn">
                         <FontAwesomeIcon icon={faXmarkCircle} onClick={toggleFlightComponent} />
                       </div>
-                      <FlightComponent selectFlight={handleAddFlight} errors={errors} city={city} bookDates={dates}/>
+                      <FlightComponent selectFlight={handleAddFlight} errors={errors} city={city} bookDates={dates} />
                     </div>
                   )}
                 </div>
@@ -384,7 +413,7 @@ const Hotel = ({ socket }) => {
                       <div className="closeFlightBtn">
                         <FontAwesomeIcon icon={faXmarkCircle} onClick={toggleTaxiComponent} />
                       </div>
-                      <Taxi city={city} bookDates={dates} street={data.data?.address} zip={data.data?.zip} taxiCity={data.data?.city}/>
+                      <Taxi selectTaxi={handleAddTaxi} errors={errors} city={city} bookDates={dates} street={data.data?.address} zip={data.data?.zip} taxiCity={data.data?.city} />
                     </div>
                   )}
 
@@ -472,6 +501,28 @@ const Hotel = ({ socket }) => {
                                 icon={faTrashAlt}
                                 className="removeFlightIcon"
                                 onClick={() => handleRemoveFlight(flight.token)}
+                              />
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {selectedTaxi.length > 0 && (
+                    <div className="selectedTaxi">
+                      <h3>Selected Taxi:</h3>
+                      <ul>
+                        {selectedTaxi.map((taxi, index) => (
+                          <li key={index} className="selectedTaxiItem">
+                            <div className="selectedTaxiInfo">
+                              <span>{taxi.supplierName} - {taxi.price.amount}€</span>
+                            </div>
+                            <div className="deleteTaxiIcon">
+                              <FontAwesomeIcon
+                                icon={faTrashAlt}
+                                className="removeTaxiIcon"
+                                onClick={() => handleRemoveTaxi(taxi.resultId)}
                               />
                             </div>
                           </li>

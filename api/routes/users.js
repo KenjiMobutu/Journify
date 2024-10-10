@@ -11,6 +11,7 @@ import {
   getUserTaxiBookings,
   getUserAttractions,
   deleteBooking,
+  updateBooking,
   getUserChats,
   getByUsername,
   addFriends,
@@ -92,6 +93,9 @@ router.get("/:id/attractionBookings", verifyUser, getUserAttractions);
 
 //DELETE A BOOKING
 router.delete("/:userId/bookings/:id", verifyUser, deleteBooking);
+
+//update a booking
+router.put("/:userId/bookings/:id", verifyUser, updateBooking);
 
 //GET ALL
 router.get("/", verifyAdmin, getAllUsers);

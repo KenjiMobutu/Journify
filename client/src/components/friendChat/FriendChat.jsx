@@ -47,7 +47,29 @@ const FriendChat = ({ socket }) => {
         socket?.off('receiveMessage');
       };
     }
-  }, [user._id, chatId, socket]);
+  }, [user._id, chatId, socket]);``
+
+  useEffect(() => {
+    if (socket) {
+      const handleReceiveMessage = (newMessage) => {
+        console.log('New message received:', newMessage);
+        if (newMessage.chatId === chatId) {
+          setChat((prevChat) => ({
+            ...prevChat,
+            messages: [...(prevChat?.messages || []), newMessage],
+          }));
+        } else {
+          // afficher une notification pour les messages reçus dans d'autres chats
+        }
+      };
+
+      socket.on('receiveMessage', handleReceiveMessage);
+
+      return () => {
+        socket.off('receiveMessage', handleReceiveMessage);
+      };
+    }
+  }, [socket, chatId]);
 
   useEffect(() => {
     const fetchFriendData = async () => {
@@ -123,6 +145,7 @@ const FriendChat = ({ socket }) => {
 
       const msg = await axios.post(`/api/users/messages`, messageData);
       const savedMessage = msg.data;
+      console.log('Saved message:', savedMessage);
       socket?.emit("sendMessage", savedMessage);
 
 
@@ -205,12 +228,14 @@ const FriendChat = ({ socket }) => {
         socket.off('newMessage');
       };
     }
-  }, [socket]);useEffect(() => {
+  }, [socket]);
+
+  useEffect(() => {
     if (socket) {
       socket.on('notification', (data) => {
         console.log('Received notification:', data);
         dis(addNotification(data));
-        dis(incrementQuantity()); // Incrémente le compteur de notifications
+        //dis(incrementQuantity()); // Incrémente le compteur de notifications
       });
     }
 

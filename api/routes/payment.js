@@ -4,12 +4,14 @@ import { createFlightBooking,
         createPaymentIntent,
         getFlightBookings,
         deleteFlightBooking,
+        updateFlightBooking,
         createTaxiBooking,
         getTaxiBookings,
         deleteTaxiBooking,
         createAttractionBooking,
         getAttractionBookings,
-        deleteAttractionBooking
+        deleteAttractionBooking,
+        updateAttractionBooking
       } from '../controllers/payController.js';
 import Stripe from 'stripe';
 
@@ -31,6 +33,8 @@ router.get("/bookings", verifyAdmin, getFlightBookings);
 //Delete a flight booking
 router.delete("/bookings/:id", verifyAdmin, deleteFlightBooking);
 
+//update a flight booking
+router.put("/bookings/:id", verifyAdmin, updateFlightBooking);
 
 
 //TAXIS
@@ -53,5 +57,8 @@ router.get("/attraction", verifyAdmin, getAttractionBookings);
 
 //Delete an attraction booking
 router.delete("/attraction/:id", verifyAdmin, deleteAttractionBooking);
+
+//update an attraction booking
+router.put("/attraction/:id", verifyAdmin, updateAttractionBooking);
 
 export default router;

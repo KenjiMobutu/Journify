@@ -69,8 +69,13 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.delete(`/api/users/${user._id}/bookings/${id}`);
+              await axios.put(`/api/users/${user._id}/bookings/${id}`);
               setBookings((prev) => prev.filter((booking) => booking._id !== id));
+              const booking = {
+                userId: user._id,
+                bookingId: id,
+              }
+              socket?.emit("cancelBooking", booking);
             } catch (error) {
               console.error('Error cancelling the booking:', error);
             }
@@ -93,8 +98,13 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.delete(`/api/payment/bookings/${id}`);
+              await axios.put(`/api/payment/bookings/${id}`);
               setFlights((prev) => prev.filter((flight) => flight._id !== id));
+              const booking = {
+                userId: user._id,
+                bookingId: id,
+              }
+              socket?.emit("cancelBooking", booking);
             } catch (error) {
               console.error('Error cancelling the flight:', error);
             }
@@ -117,8 +127,13 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.delete(`/api/payment/attraction//${id}`);
+              await axios.put(`/api/payment/attraction/${id}`);
               setAttractions((prev) => prev.filter((attraction) => attraction._id !== id));
+              const booking = {
+                userId: user._id,
+                bookingId: id,
+              }
+              socket?.emit("cancelBooking", booking);
             } catch (error) {
               console.error('Error cancelling the attraction:', error);
             }

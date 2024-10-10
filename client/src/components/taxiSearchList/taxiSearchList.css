@@ -100,3 +100,41 @@
   color: #007bff;
   font-size: 1.2rem;
 }
+
+.taxiBtns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.taxiBookButton, .taxiCartButton {
+  background-color: #3498db; /* Couleur de fond pour les boutons */
+  color: white; /* Couleur du texte */
+  padding: 10px 20px; /* Taille du bouton */
+  font-size: 16px; /* Taille du texte */
+  border: none; /* Supprimer la bordure par défaut */
+  border-radius: 5px; /* Coins arrondis */
+  cursor: pointer; /* Curseur pointeur */
+  transition: background-color 0.3s ease; /* Transition fluide pour le changement de couleur */
+}
+
+.taxiBookButton:hover, .taxiCartButton:hover {
+  background-color: #2980b9; /* Couleur de fond au survol */
+}
+
+.taxiBookButton {
+  background-color: #e74c3c; /* Couleur spécifique pour le bouton "Book Now" */
+}
+
+.taxiBookButton:hover {
+  background-color: #c0392b; /* Couleur au survol pour "Book Now" */
+}
+
+.taxiCartButton {
+  background-color: #2ecc71; /* Couleur spécifique pour le bouton "Add to Cart" */
+}
+
+.taxiCartButton:hover {
+  background-color: #27ae60; /* Couleur au survol pour "Add to Cart" */
+}

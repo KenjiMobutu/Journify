@@ -4,7 +4,9 @@
   margin: 10px 0;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
   cursor: pointer;
 }
 
@@ -20,7 +22,8 @@
   margin-bottom: 15px;
 }
 
-.flightJourneyFrom, .flightJourneyTo {
+.flightJourneyFrom,
+.flightJourneyTo {
   text-align: center;
 }
 
@@ -88,6 +91,15 @@
 .selectFlightButton {
   text-align: right;
 }
+.addCartButton {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.addToBook {
+  margin-top: 20px;
+  text-align: right;
+}
 
 .btnSelectFlight {
   background-color: #007bff;
@@ -97,6 +109,8 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  width: 7rem;
+  height: 3rem;
   transition: background-color 0.3s;
 }
 
@@ -105,6 +119,48 @@
 }
 
 .btnSelectFlight:active {
+  background-color: #00408d;
+}
+
+.btnAddCart {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  width: 7rem;
+  height: 3rem;
+  transition: background-color 0.3s;
+}
+
+.btnAddCart:hover {
+  background-color: #218838;
+}
+
+.btnAddCart:active {
+  background-color: #1e7e34;
+}
+
+.btnAddToBook {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px 15 ;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  width: 7rem;
+  height: 3rem;
+  transition: background-color 0.3s;
+}
+
+.btnAddToBook:hover {
+  background-color: #0056b3;
+}
+
+.btnAddToBook:active {
   background-color: #00408d;
 }
 

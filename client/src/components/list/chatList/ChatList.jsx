@@ -25,6 +25,12 @@ const ChatList = ({ userFriends, fetchUserFriends, groups, socket }) => {
   console.log(userFriends);
   console.log(groups);
 
+  useEffect(() => {
+    if (socket && chats) {
+      const chatIds = chats.map((chat) => chat._id);
+      socket.emit('joinChats', chatIds);
+    }
+  }, [socket, chats]);
   const fetchChats = useCallback(async () => {
     console.log("Fetching chats...");
     try {
@@ -108,6 +114,8 @@ const ChatList = ({ userFriends, fetchUserFriends, groups, socket }) => {
     console.log("Friend added");
     await fetchUserFriends(); // Rafraîchir la liste des chats
   };
+
+
 
   return (
     <div className="chatList">

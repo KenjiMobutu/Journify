@@ -38,6 +38,10 @@ const AttractionSchema = new Schema({
     type: Boolean,
     default: false
   },
+  canceled: {
+    type: Boolean,
+    default: false
+  },
 
 });
 

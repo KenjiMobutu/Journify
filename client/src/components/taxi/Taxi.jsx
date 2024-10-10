@@ -11,8 +11,7 @@ import axios from "axios";
 import TaxiSearchList from "../../components/taxiSearchList/TaxiSearchList";
 import { useEffect } from "react";
 
-
-const Taxi = ({ socket, street, zip, taxiCity, bookDates }) => {
+const Taxi = ({ socket, street, zip, taxiCity, bookDates, selectTaxi, errors }) => {
   const [departOptions, setDepartOptions] = useState([]);
   const [arrivalOptions, setArrivalOptions] = useState([]);
   const [selectedDepart, setSelectedDepart] = useState(null);
@@ -22,12 +21,12 @@ const Taxi = ({ socket, street, zip, taxiCity, bookDates }) => {
   const [arrival, setArrival] = useState("");
   const [time, setTime] = useState(dayjs());
   const [dates, setDates] = useState(dayjs());
-  const formattedDate = dayjs( dates.$d).format('YYYY-MM-DD');
+  const [loading, setLoading] = useState(false); // État de chargement
+  const formattedDate = dayjs(dates.$d).format('YYYY-MM-DD');
   const formattedTime = dayjs(time.$d).format('HH:mm');
   const rapidapiKey = import.meta.env.VITE_RAPIDAPI_KEY;
 
-  console.log(depart)
-  //console.log(bookDates[0]?.startDate)
+  console.log(depart);
   console.log("Selected Departure:", selectedDepart);
   console.log("Selected Arrival:", selectedArrival);
   console.log("Time:", time.$d);
@@ -36,24 +35,28 @@ const Taxi = ({ socket, street, zip, taxiCity, bookDates }) => {
   console.log("Formatted Time:", formattedTime);
   console.log("Data:", data);
 
-
   useEffect(() => {
     if (taxiCity && bookDates[0]?.startDate) {
-      // Combiner street, zip et taxiCity en une seule chaîne
       const combinedAddress = `${street}, ${zip}, ${taxiCity}`;
       setArrival(combinedAddress);
 
-      // Vérification et formatage de la date
       const parsedDate = dayjs(bookDates[0]?.startDate);
       if (parsedDate.isValid()) {
-        setDates(parsedDate);  // Si la date est valide, l'assigner
+        setDates(parsedDate);
       } else {
         console.error("Invalid date format:", bookDates[0]?.startDate);
       }
     }
   }, [taxiCity, street, zip, bookDates]);
 
+  const handleAddTaxi = (item) => {
+    console.log("Add Taxi:", item);
+    selectTaxi(item);
+  };
+
   const handleSearch = async () => {
+    setLoading(true); // Active le chargement
+
     const options = {
       method: 'GET',
       url: 'https://booking-com15.p.rapidapi.com/api/v1/taxi/searchLocation',
@@ -86,8 +89,9 @@ const Taxi = ({ socket, street, zip, taxiCity, bookDates }) => {
       console.log("Departure Options:", response.data.data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false); // Désactive le chargement une fois la réponse reçue
     }
-
   };
 
   const handleFinalSearch = async () => {
@@ -95,6 +99,8 @@ const Taxi = ({ socket, street, zip, taxiCity, bookDates }) => {
       console.error("Please select both departure and arrival locations.");
       return;
     }
+
+    setLoading(true); // Active le chargement
 
     const opt = {
       method: 'GET',
@@ -118,6 +124,8 @@ const Taxi = ({ socket, street, zip, taxiCity, bookDates }) => {
       console.log("Final search data:", response.data);
     } catch (error) {
       console.error("Final search error:", error);
+    } finally {
+      setLoading(false); // Désactive le chargement une fois la réponse reçue
     }
   }
 
@@ -144,8 +152,12 @@ const Taxi = ({ socket, street, zip, taxiCity, bookDates }) => {
                 onChange={(e) => setArrival(e.target.value)}
               />
             </div>
-            <button onClick={handleSearch} className="destinationSearchButtonTaxi">
-              Search Destinations
+            <button
+              onClick={handleSearch}
+              className="destinationSearchButtonTaxi"
+              disabled={loading} // Désactiver le bouton lors du chargement
+            >
+              {loading ? "Processing..." : "Search Destinations"}
             </button>
             {departOptions.length > 0 && (
               <div className="listSearchItemTaxi">
@@ -204,18 +216,18 @@ const Taxi = ({ socket, street, zip, taxiCity, bookDates }) => {
           <button
             onClick={handleFinalSearch}
             className="listSearchButtonTaxi"
-            disabled={!selectedDepart || !selectedArrival}
+            disabled={loading || !selectedDepart || !selectedArrival} // Désactiver le bouton si le chargement est en cours ou si les informations sont incomplètes
           >
-            Search Taxi
+            {loading ? "Processing..." : "Search Taxi"}
           </button>
         </div>
         <div className="listResultsflight">
-          {data.data && data.data.results.length > 0 ? (
+          {data.data && Array.isArray(data.data.results) && data.data.results.length > 0 ? (
             data.data.results.map((item, index) => (
-              <TaxiSearchList item={item} index={index} key={item.resultId} journeys={data.data.journeys} />
+              <TaxiSearchList selectTaxi={handleAddTaxi} errors={errors} item={item} index={index} key={item.resultId} journeys={data.data.journeys} />
             ))
           ) : (
-            "No Taxis found"
+            "No Taxis found."
           )}
         </div>
       </div>

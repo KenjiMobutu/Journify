@@ -32,7 +32,7 @@ const BookingSchema = new Schema({
   },
   rooms: {
     type: Number,
-    
+
   },
   totalCost: {
     type: Number,
@@ -60,6 +60,10 @@ const BookingSchema = new Schema({
   country: {
     type: String,
     required: true
+  },
+  canceled: {
+    type: Boolean,
+    default: false
   },
 }, { timestamps: true }
 );

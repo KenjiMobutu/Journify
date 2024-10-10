@@ -10,7 +10,9 @@ import { addFlight } from "../../redux/cartRedux.js";
 import { useState } from "react";
 
 const FlightSearchList = ({ item, onSelect, options, selectFlight, errors }) => {
-  const isHotelPage = location.pathname === "/hotels";
+
+  const isHotelPage = location.pathname.includes("/hotels");
+  const isFlightPage = location.pathname.includes("/flights");
   const formatDateTime = (dateTime) => {
     const date = new Date(dateTime);
     return `${format(date, "dd MMM yyyy")} - ${format(date, "HH:mm")}`;
@@ -91,25 +93,32 @@ const FlightSearchList = ({ item, onSelect, options, selectFlight, errors }) => 
       </div>
 
       {isHotelPage ?
-      (errors.flightId === item.token && (
-        <div className="flightError">
-          <span className="flightErrorText">
-            {errors.flight}
-          </span>
-        </div>)
-      ) : (<div></div>
+        (errors.flightId === item.token && (
+          <div className="flightError">
+            <span className="flightErrorText">
+              {errors.flight}
+            </span>
+          </div>)
+        ) : (<div></div>
+        )}
+      {!isHotelPage && (
+        <>
+          <div className="selectFlightButton">
+            <button className="btnSelectFlight" onClick={() => onSelect(item)}>Pay Now</button>
+          </div>
+
+          <div className="addCartButton">
+            <button className="btnAddCart" onClick={() => handleAddToCart(item)}>Add to Cart</button>
+          </div>
+        </>
       )}
 
-      <div className="selectFlightButton">
-        <button className="btnSelectFlight" onClick={() => onSelect(item)}>Select Flight</button>
-      </div>
 
-      <div className="addCartButton">
-        <button className="btnAddCart" onClick={() => handleAddToCart(item)}>Add to Cart</button>
-      </div>
-      <div className="addToBook">
-        <button className="btnAddToBook" onClick={() => addToBooking(item)}>Add to Booking</button>
-      </div>
+      {!isFlightPage && (
+        <div className="addToBook">
+          <button className="btnAddToBook" onClick={() => addToBooking(item)}>Add to Booking</button>
+        </div>
+      )}
     </div>
   );
 };

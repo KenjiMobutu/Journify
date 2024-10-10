@@ -33,11 +33,6 @@ function App() {
     return () => newSocket.close();
   }, []);
 
-  useEffect(() => {
-    if (socket && user) {
-      socket.emit('loginUser', user._id, user.userName);
-    }
-  }, [socket, user]);
 
   return (
     <BrowserRouter>
