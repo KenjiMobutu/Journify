@@ -49,9 +49,9 @@ const Taxi = ({ socket, street, zip, taxiCity, bookDates, selectTaxi, errors }) 
     }
   }, [taxiCity, street, zip, bookDates]);
 
-  const handleAddTaxi = (item) => {
+  const handleAddTaxi = (item, journeys) => {
     console.log("Add Taxi:", item);
-    selectTaxi(item);
+    selectTaxi(item, journeys);
   };
 
   const handleSearch = async () => {

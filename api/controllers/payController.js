@@ -159,6 +159,25 @@ export const deleteTaxiBooking = async (req, res, next) => {
   }
 };
 
+//UPDATE a taxi booking
+export const updateTaxiBooking = async (req, res, next) => {
+  try {
+    const booking = await Taxi.findByIdAndUpdate(
+      req.params.id,
+      { canceled: true }, // Met à jour uniquement le champ 'canceled'
+      { new: true } // Retourne le document mis à jour
+    );
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.status(200).json(booking);
+  } catch (err) {
+    next(err);
+  }
+}
+
 //ATTRACTIONS
 // CREATE a new attraction booking
 export const createAttractionBooking = async (req, res, next) => {

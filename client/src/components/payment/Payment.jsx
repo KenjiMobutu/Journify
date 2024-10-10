@@ -23,8 +23,9 @@ const Payment = ({ setOpenPayment, totalPrice, cart }) => {
   const hotels = cart.products;
   const attractions = cart.attractions;
   const flights = cart.flights;
+  const taxis = cart.taxis;
 
-  console.log("Cart: ", hotels, attractions, flights);
+  console.log("Cart: ", hotels, attractions, flights, taxis);
 
 
   const stripe = useStripe();
@@ -114,7 +115,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart }) => {
             hotel: hotel._id,
             totalCost: Math.round(hotel.product_price_breakdown.all_inclusive_amount.value),
             numberOfNights: Math.round(roundedNumberOfNights),
-            address: hotel.address,
+            address: hotel.address || 'Unknown',
             zip: hotel.zip || '',
             city: hotel.city_trans,
             country: hotel.country_trans,
@@ -129,7 +130,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart }) => {
       }
 
       // Handle payment for attractions and flights
-      await handleExtraPayments(paymentIntent.id, token, user, attractions, flights);
+      await handleExtraPayments(paymentIntent.id, token, user, attractions, flights, taxis);
 
       // Payment success actions
       setPaymentSuccess(true);
@@ -145,7 +146,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart }) => {
   }
 
   // Handle payment for attractions and flights
-  const handleExtraPayments = async (paymentIntentId, token, user, attractions, flights) => {
+  const handleExtraPayments = async (paymentIntentId, token, user, attractions, flights, taxis) => {
     try {
       for (const attraction of attractions) {
         const attractionResponse = await fetch(`/api/payment/attraction`, {
@@ -165,7 +166,59 @@ const Payment = ({ setOpenPayment, totalPrice, cart }) => {
         if (!attractionResponse.ok) throw new Error('Payment failed for attraction');
       }
 
+      for (const taxi of taxis) {
+        if (!taxi || !taxi.journeys || !taxi.journeys[0]) {
+          console.error('Taxi data is incomplete or invalid:', taxi);
+          continue; // Passer à l'itération suivante si les données du taxi sont invalides
+        }
+
+        // Debugging info
+        console.log("Taxi: ", taxi);
+        console.log("Taxi name: ", taxi.supplierName);
+        console.log("Taxi price: ", taxi?.price?.amount || taxi.price);
+
+        // Extraction des informations de date et heure
+        const requestedPickupDateTime = new Date(taxi.journeys[0].requestedPickupDateTime);
+        const date = requestedPickupDateTime.toISOString().split('T')[0];
+        const time = requestedPickupDateTime.toTimeString().split(' ')[0].slice(0, 5);
+
+        // Préparation du corps de la requête pour la réservation du taxi
+        const taxiResponse = await fetch(`/api/payment/taxi`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            paymentIntentId,
+            _id: user._id,
+            userName: user.userName,
+            userEmail: user.email,
+            name: taxi?.taxi?.supplierName || taxi.supplierName,
+            price: Math.round(taxi?.price?.amount || taxi.price), // S'assurer que le prix est un nombre
+            type: taxi?.taxi?.category || taxi.category,
+            description: taxi?.taxi?.descriptionLocalised || taxi.descriptionLocalised,
+            departure: taxi.journeys[0].pickupLocation.name,
+            date: date,
+            time: time,
+            arrival: taxi.journeys[0].dropOffLocation.name,
+            distance: taxi?.taxi?.drivingDistance || taxi.drivingDistance,
+            photos: taxi?.taxi?.imageUrl || taxi.imageUrl,
+          }),
+        });
+
+        if (!taxiResponse.ok) {
+          console.error('Failed to save taxi booking:', taxiResponse.statusText);
+          throw new Error('Payment failed for taxi');
+        }
+      }
+
       for (const flight of flights) {
+        if (!flight || !flight.segments || !flight.segments[0]) {
+          console.error('Flight data is incomplete or invalid:', flight);
+          continue; // Skip this flight if the data is incomplete
+        }
+        console.log("Flight: ", flight);
         const flightResponse = await fetch(`/api/payment/bookings`, {
           method: 'POST',
           headers: {
@@ -187,7 +240,10 @@ const Payment = ({ setOpenPayment, totalPrice, cart }) => {
             totalCost: flight.priceBreakdown.total.units,
           }),
         });
-        if (!flightResponse.ok) throw new Error('Payment failed for flight');
+        if (!flightResponse.ok) {
+          console.error('Failed to save flight booking:', flightResponse.statusText);
+          throw new Error('Payment failed for flight');
+        }
       }
     } catch (error) {
       console.error(error.message);
@@ -264,6 +320,7 @@ Payment.propTypes = {
     products: PropTypes.array.isRequired,
     attractions: PropTypes.array.isRequired,
     flights: PropTypes.array.isRequired,
+    taxis: PropTypes.array.isRequired,
   }).isRequired,
 };
 

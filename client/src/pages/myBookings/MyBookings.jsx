@@ -147,6 +147,36 @@ const MyBookings = ({socket}) => {
     });
   };
 
+  const handleTaxiCancel = async (id) => {
+    console.log("TAXI ID:", id);
+    confirmAlert({
+      title: 'Confirm cancellation',
+      message: 'Do you really want to cancel your booking ?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.put(`/api/payment/taxi/${id}`);
+              setTaxis((prev) => prev.filter((taxi) => taxi._id !== id));
+              const booking = {
+                userId: user._id,
+                bookingId: id,
+              }
+              socket?.emit("cancelBooking", booking);
+            } catch (error) {
+              console.error('Error cancelling the taxi:', error);
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ]
+    });
+  };
+
   const isCancelable = (date) => {
     console.log(date);
     const today = new Date();
@@ -299,10 +329,10 @@ const MyBookings = ({socket}) => {
                             <label>Total Cost</label>
                             <span>{taxi.price} €</span>
                           </div>
-                          {isCancelable(taxi.time) && (
+                          {isCancelable(taxi.date) && (
                             <button
                               className="cancelButton"
-                              onClick={() => handleCancel(taxi._id, 'taxi')}
+                              onClick={() => handleTaxiCancel(taxi._id, 'taxi')}
                             >
                               Cancel Ride
                             </button>

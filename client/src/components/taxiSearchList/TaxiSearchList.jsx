@@ -26,7 +26,7 @@ const TaxiSearchList = ({ item, journeys, selectTaxi, errors }) => {
     dispatch(addTaxi({
       id: item.resultId,
       taxi: item,
-      price: item.price.amount || 0,
+      price: Math.round(item.price.amount) || 0,
       journeys: journeys
     }));
 
@@ -40,7 +40,7 @@ const TaxiSearchList = ({ item, journeys, selectTaxi, errors }) => {
 
   const addToBooking = (item) => {
     console.log("Add to Booking:", item);
-    selectTaxi(item);
+    selectTaxi(item, journeys);
   }
 
   return (
@@ -77,7 +77,7 @@ const TaxiSearchList = ({ item, journeys, selectTaxi, errors }) => {
         </div>
         <div className="price">
           <label>Price:</label>
-          <span> {item.price.amount} €</span>
+          <span> {Math.round(item.price.amount)} €</span>
         </div>
         {isHotelPage ?
           (errors.resultId === item.resultId && (
@@ -102,7 +102,7 @@ const TaxiSearchList = ({ item, journeys, selectTaxi, errors }) => {
           <button className="btnAddToBook" onClick={() => addToBooking(item)}>Add to Booking</button>
         </div>
       )}
-      
+
 
       <div>
 

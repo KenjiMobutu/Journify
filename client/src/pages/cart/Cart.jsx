@@ -9,7 +9,7 @@ import attractionImg from '../../assets/attractions.png';
 import Payment from "../../components/payment/Payment";
 import { confirmAlert } from 'react-confirm-alert';
 
-const Cart = ({socket}) => {
+const Cart = ({ socket }) => {
   const [hotelPhoto, setHotelPhoto] = useState([]);
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const Cart = ({socket}) => {
       const flightData = Array.isArray(flight.flights) ? flight.flights[0] : flight.flights || flight;
       return sum + (flightData?.priceBreakdown?.total?.units || flightData?.flight.priceBreakdown?.total?.units || 0);
     }, 0);
-    const taxiTotal = cart.taxis.reduce((sum, taxi) => sum + Math.round(taxi.price), 0);
+    const taxiTotal = cart.taxis.reduce((sum, taxi) => sum + (Math.round(taxi?.price) || Math.round(taxi?.price?.amount)), 0);
     return hotelTotal + attractionTotal + flightTotal + taxiTotal;
   };
 
@@ -57,11 +57,11 @@ const Cart = ({socket}) => {
       buttons: [
         {
           label: 'Yes',
-          onClick:() => dispatch(removeProduct(product))
+          onClick: () => dispatch(removeProduct(product))
         },
         {
           label: 'No',
-          onClick: () => {}
+          onClick: () => { }
         }
       ]
     });
@@ -74,11 +74,11 @@ const Cart = ({socket}) => {
       buttons: [
         {
           label: 'Yes',
-          onClick:() => dispatch(removeFlight(flight))
+          onClick: () => dispatch(removeFlight(flight))
         },
         {
           label: 'No',
-          onClick: () => {}
+          onClick: () => { }
         }
       ]
     });
@@ -91,11 +91,11 @@ const Cart = ({socket}) => {
       buttons: [
         {
           label: 'Yes',
-          onClick:() => dispatch(removeAttraction(attraction))
+          onClick: () => dispatch(removeAttraction(attraction))
         },
         {
           label: 'No',
-          onClick: () => {}
+          onClick: () => { }
         }
       ]
     });
@@ -108,11 +108,11 @@ const Cart = ({socket}) => {
       buttons: [
         {
           label: 'Yes',
-          onClick:() => dispatch(removeTaxi(taxi))
+          onClick: () => dispatch(removeTaxi(taxi))
         },
         {
           label: 'No',
-          onClick: () => {}
+          onClick: () => { }
         }
       ]
     });
@@ -131,7 +131,7 @@ const Cart = ({socket}) => {
 
   return (
     <div>
-      <Navbar socket={socket}/>
+      <Navbar socket={socket} />
       <div className="cartContainer">
         <div className="cartTitle">
           <h1>YOUR ORDER</h1>
@@ -289,36 +289,40 @@ const Cart = ({socket}) => {
                     <div className="taxiTicketBody">
                       <div className="taxiRoute">
                         <div className="taxiDeparture">
-                          <div className="taxiName">{taxi.journeys[0]?.pickupLocation?.city}</div>
-                          <div className="taxiName">{taxi.journeys[0]?.pickupLocation?.description}</div>
+                          <div className="taxiName">{taxi?.journeys?.[0]?.pickupLocation?.city || "Unknown City"}</div>
+                          <div className="taxiName">{taxi?.journeys?.[0]?.pickupLocation?.description || "Unknown Description"}</div>
                           <div className="departureTime">
-                            {new Intl.DateTimeFormat('en-GB', {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            }).format(new Date(taxi.journeys[0]?.requestedPickupDateTime))}
+                            {taxi?.journeys?.[0]?.requestedPickupDateTime ? (
+                              new Intl.DateTimeFormat('en-GB', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              }).format(new Date(taxi.journeys[0].requestedPickupDateTime))
+                            ) : (
+                              "Unknown Date/Time"
+                            )}
                           </div>
                         </div>
                         <div className="taxiArrow">→</div>
                         <div className="taxiArrival">
-                          <div className="taxiName">{taxi.journeys[0]?.dropOffLocation?.city}</div>
-                          <div className="taxiName">{taxi.journeys[0]?.dropOffLocation?.description}</div>
+                          <div className="taxiName">{taxi?.journeys?.[0]?.dropOffLocation?.city || "Unknown City"}</div>
+                          <div className="taxiName">{taxi?.journeys?.[0]?.dropOffLocation?.description || "Unknown Description"}</div>
                         </div>
                       </div>
 
                       <div className="taxiTicketFooter">
                         <div className="taxiPrice">
-                          <b>Price: </b>{Math.round(taxi.price)} €
+                          <b>Price: </b>{Math.round(taxi.price.amount) || Math.round(taxi.price)} €
                         </div>
                         <div className="taxiDistance">
                           <b>Distance: </b>
-                        {taxi?.taxi?.drivingDistance} km
+                          {taxi?.taxi?.drivingDistance || taxi?.drivingDistance} km
                         </div>
                         <div className="taxiDuration">
                           <b>Duration: </b>
-                          {taxi?.taxi?.duration} min.
+                          {taxi?.taxi?.duration || taxi?.duration} min.
                         </div>
                         <div className="deleteTaxiButton">
                           <button onClick={() => handleDeleteTaxi(taxi)}>
@@ -348,7 +352,7 @@ const Cart = ({socket}) => {
           </div>
         </div>
       </div>
-      {openPayment && <Payment setOpenPayment={setOpenPayment} totalPrice={Math.round(calculateTotal())} cart={cart}/>}
+      {openPayment && <Payment setOpenPayment={setOpenPayment} totalPrice={Math.round(calculateTotal())} cart={cart} />}
     </div>
   );
 };

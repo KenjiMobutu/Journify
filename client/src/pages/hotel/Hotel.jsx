@@ -48,9 +48,10 @@ const Hotel = ({ socket }) => {
     setTotalPrice(totalPrice + flight.priceBreakdown.total.units);
   };
 
-  const handleAddTaxi = (taxi) => {
+  const handleAddTaxi = (taxi, journeys) => {
     console.log("Selected Taxi:", taxi);
-    if(selectedTaxi.some(t => t.resultId === taxi.resultId)) {
+    console.log("Selected Journeys:", journeys);
+    if (selectedTaxi.some(t => t.resultId === taxi.resultId)) {
       console.log("Taxi already selected");
       setErrors(prevErrors => ({
         ...prevErrors,
@@ -59,8 +60,9 @@ const Hotel = ({ socket }) => {
       }));
       return;
     }
-    setSelectedTaxi((prevSelectedTaxis) => [...prevSelectedTaxis, taxi]);
-    setTotalPrice(totalPrice + taxi.price.amount);
+    const taxiWithJourneys = { ...taxi, journeys };
+    setSelectedTaxi((prevSelectedTaxis) => [...prevSelectedTaxis, taxiWithJourneys]);
+    setTotalPrice(totalPrice + Math.round(taxi.price.amount));
 
   };
 
@@ -211,7 +213,7 @@ const Hotel = ({ socket }) => {
 
   const handleRemoveTaxi = (resultId) => {
     const taxiToRemove = selectedTaxi.find(taxi => taxi.resultId === resultId);
-    const updatedPrice = totalPrice - taxiToRemove.price.amount;
+    const updatedPrice = totalPrice - taxiToRemove?.price?.amount;
 
     setTotalPrice(updatedPrice);
 
@@ -241,7 +243,7 @@ const Hotel = ({ socket }) => {
       product: data.data,
       attractions: addedAttractions || [],
       flights: selectedFlight || [],
-      taxis: extraOptions.taxi || [],
+      taxis: selectedTaxi || [],
       price: totalPrice,
       options: {
         room: options.room,
@@ -425,7 +427,7 @@ const Hotel = ({ socket }) => {
                     <ul className="hotelAttractionsList">
                       {attractions.map((attraction, index) => {
                         const ticketCount = ticketCounts[index] || 1;  // Nombre de tickets sélectionnés ou 1 par défaut
-                        const totalPrice = (attraction.representativePrice.publicAmount * ticketCount).toFixed(2);  // Prix total
+                        const totalPrice = Math.round(attraction.representativePrice.publicAmount * ticketCount);  // Prix total
 
                         return (
                           <li
@@ -474,7 +476,7 @@ const Hotel = ({ socket }) => {
                       <ul>
                         {addedAttractions.map((attraction, index) => (
                           <li key={index} className="addedAttractionItem">
-                            <span>{attraction.ticketCount} x {attraction.name} - {Math.ceil(attraction.price)}€ </span>
+                            <span>{attraction.ticketCount} x {attraction.name} - {Math.round(attraction.price)}€ </span>
                             <FontAwesomeIcon
                               icon={faTrashAlt}
                               className="removeAttractionIcon"
@@ -494,7 +496,7 @@ const Hotel = ({ socket }) => {
                           <li key={index} className="selectedFlightItem">
                             <div className="selectedFlightInfo">
                               <span>{flight.segments[0].departureAirport.cityName} - {flight.segments[0].arrivalAirport.cityName} </span>
-                              <span>{flight.priceBreakdown.total.units}€</span>
+                              <span>{Math.round(flight.priceBreakdown.total.units)}€</span>
                             </div>
                             <div className="deleteFlighticon">
                               <FontAwesomeIcon
@@ -516,7 +518,7 @@ const Hotel = ({ socket }) => {
                         {selectedTaxi.map((taxi, index) => (
                           <li key={index} className="selectedTaxiItem">
                             <div className="selectedTaxiInfo">
-                              <span>{taxi.supplierName} - {taxi.price.amount}€</span>
+                              <span>{taxi.supplierName} - {Math.round(taxi?.price?.amount)}€</span>
                             </div>
                             <div className="deleteTaxiIcon">
                               <FontAwesomeIcon
@@ -531,7 +533,7 @@ const Hotel = ({ socket }) => {
                     </div>
                   )}
                   <span className="hotelDescPriceAmount">
-                    {totalPrice ? `${Math.floor(totalPrice)}€ (${days} Nights)` : "Price not available"}
+                    {totalPrice ? `${Math.round(totalPrice)}€ (${days} Nights)` : "Price not available"}
                   </span>
                   <button onClick={handleClick} className="hotelDescPriceBook">Book now</button>
                   <button onClick={handleCart} className="hotelDescPriceBook">

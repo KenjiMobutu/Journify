@@ -8,6 +8,7 @@ import { createFlightBooking,
         createTaxiBooking,
         getTaxiBookings,
         deleteTaxiBooking,
+        updateTaxiBooking,
         createAttractionBooking,
         getAttractionBookings,
         deleteAttractionBooking,
@@ -46,7 +47,8 @@ router.get("/taxi", verifyAdmin, getTaxiBookings);
 
 //Delete a taxi booking
 router.delete("/taxi/:id", verifyAdmin, deleteTaxiBooking);
-
+//update a taxi booking
+router.put("/taxi/:id", verifyAdmin, updateTaxiBooking);
 
 //ATTRACTIONS
 // Create a new attraction booking

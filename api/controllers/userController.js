@@ -130,7 +130,8 @@ export const getUserFlightBookings = async (req, res, next) => {
 export const getUserTaxiBookings = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).populate("taxiBookings");
-    res.status(200).json(user.taxiBookings);
+    const nonCanceledTaxis = user.taxiBookings.filter( taxi => !taxi.canceled);
+    res.status(200).json(nonCanceledTaxis);
   } catch (err) {
     next(err);
   }
