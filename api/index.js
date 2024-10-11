@@ -16,6 +16,7 @@ import { Server } from "socket.io";
 import Group from "./models/Group.js";
 import FriendChat from "./models/FriendChat.js";
 import User from "./models/User.js";
+import GroupChat from "./models/GroupChat.js";
 
 const app = express();
 
@@ -111,7 +112,9 @@ io.on("connection", (socket) => {
   socket.on("loginUser", (userId, userName, isAdmin) => {
     users[userId] = socket.id; // Associer directement l'utilisateur avec son socket.id
     socket.join(userId);
-    console.log(`User logged: ${userName} ${userId} with socket ID ${socket.id}`);
+    console.log(
+      `User logged: ${userName} ${userId} with socket ID ${socket.id}`
+    );
     // Vérifiez si l'utilisateur est un administrateur
     if (isAdmin) {
       admins[userId] = socket.id; // Stocker le socket.id si c'est un admin
@@ -157,9 +160,11 @@ io.on("connection", (socket) => {
       io.to(userSocketId).emit("notification", "You made a new booking.");
     }
     for (let adminId in admins) {
-      io.to(admins[adminId]).emit("notification", `${userName} made a new booking.`);
+      io.to(admins[adminId]).emit(
+        "notification",
+        `${userName} made a new booking.`
+      );
     }
-
   });
 
   socket.on("notificationFlightBooking", (message) => {
@@ -175,7 +180,7 @@ io.on("connection", (socket) => {
   });
 
   //
-  socket.on('joinChats', (chatIds) => {
+  socket.on("joinChats", (chatIds) => {
     chatIds.forEach((chatId) => {
       socket.join(chatId);
     });
@@ -188,7 +193,7 @@ io.on("connection", (socket) => {
     console.log(`User with ID ${userId} joined chat room ${chatId}`);
 
     // Informer les autres utilisateurs dans la "room"
-    socket.to(chatId).emit("userJoined", {
+    socket.to(chatId).emit("notification", {
       userId,
       message: `User ${userId} has joined the chat.`,
     });
@@ -201,20 +206,24 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", async (messageData) => {
-    const { chatId, senderId, receiverId, content, isGroup } = messageData;
+    const { chatId, senderId, receiverId, content, isGroup, groupId, groupName } = messageData;
 
     console.log("Message received:", messageData);
+    console.log("group Name:", groupName);
 
-    if (isGroup) {
+    if (groupId) {
       // Gestion des messages de groupe
-      const chat = await FriendChat.findById(chatId).populate("members");
+      const chat = await GroupChat.findById(chatId).populate("members");
+      if (chat) {
+        io.emit("receiveMessage", messageData);
+      }
       chat.members.forEach((member) => {
         if (member._id.toString() !== senderId) {
           const targetSocketId = users[member._id.toString()];
           if (targetSocketId) {
             io.to(targetSocketId).emit("notification", {
               senderId,
-              content: `Nouveau message dans le groupe ${chat.groupName}`,
+              content: `Nouveau message dans le groupe ${groupName}`,
             });
             io.to(targetSocketId).emit("receiveMessage", messageData);
           }
@@ -236,7 +245,9 @@ io.on("connection", (socket) => {
         });
         io.to(targetSocketId).emit("receiveMessage", messageData);
       } else {
-        console.log(`Le destinataire avec l'ID ${receiverId} n'est pas connecté.`);
+        console.log(
+          `Le destinataire avec l'ID ${receiverId} n'est pas connecté.`
+        );
       }
     }
 
@@ -248,7 +259,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("cancelBooking", async (booking) => {
-    const { userId, bookingId} = booking;
+    const { userId, bookingId } = booking;
     const targetSocketId = users[userId];
     io.to(targetSocketId).emit("notification", {
       content: `Your booking ${bookingId} has been canceled.`,

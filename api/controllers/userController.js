@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import e from "express";
 import Booking from "../models/Booking.js";
+import GroupChat from "../models/GroupChat.js";
 
 // Create User
 export const createUser = async (req, res, next) => {
@@ -78,7 +79,9 @@ export const getAllUsers = async (req, res, next) => {
 export const getUserBookings = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).populate("bookings");
-    const nonCanceledHotels = user.bookings.filter(booking => !booking.canceled);
+    const nonCanceledHotels = user.bookings.filter(
+      (booking) => !booking.canceled
+    );
     res.status(200).json(nonCanceledHotels);
   } catch (err) {
     next(err);
@@ -103,23 +106,26 @@ export const updateBooking = async (req, res, next) => {
     const user = await User.findById(req.params.userId);
     const booking = await Booking.findByIdAndUpdate(
       req.params.id,
-      {canceled: true},
-      {new: true});
+      { canceled: true },
+      { new: true }
+    );
 
-      if (!booking) {
-        return res.status(404).json({ message: "Booking not found" });
-      }
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
     res.status(200).json(booking);
   } catch (err) {
     next(err);
   }
-}
+};
 
 // Get User Flight Bookings
 export const getUserFlightBookings = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).populate("flightBookings");
-    const nonCanceledFlights = user.flightBookings.filter( flight => !flight.canceled);
+    const nonCanceledFlights = user.flightBookings.filter(
+      (flight) => !flight.canceled
+    );
     res.status(200).json(nonCanceledFlights);
   } catch (err) {
     next(err);
@@ -130,7 +136,7 @@ export const getUserFlightBookings = async (req, res, next) => {
 export const getUserTaxiBookings = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).populate("taxiBookings");
-    const nonCanceledTaxis = user.taxiBookings.filter( taxi => !taxi.canceled);
+    const nonCanceledTaxis = user.taxiBookings.filter((taxi) => !taxi.canceled);
     res.status(200).json(nonCanceledTaxis);
   } catch (err) {
     next(err);
@@ -144,7 +150,9 @@ export const getUserAttractions = async (req, res, next) => {
     const user = await User.findById(req.params.id).populate("attractions");
 
     // Filtrer les attractions pour ne garder que celles qui ne sont pas annulées
-    const nonCanceledAttractions = user.attractions.filter(attraction => !attraction.canceled);
+    const nonCanceledAttractions = user.attractions.filter(
+      (attraction) => !attraction.canceled
+    );
 
     // Renvoyer les attractions non annulées
     res.status(200).json(nonCanceledAttractions);
@@ -303,7 +311,7 @@ export const findUserFriends = async (req, res, next) => {
     }).populate("user friend"); // Populer à la fois 'user' et 'friend'
 
     // Créer une nouvelle structure où seul l'ami est renvoyé
-    const filteredFriends = friends.map(friend => {
+    const filteredFriends = friends.map((friend) => {
       // Si l'utilisateur connecté est dans le champ `user`, renvoyer `friend`
       if (friend.user._id.toString() === id) {
         return {
@@ -355,29 +363,42 @@ export const findUserChatById = async (req, res, next) => {
 export const findGroupChat = async (req, res, next) => {
   try {
     const { chatId } = req.params;
-    const chat = await FriendChat.findById(chatId).populate({
+
+    if (!chatId) {
+      return res.status(400).json({ message: "Chat ID is required" });
+    }
+
+    let chat = await GroupChat.findOne({
+      groupId: chatId,
+    }).populate({
       path: "messages",
-     // Populate the user name for each message
       options: { sort: { createdAt: 1 } }, // Sort messages by creation time
     });
+    if (!chat) {
+      // If no chat exists, create an empty chat
+      chat = new GroupChat({ messages: [] });
+      await chat.save();
+    }
     res.status(200).json(chat);
   } catch (err) {
     console.error(err);
   }
-}
+};
 
 export const findGroupChatById = async (req, res, next) => {
   try {
     const { chatId } = req.params;
     const { userId, friendIds } = req.body; // Assumer que friendIds est un tableau d'IDs d'amis
     if (!userId || !friendIds || !friendIds.length) {
-      return res.status(400).json({ message: "User ID or Friend IDs are missing." });
+      return res
+        .status(400)
+        .json({ message: "User ID or Friend IDs are missing." });
     }
-    const objectIds = friendIds.map(id => new mongoose.Types.ObjectId(id));
+    const objectIds = friendIds.map((id) => new mongoose.Types.ObjectId(id));
 
     // Chercher le chat par son ID et trier les messages par date de création (du plus ancien au plus récent)
     let chat = await FriendChat.findOne({
-      _id: chatId
+      _id: chatId,
     }).populate({
       path: "messages",
       populate: { path: "sender", select: "userName" }, // Populer le nom de l'utilisateur pour chaque message
@@ -388,14 +409,14 @@ export const findGroupChatById = async (req, res, next) => {
       // Si aucun chat n'existe, créer un nouveau chat avec les membres (user + friends)
       chat = new FriendChat({
         members: [new mongoose.Types.ObjectId(userId), ...objectIds], // Ajouter l'utilisateur et tous les amis dans 'members'
-        messages: []
+        messages: [],
       });
       await chat.save();
     }
     res.status(200).json(chat);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error', error: err.message });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
@@ -412,37 +433,73 @@ export const updateUserChat = async (userId, update) => {
 // Post user chat message
 export const postUserChatMessage = async (req, res, next) => {
   try {
-    const { chatId, senderId, receiverId, content, createdAt, img } = req.body;
-    console.log(chatId);
-    // Find or create a chat between the two users
-     let chat = await FriendChat.findOne({
-      members: { $all: [senderId, ...receiverId] },
-    });
-    console.log(chat);
-    if (!chat) {
-      chat = new FriendChat({ members: [senderId, receiverId] });
+    const { chatId, senderId, receiverId, content, createdAt, img, isGroup, groupId, chatType, groupName} =
+      req.body;
+
+    // Vérifier si le message est destiné à un groupe ou à une conversation privée
+    if (isGroup) {
+      // Gestion des messages de groupe
+      let chat = await GroupChat.findById(chatId);
+      if (!chat) {
+        chat = new GroupChat({groupId: groupId, members: [senderId], messages: []});
+        await chat.save();
+      }
+
+      // Envoyer le message à chaque membre du groupe sauf l'expéditeur
+
+      const messageData = new Message({
+        chatId: chatId,
+        senderId,
+        content,
+        groupId: chat.groupId,
+        createdAt: createdAt || Date.now(),
+        img: img || null,
+        chatType,
+        groupName: groupName
+      });
+
+      // Créer le nouveau message
+      const newMessage = await messageData.save();
+      chat.messages.push(newMessage._id);
       await chat.save();
+      res.status(201).json(newMessage);
+    } else {
+      // Gestion des messages privés
+      let chat = await FriendChat.findOne({
+        members: { $all: [senderId, ...receiverId] }, // Trouver ou créer un chat entre les utilisateurs
+      });
+
+      // Si la conversation n'existe pas, on la crée
+      if (!chat) {
+        chat = new FriendChat({ members: [senderId, ...receiverId] });
+        await chat.save();
+      }
+
+      // Créer le nouveau message
+      const newMessage = new Message({
+        chatId: chat._id,
+        senderId,
+        receiverId,
+        content: content || "",
+        createdAt: createdAt || Date.now(),
+        img: img || null,
+        chatType,
+      });
+
+      // Sauvegarder le message
+      const savedMessage = await newMessage.save();
+
+      // Ajouter le message à la conversation
+      chat.messages.push(savedMessage._id);
+      await chat.save();
+
+      // Envoyer le message à l'utilisateur destinataire
+
+      res.status(201).json(savedMessage);
     }
-
-    // Créez le message et obtenez l'ObjectId du message
-    const newMessage = new Message({
-      chatId: chat._id,
-      senderId,
-      receiverId,
-      content: content || "",
-      createdAt: createdAt || Date.now(),
-      img: img || null,
-    });
-
-    // Sauvegarder le nouveau message et obtenir son ObjectId
-    const savedMessage = await newMessage.save();
-
-    chat.messages.push(savedMessage);
-    await chat.save();
-
-    res.status(201).json(savedMessage);
   } catch (err) {
-    next(err);
+    console.error(err);
+    next(err); // Transmettre l'erreur à l'intergiciel de gestion des erreurs
   }
 };
 
@@ -587,7 +644,15 @@ export const getGroupById = async (req, res, next) => {
       "members",
       "userName img"
     );
-    res.status(200).json(group);
+    let chat = await GroupChat.findOne({ groupId: groupId });
+    if(!chat) {
+      chat = new GroupChat({groupId: groupId, members: group.members, messages: []});
+      await chat.save();
+    }
+
+
+    const groupWithChat = { ...group._doc, chat: chat };
+    res.status(200).json(groupWithChat);
   } catch (err) {
     next(err);
   }
@@ -599,17 +664,19 @@ export const getGroupMessages = async (req, res, next) => {
     const { chatId } = req.params;
 
     // Trouver le chat et peupler les messages et les membres
-    const chat = await FriendChat.findById(chatId).populate({
-      path: "messages",
-      populate: { path: "sender", select: "userName" },
-    }).populate("members", "userName");
+    const chat = await FriendChat.findById(chatId)
+      .populate({
+        path: "messages",
+        populate: { path: "sender", select: "userName" },
+      })
+      .populate("members", "userName");
 
     if (!chat) {
-      return res.status(404).json({ message: 'Chat not found' });
+      return res.status(404).json({ message: "Chat not found" });
     }
 
     res.status(200).json(chat.messages);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: "Server error", error });
   }
-}
+};

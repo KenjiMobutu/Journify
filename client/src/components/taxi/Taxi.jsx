@@ -175,7 +175,7 @@ const Taxi = ({ socket, street, zip, taxiCity, bookDates, selectTaxi, errors }) 
                 </select>
               </div>
             )}
-            {arrivalOptions.length > 0 && (
+            {arrivalOptions?.length > 0 && (
               <div className="listSearchItemTaxi">
                 <label>Select Arrival</label>
                 <select

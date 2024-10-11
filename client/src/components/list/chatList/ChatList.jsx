@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import "./chatList.css";
 import { useContext, useState, useEffect, useCallback } from "react";
 import PropTypes from 'prop-types';
@@ -24,7 +25,7 @@ const ChatList = ({ userFriends, fetchUserFriends, groups, socket }) => {
   const { chats, setSelectedChat, setChats } = useContext(ChatContext);
   console.log(userFriends);
   console.log(groups);
-
+  console.log(chats);
   useEffect(() => {
     if (socket && chats) {
       const chatIds = chats.map((chat) => chat._id);
@@ -84,14 +85,15 @@ const ChatList = ({ userFriends, fetchUserFriends, groups, socket }) => {
   };
 
   const handleSelectGroup = async (group) => {
-    console.log("Group selected" + group._id);
+    console.log("Group selected", group);
 
     try {
       // Récupérer les détails du groupe avec les membres
       const response = await axios.get(`/api/users/groups/${group._id}`);
       const groupDetails = response.data;
-      console.log(groupDetails);
-      const updatedChats = chats.map((item) => {
+      console.log(groupDetails.chat._id);
+      console.log('user:', user);
+      const updatedChats = groupDetails.chat.messages.map((item) => {
         if (item._id === group._id) {
           return { ...item, isSeen: true };
         }
@@ -101,9 +103,10 @@ const ChatList = ({ userFriends, fetchUserFriends, groups, socket }) => {
       // Trier les chats après sélection du groupe
       updatedChats.sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
 
-      dispatch(selectGroup(groupDetails));
-      setSelectedChat(groupDetails);  // Stocker les détails du groupe sélectionné
-      setChats(updatedChats);
+      dispatch(selectGroup(group));
+      setSelectedChat(group);  // Stocker les détails du groupe sélectionné
+      //setChats(updatedChats);
+      socket.emit("joinChat", { chatId: groupDetails.chat._id, userId: user._id });
     } catch (err) {
       console.error("Erreur lors de la récupération des détails du groupe :", err);
     }
@@ -169,7 +172,6 @@ const ChatList = ({ userFriends, fetchUserFriends, groups, socket }) => {
         </div>
       ))}
       {filteredGroups?.map((group) => (
-        console.log(group),
         <div
           className="item"
           key={group._id}

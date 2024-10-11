@@ -21,15 +21,17 @@ const FriendChat = ({ socket }) => {
   const [img, setImg] = useState(null);
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [group, setGroup] = useState(null);
   const [isCurrentUserBlocked, setIsCurrentUserBlocked] = useState(false);
   const [isReceiverBlocked, setIsReceiverBlocked] = useState(false);
+  const [chatType, setChatType] = useState("");
   const { selectedChat, setChats, chats, updateLastMessage } = useContext(ChatContext);
   const friendId = selectedChat?.friend?._id;
   const friendIds = selectedChat?.members?.map((member) => member._id);
   const chatId = selectedChat?._id;
   const dis = useDispatch();
   console.log('selectedChat:', selectedChat);
-
+  console.log("chatType:", chatType);
   const endRef = useRef(null);
 
   useEffect(() => {
@@ -47,17 +49,25 @@ const FriendChat = ({ socket }) => {
         socket?.off('receiveMessage');
       };
     }
-  }, [user._id, chatId, socket]);``
+  }, [user._id, chatId, socket]); ``
 
   useEffect(() => {
     if (socket) {
       const handleReceiveMessage = (newMessage) => {
         console.log('New message received:', newMessage);
         if (newMessage.chatId === chatId) {
-          setChat((prevChat) => ({
-            ...prevChat,
-            messages: [...(prevChat?.messages || []), newMessage],
-          }));
+          setChat((prevChat) => {
+            const messageExists = prevChat.messages.some(msg => msg._id === newMessage._id);
+            // ...prevChat,
+            // messages: [...(prevChat?.messages || []), newMessage],
+            if (!messageExists) {
+              return {
+                ...prevChat,
+                messages: [...prevChat.messages, newMessage],
+              };
+            }
+            return prevChat;
+          });
         } else {
           // afficher une notification pour les messages reçus dans d'autres chats
         }
@@ -87,18 +97,24 @@ const FriendChat = ({ socket }) => {
   }, [friendId]);
 
   useEffect(() => {
+    if (selectedChat) {
+      setChatType(selectedChat?.isGroup ? "GroupChat" : "FriendChat")
+      if (selectedChat?.isGroup) {
+        setGroup(selectedChat);
+      }
+    }
+
+  }, [selectedChat, selectedChat?.isGroup]);
+
+  useEffect(() => {
     const fetchChat = async () => {
       try {
-        if (selectedChat.isGroup) {
-          const response = await axios.get(`api/users/findGroupChat/${selectedChat._id}`);
-          console.log('Group chat response:', response.data);
-          setChat(response?.data);
-          setMessages(response?.data.messages);
-          return;
+        if (!selectedChat.isGroup) {
+          const response = await axios.get(`api/users/findUserChat/${user._id}/${friendId}`);
+          setChat(response.data);
+          setMessages(response.data.messages);
+
         }
-        const response = await axios.get(`api/users/findUserChat/${user._id}/${friendId}`);
-        setChat(response.data);
-        setMessages(response.data.messages);
       } catch (error) {
         console.error('Erreur lors de la récupération du chat :', error);
       }
@@ -128,19 +144,23 @@ const FriendChat = ({ socket }) => {
 
     let imgUrl = null;
 
+    console.log('selectedChat:', selectedChat);
     try {
       if (img) {
         imgUrl = img.url;
       }
-
       const messageData = {
-        chatId,
+        chatId: chat._id,
         senderId: user._id,
         receiverId: selectedChat.isGroup
           ? null // Si c'est un groupe, on envoie à tous les membres
           : [friendId], // Si c'est un message privé, on l'envoie à un seul ami
         content: text.trim(),
         img: imgUrl,
+        isGroup: selectedChat.isGroup,
+        groupId: selectedChat._id,
+        groupName: selectedChat.groupName,
+        chatType: chatType,
       };
 
       const msg = await axios.post(`/api/users/messages`, messageData);
@@ -155,7 +175,7 @@ const FriendChat = ({ socket }) => {
       // Met à jour les messages dans l'état local
       const updatedChat = {
         ...selectedChat,
-        messages: [...selectedChat.lastMessage, savedMessage],
+        messages: [...(selectedChat.messages || []), savedMessage],
         lastMessage: savedMessage.content,
         lastMessageTime: new Date(),
       };
@@ -168,10 +188,12 @@ const FriendChat = ({ socket }) => {
 
       setChats(updatedChats);
 
-      setChat((prevChat) => ({
-        ...prevChat,
-        messages: [...prevChat.messages, savedMessage],
-      }));
+      if (!selectedChat.isGroup) {
+        setChat((prevChat) => ({
+          ...prevChat,
+          messages: [...prevChat.messages, savedMessage],
+        }));
+      }
 
       setImg(null);
       setText("");
@@ -201,15 +223,16 @@ const FriendChat = ({ socket }) => {
 
   useEffect(() => {
     if (selectedChat?.isGroup) {
+
       // Si c'est un groupe, récupérer les messages du groupe
       const fetchGroupChat = async () => {
         try {
-          const response = await axios.post(`/api/users/findGroupChat/${selectedChat._id}`, {
-            userId: user._id,
-            friendIds: selectedChat.members.map(member => member._id),
-          });
+          const response = await axios.get(`/api/users/findGroupChat/${selectedChat._id}`);
           console.log('Group chat response:', response.data);
+
+          setChat(response.data);
           setMessages(response.data.messages);
+
         } catch (error) {
           console.error('Erreur lors de la récupération des messages du groupe :', error);
         }

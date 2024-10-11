@@ -262,12 +262,11 @@ const Navbar = ({ socket }) => {
                       .map((notif, index) => (
                         <MenuItem
                           key={index}
-                          onClick={() => handleNotificationClick(notif)}  // Ajoutez l'événement onClick ici
+                          onClick={() => handleNotificationClick(notif)}
                         >
-                          {notif.content || notif}
+                          {notif.content || notif.message}
                         </MenuItem>
                       ))}
-                    {/* Ajoutez un bouton pour effacer les notifications */}
                     <MenuItem>
                       <button onClick={handleClearNotif}>Clear notifications</button>
                     </MenuItem>

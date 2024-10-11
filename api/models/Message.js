@@ -2,8 +2,13 @@ import mongoose from "mongoose";
 const messageSchema = new mongoose.Schema({
   chatId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "FriendChat",
     required: true,
+    refPath: 'chatType', // Utilisation de refPath pour choisir la référence dynamiquement
+  },
+  chatType: {
+    type: String,
+    required: true,
+    enum: ["FriendChat", "GroupChat"], // Permet de définir si le chat est un chat d'ami ou de groupe
   },
   senderId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -11,7 +16,11 @@ const messageSchema = new mongoose.Schema({
     required: true,
   },
   receiverId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Utilisé pour les messages privés
-  groupId: { type: mongoose.Schema.Types.ObjectId, ref: "Group" }, // Utilisé pour les messages de groupe
+  groupId: { type: mongoose.Schema.Types.ObjectId, ref: "Group" },
+  groupName:{
+    type: String,
+    ref: "Group",
+  },// Utilisé pour les messages de groupe
   content: { type: String, required: true },
   type: {
     type: String,
