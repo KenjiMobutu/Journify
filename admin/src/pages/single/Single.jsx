@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import axios from 'axios'
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Single = () => {
   const location = useLocation();
@@ -50,26 +52,124 @@ const Single = () => {
   if (flightError) return <div>Error loading flight bookings: {flightError.message}</div>;
   if (taxiError) return <div>Error loading taxi bookings: {taxiError.message}</div>;
 
-  const handleCancelBooking = async (bookingId) => {
-    try {
-      // Faire une requête pour annuler la réservation
-      await axios.delete(`/api/bookings/${bookingId}`);
-      // Mettre à jour l'état des réservations
-      setBookings(prev => prev.filter(booking => booking.id !== bookingId));
-    } catch (error) {
-      console.error("Failed to cancel booking", error);
-    }
+  const handleDeleteBooking = async (bookingId) => {
+    confirmAlert({
+      title: 'Confirm deletion',
+      message: 'Do you really want to delete this booking ?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              // Faire une requête pour annuler la réservation
+              await axios.delete(`/api/users/${data._id}/bookings/${bookingId}`);
+              // Mettre à jour l'état des réservations
+              setBookings(prev => prev.filter(booking => booking._id !== bookingId));
+            } catch (error) {
+              console.error("Failed to cancel booking", error);
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => { }
+        }
+      ]
+    });
+  };
+
+  const handleCancelBooking = async (id) => {
+    console.log("BOOKING ID:", id);
+    confirmAlert({
+      title: 'Confirm cancellation',
+      message: 'Do you really want to cancel your booking ?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.put(`/api/users/${data._id}/bookings/${id}`);
+              setBookings((prev) => prev.filter((booking) => booking._id !== id));
+              const booking = {
+                userId: data._id,
+                bookingId: id,
+              }
+              socket?.emit("cancelBooking", booking);
+            } catch (error) {
+              console.error('Error cancelling the booking:', error);
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => { }
+        }
+      ]
+    });
   };
 
   const handleCancelFlight = async (flightId) => {
-    try {
-      // Faire une requête pour annuler la réservation de vol
-      await axios.delete(`/api/flights/${flightId}`);
-      // Mettre à jour l'état des réservations de vol
-      setFlights(prev => prev.filter(flight => flight.id !== flightId));
-    } catch (error) {
-      console.error("Failed to cancel flight booking", error);
-    }
+    console.log("FLIGHT ID:", flightId);
+    confirmAlert({
+      title: 'Confirm cancellation',
+      message: 'Do you really want to cancel your booking ?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.put(`/api/payment/bookings/${flightId}`);
+              setFlights(prev => prev.filter(flight => flight._id !== flightId));
+            } catch (error) {
+              console.error('Error cancelling the flight:', error);
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => { }
+        }
+      ]
+    });
+  };
+
+  const handleTaxiCancel = async (id) => {
+    console.log("TAXI ID:", id);
+    confirmAlert({
+      title: 'Confirm cancellation',
+      message: 'Do you really want to cancel your booking ?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.put(`/api/payment/taxi/${id}`);
+              setTaxis((prev) => prev.filter((taxi) => taxi._id !== id));
+              const booking = {
+                userId: data._id,
+                bookingId: id,
+              }
+              socket?.emit("cancelBooking", booking);
+            } catch (error) {
+              console.error('Error cancelling the taxi:', error);
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => { }
+        }
+      ]
+    });
+  };
+
+  const isCancelable = (date) => {
+    console.log(date);
+    const today = new Date();
+    const checkDate = new Date(date);
+    const differenceInTime = checkDate.getTime() - today.getTime();
+    const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+    return differenceInDays >= 3;
   };
 
 
@@ -154,10 +254,26 @@ const Single = () => {
                                 <span>{booking.totalCost} €</span>
                               </div>
                               <div className="bookingDetail">
-                                <button className="cancelButton" onClick={() => handleCancelBooking(booking.id)}>
-                                  Cancel Booking
-                                </button>
+                                <div className="bookingDetail">
+                                  <label>Canceled Status</label>
+                                  <span>{booking.isCanceled ? "Canceled" : "Not Canceled"}</span>
+                                </div>
                               </div>
+                              <div className="adminButtons">
+                                <div className="bookingDetail">
+                                  {isCancelable(booking.checkIn) && (
+                                    <button className="cancelButton" onClick={() => handleCancelBooking(booking._id)}>
+                                      Cancel Booking
+                                    </button>
+                                  )}
+                                </div>
+                                <div className="bookingDetail">
+                                  <button className="deleteButton" onClick={() => handleDeleteBooking(booking._id)}>
+                                    Delete Booking
+                                  </button>
+                                </div>
+                              </div>
+
                             </div>
                           </div>
                         ))}
@@ -197,9 +313,11 @@ const Single = () => {
                                 <span>{flight.totalCost} €</span>
                               </div>
                               <div className="bookingDetail">
-                                <button className="cancelButton" onClick={() => handleCancelFlight(flight.id)}>
-                                  Cancel Booking
-                                </button>
+                                {isCancelable(flight.departureDate) && (
+                                  <button className="cancelButton" onClick={() => handleCancelFlight(flight._id)}>
+                                    Cancel Booking
+                                  </button>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -243,6 +361,16 @@ const Single = () => {
                               <div className="bookingDetail">
                                 <label>Price</label>
                                 <span>{taxi.price} €</span>
+                              </div>
+                              <div className="bookingDetail">
+                                {isCancelable(taxi.date) && (
+                                  <button
+                                    className="cancelButton"
+                                    onClick={() => handleTaxiCancel(taxi._id, 'taxi')}
+                                  >
+                                    Cancel Ride
+                                  </button>
+                                )}
                               </div>
                             </div>
                           </div>

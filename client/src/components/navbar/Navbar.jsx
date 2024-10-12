@@ -207,7 +207,7 @@ const Navbar = ({ socket }) => {
                 </MenuItem>
                 <Divider />
                 {isAdmin && (
-                  <MenuItem onClick={() => navigate('/admin')} >
+                  <MenuItem onClick={() => window.location.href = 'http://localhost:8000'}  >
                     <Settings className="bookingTickets" />
                     Admin
                   </MenuItem>

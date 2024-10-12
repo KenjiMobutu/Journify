@@ -157,7 +157,7 @@
                 margin-bottom: 20px;
                 display: flex;
                 flex-direction: column;
-                height: 10rem;
+                height: 14rem;
                 position: relative;
                 transition: box-shadow 0.3s ease, transform 0.3s ease;
 
@@ -194,7 +194,12 @@
                       color: #333;
                     }
 
-                    .cancelButton {
+                    .adminButtons{
+                      display: flex;
+                      gap: 10px;
+                      align-items: space-between;
+
+                      .cancelButton {
                       background-color: #ff4d4d;
                       color: white;
                       border: none;
@@ -213,6 +218,24 @@
                     .cancelButton:hover {
                       background-color: #cc0000;
                     }
+
+                    .deleteButton {
+                      background-color: #ff4d4d;
+                      color: white;
+                      border: none;
+                      padding: 10px 20px;
+                      border-radius: 5px;
+                      cursor: pointer;
+                      font-size: 0.875rem;
+                      transition: background-color 0.3s ease;
+                      display: flex;
+                      align-items: center;
+                      position: absolute;
+                      bottom: 20px;
+                      right: 20px;
+                    }
+                    }
+
                   }
                 }
               }
