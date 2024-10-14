@@ -5,6 +5,8 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import axios from "axios";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 
 const Datatable = ({ columns, title }) => {
@@ -19,10 +21,25 @@ const Datatable = ({ columns, title }) => {
   }, [data]);
 
   const handleDelete = async (id) => {
-    try {
-      await axios.delete(`/api/${path}/${id}`);
-      setList(list.filter((item) => item._id !== id));
-    } catch (err) { }
+    confirmAlert({
+      title: 'Delete User',
+      message: 'Are you sure to delete this user.',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.delete(`/api/${path}/${id}`);
+              setList(list.filter((item) => item._id !== id));
+            } catch (err) { }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => { }
+        }
+      ]
+    });
   };
 
   const actionColumn = [
@@ -50,7 +67,54 @@ const Datatable = ({ columns, title }) => {
     },
   ];
 
-  const finalColumns = path === "hotels/bookings" ? columns : columns.concat(actionColumn);
+  const handleDeleteBooking = async (id) => {
+    confirmAlert({
+      title: 'Delete Booking',
+      message: 'Are you sure to delete this booking.',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.delete(`/api/hotels/bookings/${id}`);
+              setList(list.filter((item) => item._id !== id));
+            } catch (err) { }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => { }
+        }
+      ]
+    });
+  };
+
+
+  const actionBookingColumn = [
+    {
+      field: "action",
+      headerName: "Action",
+      width: 180,
+      headerAlign: 'center',  // Centrer le titre
+    align: 'center',
+      renderCell: (params) => {
+        return (
+          <div className="cellAction">
+            <div
+              className="datatableDelete"
+              onClick={() => handleDeleteBooking(params.row._id)}
+            >
+              Delete
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
+
+
+
+  const finalColumns = path === "hotels/bookings" ? columns.concat(actionBookingColumn) : columns.concat(actionColumn);
 
   return (
     <div className="datatable">

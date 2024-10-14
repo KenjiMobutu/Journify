@@ -187,6 +187,34 @@ export const bookingsColumns = [
     },
   },
   {
+    field: "canceled",
+    headerName: "canceled",
+    width: 100,
+    headerAlign: 'center',  // Centrer le titre
+    align: 'center',
+    renderCell: (params) => {
+      return (
+        <span
+          style={{
+            backgroundColor: params.value ?  '#f8d7da': '#d4edda',
+            color: params.value ? '#721c24' :'#155724' ,
+            padding: '5px',
+            borderRadius: '5px',
+            textAlign: 'center',
+            width: '99%',
+            height: '50%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: '7px',
+          }}
+        >
+          {params.value ? "Canceled" : "Not Canceld"}
+        </span>
+      );
+    },
+  },
+  {
     field: "totalCost",
     headerName: "Price",
     width: 100,

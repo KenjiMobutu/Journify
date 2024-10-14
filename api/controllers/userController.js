@@ -100,19 +100,27 @@ export const deleteBooking = async (req, res, next) => {
   }
 };
 
-//Update a user booking
+// Update a user booking
 export const updateBooking = async (req, res, next) => {
   try {
+    // Vérifiez si l'utilisateur existe
     const user = await User.findById(req.params.userId);
-    const booking = await Booking.findByIdAndUpdate(
-      req.params.id,
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Mettre à jour la réservation
+    const booking = await Booking.findOneAndUpdate(
+      { _id: req.params.id, userEmail: user.email },  // Assurez-vous que la réservation appartient à l'utilisateur
       { canceled: true },
       { new: true }
     );
 
     if (!booking) {
-      return res.status(404).json({ message: "Booking not found" });
+      return res.status(404).json({ message: "Booking not found or does not belong to the user" });
     }
+
+    // Réponse avec la réservation mise à jour
     res.status(200).json(booking);
   } catch (err) {
     next(err);

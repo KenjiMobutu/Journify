@@ -12,6 +12,7 @@ import { countByCity,
         getTodaySales,
         getPreviousSales,
         getLast6Months,
+        deleteBooking,
         updateHotel } from '../controllers/hotelController.js';
 import { verifyAdmin, verifyToken, verifyUser } from '../utils/verifyToken.js';
 import dotenv from 'dotenv';
@@ -41,6 +42,7 @@ router.get("/bookings", verifyAdmin, getBookings);
 router.get("/todaySales", verifyUser, getTodaySales);
 router.get("/previousSales", verifyToken, getPreviousSales);
 router.get("/last6Months", verifyToken, getLast6Months);
+router.delete("/bookings/:id", verifyToken, deleteBooking);
 
 // Payment Stripe
 router.post("/create-payment-intent", verifyToken, createPaymentIntent)

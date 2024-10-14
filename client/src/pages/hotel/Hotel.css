@@ -126,7 +126,7 @@
   gap: 10px;
   height: 20rem; /* Auto height to accommodate content */
   position: sticky;
-  top: 50px;
+  top: 20px;
 }
 
 .hotelDescPriceWrapper {
@@ -137,6 +137,7 @@
   flex-direction: column;
   gap: 15px;
   border-radius: 10px;
+  width: 250px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -395,6 +396,7 @@
 
 .removeAttractionIcon:hover {
   color: #c0392b;
+  transform: scale(1.2);
 }
 
 .closeFlightBtn{
@@ -414,6 +416,13 @@
   padding: 10px 0;
   border-bottom: 1px solid #e0e0e0;
 }
+.selectedTaxiItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
 
 .selectedFlightInfo {
   flex: 1; /* Occupe tout l'espace disponible */
@@ -427,10 +436,30 @@
   cursor: pointer;
 }
 
+.selectedTaxiInfo {
+  flex: 1; /* Occupe tout l'espace disponible */
+  display: flex;
+  font-size: 12px;
+  flex-direction: column; /* Les infos du vol en colonne */
+}
+
 .removeFlightIcon {
   color: #e74c3c;
   cursor: pointer;
   transition: color 0.3s ease;
+}
+.removeFlightIcon:hover {
+  color: #c0392b;
+  transform: scale(1.2);
+}
+.removeTaxiIcon {
+  color: #e74c3c;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.removeTaxiIcon:hover {
+  color: #c0392b;
+  transform: scale(1.2);
 }
 .confirmationVisibility {
   position: fixed; /* Permet de fixer l'élément par rapport à la fenêtre */
