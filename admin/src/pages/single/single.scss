@@ -1,248 +1,259 @@
 .single {
   display: flex;
   width: 100%;
+}
 
-  .singleContainer {
-    flex: 6;
+.singleContainer {
+  flex: 6;
+}
 
-    .top {
-      padding: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
+.singleContainer .top {
+  padding: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
 
-      .left {
-        position: relative;
-        padding: 20px;
-        box-shadow: 4px 13px 19px 0px rgba(0, 0, 0, 0.5);
-        border-radius: 10px;
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
+.singleContainer .top .left {
+  position: relative;
+  padding: 20px;
+  box-shadow: 4px 13px 19px 0px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
 
-        &:hover {
-          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-          transform: translateY(-5px);
-        }
+.singleContainer .top .left:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  transform: translateY(-5px);
+}
 
-        .title {
-          font-size: 1.5rem;
-          font-weight: 300;
-          margin-bottom: 20px;
-          color: rgba(142, 141, 141, 0.614);
-        }
+.singleContainer .top .left .title {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+  color: rgba(142, 141, 141, 0.614);
+}
 
-        .editButton {
-          position: absolute;
-          top: 0;
-          right: 0;
-          padding: 10px 20px;
-          background-color: #f70476;
-          color: white;
-          border-radius: 5px;
-          margin-top: 10px;
-          margin-right: 10px;
-          letter-spacing: 2px;
-          display: flex;
-          align-items: center;
-          cursor: pointer;
-          font-size: 0.875rem;
-          transition: background-color 0.3s ease;
+.singleContainer .top .left .editButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px 20px;
+  background-color: #f70476;
+  color: white;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-right: 10px;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.3s ease;
+}
 
-          &:hover {
-            background-color: #d6006f;
-          }
-        }
+.singleContainer .top .left .editButton:hover {
+  background-color: #d6006f;
+}
 
-        .item {
-          display: flex;
-          align-items: center;
-          gap: 20px;
+.singleContainer .top .left .item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
 
-          .itemImg {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-          }
-        }
+.singleContainer .top .left .item .itemImg {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
 
-        .details {
-          margin-left: 20px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
+.singleContainer .top .left .details {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-          .itemTitle {
-            font-size: 2.5rem;
-            font-weight: 300;
-            margin-bottom: 20px;
-          }
+.singleContainer .top .left .details .itemTitle {
+  font-size: 2.5rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
 
-          .detailItem {
-            display: flex;
-            gap: 10px;
-            align-items: center;
+.singleContainer .top .left .details .detailItem {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
-            .detailKey {
-              font-size: 1rem;
-              font-weight: 300;
-              color: gray;
-            }
+.singleContainer .top .left .details .detailItem .detailKey {
+  font-size: 1rem;
+  font-weight: 300;
+  color: gray;
+}
 
-            .detailValue {
-              font-size: 1rem;
-              font-weight: 300;
-            }
-          }
-        }
-      }
-    }
+.singleContainer .top .left .details .detailItem .detailValue {
+  font-size: 1rem;
+  font-weight: 300;
+}
 
-    .bottom {
-      padding: 50px;
-      display: flex;
-      gap: 20px;
-      flex-direction: column;
+.singleContainer .bottom {
+  padding: 50px;
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
 
-      .bottomBookings {
-        padding: 20px;
-        box-shadow: 4px 13px 19px 0px rgba(0, 0, 0, 0.5);
-        border-radius: 10px;
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
+.singleContainer .bottom .bottomBookings {
+  padding: 20px;
+  box-shadow: 4px 13px 19px 0px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
 
-        &:hover {
-          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-          transform: translateY(-5px);
-        }
+.singleContainer .bottom .bottomBookings:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  transform: translateY(-5px);
+}
 
-        .title {
-          font-size: 1.5rem;
-          font-weight: 300;
-          margin-bottom: 20px;
-          color: rgba(142, 141, 141, 0.614);
-        }
+.singleContainer .bottom .bottomBookings .title {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+  color: rgba(142, 141, 141, 0.614);
+}
 
-        .bottomBookingsContainer {
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-          .bookingsContainer {
-            .hotelBookings,
-            .flightBookings,
-            .taxiBookings {
-              padding: 20px;
-              border-radius: 8px;
-              background-color: #fafafa;
-              margin-bottom: 20px;
-              transition: box-shadow 0.3s ease, transform 0.3s ease;
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .hotelBookings,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .flightBookings,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .taxiBookings {
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fafafa;
+  margin-bottom: 20px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
 
-              &:hover {
-                box-shadow: 0 4px 15px rgba(0, 0, 2, 0.359);
-                transform: translateY(-3px);
-              }
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .hotelBookings:hover,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .flightBookings:hover,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .taxiBookings:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 2, 0.359);
+  transform: translateY(-3px);
+}
 
-              h2 {
-                font-size: 1.25rem;
-                font-weight: 400;
-                margin-bottom: 10px;
-                color: #828181;
-              }
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .hotelBookings h2,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .flightBookings h2,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .taxiBookings h2 {
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: #828181;
+}
 
-              .booking {
-                padding: 20px;
-                border-radius: 8px;
-                background-color: #ffffff;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                margin-bottom: 20px;
-                display: flex;
-                flex-direction: column;
-                height: 14rem;
-                position: relative;
-                transition: box-shadow 0.3s ease, transform 0.3s ease;
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .hotelBookings .booking,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .flightBookings .booking,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .taxiBookings .booking {
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  position: relative;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
 
-                &:hover {
-                  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.55);
-                  transform: translateY(-3px);
-                }
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .hotelBookings .booking:hover,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .flightBookings .booking:hover,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .taxiBookings .booking:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.55);
+  transform: translateY(-3px);
+}
 
-                .bookingTitle {
-                  font-size: 1.125rem;
-                  font-weight: 500;
-                  margin-bottom: 10px;
-                  color: #333;
-                }
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .hotelBookings .booking .bookingTitle,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .flightBookings .booking .bookingTitle,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .taxiBookings .booking .bookingTitle {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: #333;
+}
 
-                .bookingDetails {
-                  display: flex;
-                  flex-wrap: wrap;
-                  gap: 15px;
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .hotelBookings .booking .bookingDetails,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .flightBookings .booking .bookingDetails,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .taxiBookings .booking .bookingDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
 
-                  .bookingDetail {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 5px;
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .hotelBookings .booking .bookingDetails .bookingDetail,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .flightBookings .booking .bookingDetails .bookingDetail,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .taxiBookings .booking .bookingDetails .bookingDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
-                    label {
-                      font-size: 0.875rem;
-                      color: gray;
-                    }
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .hotelBookings .booking .bookingDetails .bookingDetail label,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .flightBookings .booking .bookingDetails .bookingDetail label,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .taxiBookings .booking .bookingDetails .bookingDetail label {
+  font-size: 0.875rem;
+  color: gray;
+}
 
-                    span {
-                      font-size: 1rem;
-                      font-weight: 300;
-                      color: #333;
-                    }
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .hotelBookings .booking .bookingDetails .bookingDetail span,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .flightBookings .booking .bookingDetails .bookingDetail span,
+.singleContainer .bottom .bottomBookings .bottomBookingsContainer .bookingsContainer .taxiBookings .booking .bookingDetails .bookingDetail span {
+  font-size: 1rem;
+  font-weight: 300;
+  color: #333;
+}
+.adminButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute; /* Positionner les boutons en fonction de l'élément parent */
+  bottom: 20px; /* Les placer à 20px du bas */
+  right: 20px;
 
-                    .adminButtons{
-                      display: flex;
-                      gap: 10px;
-                      align-items: space-between;
+}
 
-                      .cancelButton {
-                      background-color: #ff4d4d;
-                      color: white;
-                      border: none;
-                      padding: 10px 20px;
-                      border-radius: 5px;
-                      cursor: pointer;
-                      font-size: 0.875rem;
-                      transition: background-color 0.3s ease;
-                      display: flex;
-                      align-items: center;
-                      position: absolute;
-                      bottom: 20px;
-                      right: 20px;
-                    }
+.cancelButton {
+  width: 100%; /* Pour que les boutons aient la même largeur */
+  padding: 10px 20px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.3s ease;
 
-                    .cancelButton:hover {
-                      background-color: #cc0000;
-                    }
+}
 
-                    .deleteButton {
-                      background-color: #ff4d4d;
-                      color: white;
-                      border: none;
-                      padding: 10px 20px;
-                      border-radius: 5px;
-                      cursor: pointer;
-                      font-size: 0.875rem;
-                      transition: background-color 0.3s ease;
-                      display: flex;
-                      align-items: center;
-                      position: absolute;
-                      bottom: 20px;
-                      right: 20px;
-                    }
-                    }
+ .cancelButton:hover {
+  background-color: #cc0000;
+}
 
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+.deleteButton {
+  width: 100%; /* Pour que les boutons aient la même largeur */
+  padding: 10px 20px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.3s ease;
 }

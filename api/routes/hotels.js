@@ -9,10 +9,14 @@ import { countByCity,
         createBooking,
         getBookings,
         createPaymentIntent,
+        getTodaySales,
+        getPreviousSales,
+        getLast6Months,
         updateHotel } from '../controllers/hotelController.js';
-import { verifyAdmin, verifyToken } from '../utils/verifyToken.js';
+import { verifyAdmin, verifyToken, verifyUser } from '../utils/verifyToken.js';
 import dotenv from 'dotenv';
 import Stripe from 'stripe';
+import { get } from 'mongoose';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -34,6 +38,9 @@ router.get('/room/:id', getHotelRooms);
 // Booking
 router.post("/:id/bookings", verifyToken, createBooking);
 router.get("/bookings", verifyAdmin, getBookings);
+router.get("/todaySales", verifyUser, getTodaySales);
+router.get("/previousSales", verifyToken, getPreviousSales);
+router.get("/last6Months", verifyToken, getLast6Months);
 
 // Payment Stripe
 router.post("/create-payment-intent", verifyToken, createPaymentIntent)

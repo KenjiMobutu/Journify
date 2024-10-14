@@ -1,20 +1,28 @@
 import "./chart.scss"
 import { AreaChart, Area, XAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const data = [
-  { name: 'January', Total: 4000, },
-  { name: 'February', Total: 3000, },
-  { name: 'March', Total: 2000, },
-  { name: 'April', Total: 2780, },
-  { name: 'May', Total: 1890, },
-  { name: 'June', Total: 2390, },
-];
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Chart = ({ aspect, title }) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/hotels/last6Months");
+        console.log("Last 6 months revenue :", response.data);
+        setData(response.data); // Récupérer les données de revenus des 6 derniers mois
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données de revenus :", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="chart">
-      <div className="title">Last 6 months revenue</div>
-      <ResponsiveContainer width="100%" aspect={2 / 1}>
+      <div className="title">{title || 'Last 6 months revenue'}</div>
+      <ResponsiveContainer width="100%" aspect={aspect || 2 / 1}>
         <AreaChart
           width={630}
           height={250}
@@ -28,7 +36,6 @@ const Chart = ({ aspect, title }) => {
             </linearGradient>
           </defs>
           <XAxis dataKey="name" stroke="gray" />
-
           <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
           <Tooltip />
           <Area
@@ -40,9 +47,8 @@ const Chart = ({ aspect, title }) => {
           />
         </AreaChart>
       </ResponsiveContainer>
-
     </div>
-  )
-}
+  );
+};
 
-export default Chart
+export default Chart;

@@ -312,12 +312,14 @@ const Single = () => {
                                 <label>Total Cost</label>
                                 <span>{flight.totalCost} €</span>
                               </div>
-                              <div className="bookingDetail">
-                                {isCancelable(flight.departureDate) && (
-                                  <button className="cancelButton" onClick={() => handleCancelFlight(flight._id)}>
-                                    Cancel Booking
-                                  </button>
-                                )}
+                              <div className="adminButtons">
+                                <div className="bookingDetail">
+                                  {isCancelable(flight.departureDate) && (
+                                    <button className="cancelButton" onClick={() => handleCancelFlight(flight._id)}>
+                                      Cancel Booking
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -362,15 +364,17 @@ const Single = () => {
                                 <label>Price</label>
                                 <span>{taxi.price} €</span>
                               </div>
-                              <div className="bookingDetail">
-                                {isCancelable(taxi.date) && (
-                                  <button
-                                    className="cancelButton"
-                                    onClick={() => handleTaxiCancel(taxi._id, 'taxi')}
-                                  >
-                                    Cancel Ride
-                                  </button>
-                                )}
+                              <div className="adminButtons">
+                                <div className="bookingDetail">
+                                  {isCancelable(taxi.date) && (
+                                    <button
+                                      className="cancelButton"
+                                      onClick={() => handleTaxiCancel(taxi._id, 'taxi')}
+                                    >
+                                      Cancel Ride
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>

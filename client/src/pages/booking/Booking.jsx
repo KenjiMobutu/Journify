@@ -107,7 +107,7 @@ const Booking = ({ socket }) => {
           checkOut: endDate,
           adultsCount: adults,
           childrenCount: children,
-          rooms,
+          rooms: rooms|| 1,
           hotel: hotel._id,
           totalCost: price,
           numberOfNights: Math.round(numberOfNights),

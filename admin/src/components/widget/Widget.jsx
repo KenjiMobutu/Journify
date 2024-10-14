@@ -40,7 +40,7 @@ const Widget = ({ type }) => {
           return acc + nights;
         }, 0);
         previousValue = await getPreviousValue("/api/hotels/bookings", "night");
-        setNights(currentValue);
+        setNights((currentValue).toFixed(0));
       }
 
       if (type === "room") {
@@ -59,6 +59,7 @@ const Widget = ({ type }) => {
 
       if (type === "balance") {
         const response = await axios.get("/api/hotels/bookings");
+        console.log("Balance :", response.data);
         currentValue = response.data.reduce((acc, booking) => acc + booking.totalCost, 0);
         previousValue = await getPreviousValue("/api/hotels/bookings", "balance");
         setAmount(currentValue);

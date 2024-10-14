@@ -182,7 +182,110 @@ export const getBookings = async (req, res, next) => {
     }
 }
 
+// Get today sales
+export const getTodaySales = async (req, res, next) => {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
 
+        const totalSales = await Booking.aggregate([
+            {
+                $match: {
+                    createdAt: {
+                        $gte: today,
+                        $lt: tomorrow
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$totalCost" }
+                }
+            }
+        ]);
 
+        res.status(200).json(totalSales.length > 0 ? totalSales[0].total : 0);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch today sales', details: err.message });
+    }
+};
 
+// Get previous sales
+export const getPreviousSales = async (req, res, next) => {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        const totalSales = await Booking.aggregate([
+            {
+                $match: {
+                    createdAt: {
+                        $gte: yesterday,
+                        $lt: today
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$totalCost" }
+                }
+            }
+        ]);
+
+        res.status(200).json(totalSales.length > 0 ? totalSales[0].total : 0);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch previous sales', details: err.message });
+    }
+};
+
+export const getLast6Months = async (req, res, next) => {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Obtenir la date de début il y a 6 mois
+        const sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1);
+
+        const last6Months = await Booking.aggregate([
+            {
+                $match: {
+                    createdAt: {
+                        $gte: sixMonthsAgo,
+                        $lt: today
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: { $month: "$createdAt" },
+                    total: { $sum: "$totalCost" }
+                }
+            }
+        ]);
+
+        // Créer une structure pour tous les mois avec total = 0 si les données sont manquantes
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const result = [];
+
+        for (let i = 5; i >= 0; i--) {
+            const month = new Date(today.getFullYear(), today.getMonth() - i, 1).getMonth() + 1; // Obtenir le mois de chaque itération
+            const monthName = months[month - 1]; // Convertir le numéro du mois en nom
+            const foundMonth = last6Months.find((item) => item._id === month); // Vérifier si ce mois existe dans les données agrégées
+            result.push({
+                name: monthName,
+                Total: foundMonth ? foundMonth.total : 0 // Si le mois n'existe pas, total = 0
+            });
+        }
+
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch last 6 months sales', details: err.message });
+    }
+};
 
