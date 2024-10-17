@@ -8,7 +8,7 @@ import { SocketProvider } from './context/SocketContext';
 import { StripeProvider } from './context/StripeContext.jsx'
 import { Provider } from 'react-redux'
 import { setupStore } from './redux/store'
-import { PersistGate } from 'redux-persist/integration/react'
+import { PersistGate } from 'redux-persist/integration/react';
 import { PersistorProvider } from './context/PersistorContext';
 import { QueryClient, QueryClientProvider, } from '@tanstack/react-query';
 import { ChatProvider } from './context/ChatContext';
