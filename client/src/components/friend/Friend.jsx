@@ -56,7 +56,7 @@ const Friend = ({ socket }) => {
     } catch (err) {
       console.error("Erreur lors de la récupération des groupes", err);
     }
-  }, [user]);
+  }, [apiUrl, token, user._id]);
 
   useEffect(() => {
     fetchUserGroups();
@@ -138,33 +138,33 @@ const Friend = ({ socket }) => {
     setFindUser(null);
   };
 
-  useEffect(() => {
-    const fetchUserFriends = async () => {
-      if (!user || !user._id) {
-        return; // Si user ou user._id est absent, on quitte la fonction
-      }
+  // useEffect(() => {
+  //   const fetchUserFriends = async () => {
+  //     if (!user || !user._id) {
+  //       return; // Si user ou user._id est absent, on quitte la fonction
+  //     }
 
-      try {
-        const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`,{
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          withCredentials: true,
-        });
-        if (!response.ok) {
-          throw new Error("Failed to fetch user friends");
-        }
-        const data = await response.json();
-        console.log(data);
-        setUserFriends(data);
-      } catch (err) {
-        console.error("Erreur lors du chargement des amis:", err);
-      }
-    };
+  //     try {
+  //       const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`,{
+  //         headers: {
+  //           Authorization: `Bearer ${token}`
+  //         },
+  //         withCredentials: true,
+  //       });
+  //       if (!response.ok) {
+  //         throw new Error("Failed to fetch user friends");
+  //       }
+  //       const data = await response.json();
+  //       console.log(data);
+  //       setUserFriends(data);
+  //     } catch (err) {
+  //       console.error("Erreur lors du chargement des amis:", err);
+  //     }
+  //   };
 
-    fetchUserFriends();
+  //   fetchUserFriends();
 
-  }, [user, apiUrl]);
+  // }, [user, apiUrl, token]);
 
   // Fonction pour gérer la suppression d'un ami
   const handleDeleteFriend = async (friendId) => {
