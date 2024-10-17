@@ -76,7 +76,13 @@ const Navbar = ({ socket }) => {
   useEffect(() => {
     const fetchAdminStatus = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/users/${user._id}`);
+        const response = await axios.get(`${apiUrl}/api/users/${user._id}`,{
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            withCredentials: true,
+          }
+        );
         setIsAdmin(response.data.isAdmin);
       } catch (error) {
         console.error("Failed to fetch admin status:", error);
@@ -86,7 +92,7 @@ const Navbar = ({ socket }) => {
     if (user) {
       fetchAdminStatus();
     }
-  }, [user, apiUrl]);
+  }, [user, apiUrl, token]);
 
 
   const handleLogout = async () => {
