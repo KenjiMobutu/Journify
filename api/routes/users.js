@@ -57,38 +57,38 @@ router.get("/checkUser/:id", verifyUser, (req, res, next) => {
 //Voir authController.js
 
 //UPDATE
-router.put("/:id", verifyUser, updateUser);
+router.put("/:id", verifyToken, updateUser);
 
 //DELETE
-router.delete("/:id", verifyUser, deleteUser);
+router.delete("/:id", verifyToken, deleteUser);
 // Gestion des messages
-router.post("/messages", verifyUser, postUserChatMessage);
+router.post("/messages", verifyToken, postUserChatMessage);
 
 // ADD Friend
 router.post("/friends/add", verifyToken, addFriends);
 router.get("/friends", verifyAdmin, getAllFriends);
-router.delete("/friends/delete/:userId/:friendId", verifyUser, deleteFriend);
-router.get("/userFriends/:id", verifyUser, findUserFriends);
-router.get("/findUserChat/:userId/:friendId", verifyUser, findUserChatById);
+router.delete("/friends/delete/:userId/:friendId", verifyToken, deleteFriend);
+router.get("/userFriends/:id", verifyToken, findUserFriends);
+router.get("/findUserChat/:userId/:friendId", verifyToken, findUserChatById);
 router.get("/findGroupChat/:chatId", verifyToken, findGroupChat );
 router.post("/findGroupChat/:chatId", verifyToken, findGroupChatById );
 router.put("/updateUserChat/:id", verifyUser, updateUserChat);
 router.delete("/deleteUserChat/:userId/:friendId", verifyUser, deleteUserChat);
 router.put('/status', verifyToken, updateUserStatus);
 router.post('/groups/create', verifyToken, createGroup);
-router.get('/userGroups/:userId', verifyUser, getUserGroups);
+router.get('/userGroups/:userId', verifyToken, getUserGroups);
 router.get('/groups/:groupId', verifyToken, getGroupById);
 router.get('/groups/:chatId/messages', verifyToken, getGroupMessages);
 router.delete('/groups/delete/:groupId', verifyToken, deleteGroup);
 router.delete('/groups/delete/:groupId/:userId', verifyToken, deleteMemberGroup);
 
 //get user by username
-router.get("/search/:userName", verifyUser, getByUsername);
+router.get("/search/:userName", verifyToken, getByUsername);
 
 // Gestion des réservations d'un utilisateur
-router.get("/:id/bookings", verifyUser, getUserBookings);
-router.get("/:id/flightBookings", verifyUser, getUserFlightBookings);
-router.get("/:id/taxiBookings", verifyUser, getUserTaxiBookings);
+router.get("/:id/bookings",verifyToken, getUserBookings);
+router.get("/:id/flightBookings", verifyToken, getUserFlightBookings);
+router.get("/:id/taxiBookings", verifyToken, getUserTaxiBookings);
 router.get("/:id/attractionBookings", verifyUser, getUserAttractions);
 
 //DELETE A BOOKING
