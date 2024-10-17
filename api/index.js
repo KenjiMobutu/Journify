@@ -24,20 +24,20 @@ dotenv.config();
 
 const httpServer = createServer(app);
 
-const io = new Server(httpServer, {
-  cors: {
-    origin: ["http://localhost:8000", "http://localhost:5000"],
-    methods: ["GET", "POST"],
-  },
-});
-
 // const io = new Server(httpServer, {
 //   cors: {
-//     origin: ["https://journify-9zve.onrender.com", "http://localhost:8000"], // Assurez-vous que les origines sont correctes
+//     origin: ["http://localhost:8000", "http://localhost:5000"],
 //     methods: ["GET", "POST"],
-//     credentials: true,
 //   },
 // });
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: ["https://journify-9zve.onrender.com", "https://tfe2024-29js.onrender.com"], // Assurez-vous que les origines sont correctes
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
 
 const connectToMongo = async () => {
   try {
@@ -61,14 +61,14 @@ connectToMongo();
 // Middlewares
 app.use(cors()); // Autorise toutes les origines
 
-// Ou pour une origine spécifique :
-app.use(
-  cors({
-    origin: "http://localhost:5000", // Adresse de l'application cliente
-    methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
-    credentials: true,
-  })
-);
+// // Ou pour une origine spécifique :
+// app.use(
+//   cors({
+//     origin: "http://localhost:5000", // Adresse de l'application cliente
+//     methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
+//     credentials: true,
+//   })
+// );
 
 // app.options(
 //   "*",
