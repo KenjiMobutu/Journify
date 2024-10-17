@@ -39,9 +39,21 @@ const io = new Server(httpServer, {
   },
 });
 
+// const connectToMongo = async () => {
+//   try {
+//     await mongoose.connect(process.env.MONGO);
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// };
+
 const connectToMongo = async () => {
   try {
-    await mongoose.connect(process.env.MONGO);
+    await mongoose.connect(process.env.MONGO, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
   } catch (error) {
     console.log(error);
     throw error;
@@ -62,21 +74,21 @@ connectToMongo();
 app.use(cors()); // Autorise toutes les origines
 
 // // Ou pour une origine spécifique :
-// app.use(
-//   cors({
-//     origin: "http://localhost:5000", // Adresse de l'application cliente
-//     methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: "http://localhost:5000", // Adresse de l'application cliente
+    methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
+    credentials: true,
+  })
+);
 
-// app.options(
-//   "*",
-//   cors({
-//     origin: "https://journify-9zve.onrender.com",
-//     credentials: true,
-//   })
-// );
+app.options(
+  "*",
+  cors({
+    origin: "https://journify-9zve.onrender.com",
+    credentials: true,
+  })
+);
 
 app.use(cookieParser());
 app.use(express.json());
