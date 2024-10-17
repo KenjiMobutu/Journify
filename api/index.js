@@ -33,7 +33,7 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ["https://journify-9zve.onrender.com", "https://tfe2024-29js.onrender.com"], // Assurez-vous que les origines sont correctes
+    origin: ["https://journify.fun", "https://tfe2024-29js.onrender.com"],
     methods: ["GET", "POST"],
     credentials: true,
   },
