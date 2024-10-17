@@ -12,7 +12,7 @@ const Booking = ({ socket }) => {
   const token = localStorage.getItem('access_token');
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const location = useLocation();
-  const { startDate, endDate, adults, children, rooms, hotel, price, addedAttractions, attractionPrice, selectedFlight } = location.state || {};
+  const { startDate, endDate, adults, children, rooms, hotel, price, addedAttractions, attractionPrice, selectedFlight, selectedTaxi } = location.state || {};
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentIntentId, setPaymentIntentId] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -24,7 +24,7 @@ const Booking = ({ socket }) => {
   const elements = useElements();
   console.log(location.state);
   console.log("FLIGHT", selectedFlight);
-
+  console.log("TAXI", selectedTaxi);
   // Redirect if user is not logged in
   useEffect(() => {
     if (!user) {
@@ -107,7 +107,7 @@ const Booking = ({ socket }) => {
           checkOut: endDate,
           adultsCount: adults,
           childrenCount: children,
-          rooms: rooms|| 1,
+          rooms: rooms || 1,
           hotel: hotel._id,
           totalCost: price,
           numberOfNights: Math.round(numberOfNights),
@@ -125,7 +125,7 @@ const Booking = ({ socket }) => {
       await bookingResponse.json();
 
       // Handle payment for attractions and flights
-      await handleExtraPayments(paymentIntent.id, token, user, addedAttractions, selectedFlight);
+      await handleExtraPayments(paymentIntent.id, token, user, addedAttractions, selectedFlight, selectedTaxi);
 
       // Payment success actions
       setPaymentSuccess(true);
@@ -142,7 +142,7 @@ const Booking = ({ socket }) => {
   };
 
   // Handle payment for attractions and flights
-  const handleExtraPayments = async (paymentIntentId, token, user, addedAttractions, selectedFlight) => {
+  const handleExtraPayments = async (paymentIntentId, token, user, addedAttractions, selectedFlight, selectedTaxi) => {
     try {
       for (const attraction of addedAttractions) {
         const attractionResponse = await fetch(`/api/payment/attraction`, {
@@ -159,6 +159,7 @@ const Booking = ({ socket }) => {
             ...attraction,
           }),
         });
+        socket?.emit("notificationAttractionBooking", { userName: user.userName, userId: user._id });
         if (!attractionResponse.ok) throw new Error('Payment failed for attraction');
       }
 
@@ -184,7 +185,36 @@ const Booking = ({ socket }) => {
             totalCost: flight.priceBreakdown.total.units,
           }),
         });
+        socket?.emit("notificationFlightBooking", { userName: user.userName, userId: user._id });
         if (!flightResponse.ok) throw new Error('Payment failed for flight');
+      }
+
+      for (const taxi of selectedTaxi) {
+        const taxiResponse = await fetch(`/api/payment/taxi`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            paymentIntentId,
+            _id: user._id,
+            userName: user.userName,
+            userEmail: user.email,
+            name: taxi.supplierName,
+            type: taxi.category,
+            price: taxi.price.amount,
+            description: taxi.descriptionLocalised,
+            departure: taxi.journeys[0].pickupLocation.name,
+            date: taxi.journeys[0].pickupTime,
+            time: taxi.journeys[0].pickupTime,
+            arrival: taxi.journeys[0].dropOffLocation.name,
+            distance: taxi.drivingDistance,
+
+          }),
+        });
+        socket?.emit("notificationTaxiBooking", { userName: user.userName, userId: user._id });
+        if (!taxiResponse.ok) throw new Error('Payment failed for taxi');
       }
     } catch (error) {
       console.error(error.message);
@@ -193,7 +223,7 @@ const Booking = ({ socket }) => {
 
   return (
     <div>
-      <Navbar socket={socket}/>
+      <Navbar socket={socket} />
       {user ? (
         <div className="bookingContainer">
           <div className="detailsB">
@@ -270,20 +300,38 @@ const Booking = ({ socket }) => {
               </div>
               <div className="addedFlights">
                 {selectedFlight?.length > 0 && (
-                <div className="addedFlightsList">
-                  <div className="addedFlightsTitle">Added Flights</div>
-                  {selectedFlight.map((flight, index) => (
-                  <div key={index} className="addedFlightsItem">
-                    <div className="addedFlightDetails">
-                      <span>{flight.segments[0].departureAirport.cityName} - {flight.segments[0].arrivalAirport.cityName}</span>
-                      <span>{format(new Date(flight.segments[0].departureTime), "dd/MM/yyyy HH:mm")} - {format(new Date(flight.segments[0].arrivalTime), "dd/MM/yyyy HH:mm")}</span>
-                    </div>
-                    <div className="addedFlightsPrice">
-                      <span>{flight.priceBreakdown.total.units}€</span>
-                    </div>
+                  <div className="addedFlightsList">
+                    <div className="addedFlightsTitle">Added Flights</div>
+                    {selectedFlight.map((flight, index) => (
+                      <div key={index} className="addedFlightsItem">
+                        <div className="addedFlightDetails">
+                          <span>{flight.segments[0].departureAirport.cityName} - {flight.segments[0].arrivalAirport.cityName}</span>
+                          <span>{format(new Date(flight.segments[0].departureTime), "dd/MM/yyyy HH:mm")} - {format(new Date(flight.segments[0].arrivalTime), "dd/MM/yyyy HH:mm")}</span>
+                        </div>
+                        <div className="addedFlightsPrice">
+                          <span>{flight.priceBreakdown.total.units}€</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  ))}
-                </div>
+                )}
+              </div>
+              <div className="addedTaxis">
+                {selectedTaxi?.length > 0 && (
+                  <div className="addedTaxisList">
+                    <div className="addedTaxisTitle">Added Taxis</div>
+                    {selectedTaxi.map((taxi, index) => (
+                      <div key={index} className="addedTaxisItem">
+                        <div className="addedTaxiDetails">
+                          <span>{taxi.supplierName} - {taxi.category}</span>
+                          
+                        </div>
+                        <div className="addedTaxiPrice">
+                          <span>{taxi.price.amount}€</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>

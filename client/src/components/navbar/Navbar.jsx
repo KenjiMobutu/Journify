@@ -264,7 +264,7 @@ const Navbar = ({ socket }) => {
                           key={index}
                           onClick={() => handleNotificationClick(notif)}
                         >
-                          {notif.content || notif.message}
+                          {notif.content || notif.message||notif.userName||notif }
                         </MenuItem>
                       ))}
                     <MenuItem>

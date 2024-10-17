@@ -8,7 +8,7 @@ import download from '../../assets/download.png';
 import axios from 'axios';
 import nobody from '../../assets/nobody.png';
 
-const Detail = () => {
+const Detail = ({socket}) => {
 
   const { user, dispatch} = useContext(AuthenticationContext);
   const isCurrentUserBlocked = null;
@@ -17,10 +17,17 @@ const Detail = () => {
   console.log(user.status);
 
   const handleStatusChange = (newStatus) => {
-    dispatch({
-      type: "UPDATE_STATUS",
-      payload: newStatus, // Envoyer le nouveau statut
-    });
+    // Mise à jour du statut dans le contexte
+  dispatch({
+    type: "UPDATE_STATUS",
+    payload: newStatus, // Envoyer le nouveau statut
+  });
+
+  // Mettre à jour le statut dans localStorage immédiatement
+  const updatedUser = { ...user, status: newStatus };
+  console.log("UPDATED USER:",updatedUser);
+  localStorage.setItem("user", JSON.stringify(updatedUser));
+  socket.emit("statusChange", { userId: user._id, status:newStatus});
   };
 
   return (

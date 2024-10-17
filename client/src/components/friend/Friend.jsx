@@ -18,6 +18,10 @@ import Checkbox from '@mui/material/Checkbox';
 import Avatar from '@mui/material/Avatar';
 import ListChat from "../../components/list/List";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import Alert from '@mui/material/Alert';
+import CheckIcon from '@mui/icons-material/Check';
 
 const Friend = ({ socket }) => {
   const { user } = useContext(AuthenticationContext);
@@ -30,6 +34,7 @@ const Friend = ({ socket }) => {
   const [groupMembers, setGroupMembers] = useState([]);
   const [groups, setGroups] = useState([]);
   const [groupError, setGroupError] = useState("");
+  const [confirmationVisible, setConfirmationVisible] = useState(false);
 
   console.log(groups);
   console.log(userFriends);
@@ -92,7 +97,13 @@ const Friend = ({ socket }) => {
         user: user._id,
         friend: findUser._id,
       });
-      alert(`${findUser.userName} has been added as your friend!`);
+
+      // Afficher la confirmation
+      setConfirmationVisible(true);
+
+      setTimeout(() => {
+        setConfirmationVisible(false);
+      }, 2000);
 
       // Réinitialiser après ajout
       setFindUser(null);
@@ -127,6 +138,28 @@ const Friend = ({ socket }) => {
 
   // Fonction pour gérer la suppression d'un ami
   const handleDeleteFriend = async (friendId) => {
+    console.log(friendId);
+    confirmAlert({
+      title: 'Confirmer la suppression',
+      message: 'Voulez-vous vraiment supprimer cet ami ?',
+      buttons: [
+        {
+          label: 'Oui',
+          onClick: async () => {
+            await deleteFriend(friendId);
+          }
+        },
+        {
+          label: 'Non',
+          onClick: () => { }
+        }
+      ]
+    });
+
+  };
+
+  // Fonction pour supprimer un ami
+  const deleteFriend = async (friendId) => {
     try {
       // Requête pour supprimer l'ami
       await axios.delete(`/api/users/friends/delete/${user._id}/${friendId}`);
@@ -138,12 +171,16 @@ const Friend = ({ socket }) => {
         group.members.some((member) => member._id === friendId)
       );
 
+      console.log(groupsWithFriend);
+
       // Pour chaque groupe, supprimer l'ami
       await Promise.all(
         groupsWithFriend.map(async (group) => {
-          await axios.delete(`/api/users/groups/delete/${group._id}/${user._id}`, {
+          const res = await axios.delete(`/api/users/groups/delete/${group._id}/${friendId}`, {
             data: { groupId: group._id, userId: friendId },
           });
+          console.log("Deleted from group:", res.data); // Vérifier les réponses
+          return res;
         })
       );
 
@@ -151,10 +188,7 @@ const Friend = ({ socket }) => {
       setGroups((prevGroups) =>
         prevGroups.map((group) =>
           groupsWithFriend.includes(group)
-            ? {
-              ...group,
-              members: group.members.filter((member) => member._id !== friendId),
-            }
+            ? { ...group, members: group.members.filter((member) => member._id !== friendId) }
             : group
         )
       );
@@ -164,9 +198,14 @@ const Friend = ({ socket }) => {
       setSelectedChat(null);
       fetchUserGroups();
     } catch (err) {
-      console.error(err);
+      console.error(err); ``
+      if (err.response?.status === 404) {
+        console.error("Ami ou groupe introuvable", err);
+      } else {
+        console.error("Erreur lors de la suppression", err);
+      }
     }
-  };
+  }
 
   // Fonction pour créer un groupe avec les amis sélectionnés
   const handleCreateGroup = async (e) => {
@@ -194,8 +233,27 @@ const Friend = ({ socket }) => {
     }
   };
 
+  const handleDeleteGroup = (groupId) => {
+    confirmAlert({
+      title: 'Confirmer la suppression',
+      message: 'Voulez-vous vraiment supprimer ce groupe ?',
+      buttons: [
+        {
+          label: 'Oui',
+          onClick: () => {
+            deleteGroup(groupId);
+          }
+        },
+        {
+          label: 'Non',
+          onClick: () => { }
+        }
+      ]
+    });
+  };
+
   // Fonction pour supprimer un groupe
-  const handleDeleteGroup = async (groupId) => {
+  const deleteGroup = async (groupId) => {
     try {
       // Requête pour supprimer le groupe
       await axios.delete(`/api/users/groups/delete/${groupId}`);
@@ -369,18 +427,30 @@ const Friend = ({ socket }) => {
           </div>
         </div>
       </div>
+      <div>
+        {/* Afficher l'alerte si visible */}
+        {confirmationVisible && (
+          <div className="confirmationVisibility">
+            <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+            Your friend has been added successfully.
+            </Alert>
+          </div>
+        )}
+      </div>
+
       <div className="chat-container">
         {user ? (
           <>
-            <ListChat userFriends={userFriends} fetchUserFriends={fetchUserFriends} groups={groups} socket={socket}/>
+            <ListChat userFriends={userFriends} fetchUserFriends={fetchUserFriends} groups={groups} socket={socket} />
             <Chat socket={socket} />
-            <Detail />
+            <Detail socket={socket} />
           </>
         ) : (
           "Please login to chat"
         )}
         <Notification />
       </div>
+
     </>
   )
 }

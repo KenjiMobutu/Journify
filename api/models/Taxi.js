@@ -17,7 +17,7 @@ const TaxiSchema = new Schema(
     },
     type: {
       type: String,
-      required: true,
+      
     },
     price: {
       type: Number,

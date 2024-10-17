@@ -227,7 +227,7 @@ function Header({ type }) {
     }
     dispatch({ type: "NEW_SEARCH", payload: { city:destination, dates, options } });
     console.log("Handle search button clicked");
-    
+
 
     const params = {
       method: 'GET',
@@ -247,8 +247,8 @@ function Header({ type }) {
         const destinationTypes = response.data.data.map(dest => dest.search_type);
         console.log(destinationIds);
         console.log(destinationTypes);
-        console.log(format(dates[0].startDate, "yyyy-MM-dd"));  // Vérifiez cette valeur
-        console.log(format(dates[0].endDate, "yyyy-MM-dd"));    // Vérifiez cette valeur
+        console.log(format(dates[0].startDate, "yyyy-MM-dd"));
+        console.log(format(dates[0].endDate, "yyyy-MM-dd"));
 
         const hotelParams = {
           method: 'GET',
@@ -268,7 +268,7 @@ function Header({ type }) {
         const hotelResponse = await axios.request(hotelParams);
         console.log(hotelResponse.data);
 
-        setHotels(hotelResponse.data); // Utilisez la réponse des hôtels ici
+        setHotels(hotelResponse.data);
         navigate('/hotels', { state: { destination, dates, options, hotels: hotelResponse.data } });
       } else {
         console.error('Unexpected data format:', response.data);
@@ -334,10 +334,6 @@ function Header({ type }) {
                 <FontAwesomeIcon icon={faPlane} />
                 <span>Flights</span>
               </button>
-              {/* <button className="headerListItem" onClick={handleCar}>
-                <FontAwesomeIcon icon={faCar} />
-                <span>Car rentals</span>
-              </button> */}
               <button className="headerListItem" onClick={handleAttraction}>
                 <FontAwesomeIcon icon={faIcons} />
                 <span>Attractions</span>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import './register.css'; // Assurez-vous que le chemin d'accès est correct
+import './register.css';
 import axios from 'axios';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
@@ -20,7 +20,7 @@ const Register = ({ socket }) => {
     isAdmin: 'false'
   });
 
-  // Charger les données de l'utilisateur si un ID est présent
+  // Charge les données de l'utilisateur si un ID est présent
   useEffect(() => {
     if (id) {
       const fetchData = async () => {
@@ -96,7 +96,7 @@ const Register = ({ socket }) => {
         await axios.post(`${apiUrl}/api/auth/register`, user);
         socket?.emit("notificationRegister", user.userName);
       }
-      navigate('/'); // Rediriger vers la page d'accueil après l'inscription
+      navigate('/'); // Redirige vers la page d'accueil après l'inscription
     } catch (error) {
       if (error.response && error.response.data.errors) {
         setErrors(error.response.data.errors.map(err => err.msg));

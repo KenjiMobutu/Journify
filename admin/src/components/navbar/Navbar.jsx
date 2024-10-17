@@ -14,6 +14,7 @@ const Navbar = ({ socket }) => {
   const { user } = useContext(AuthenticationContext);
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  console.log(notifications);
 
   useEffect(() => {
     const storedNotifications = localStorage.getItem("notifications");
@@ -62,7 +63,7 @@ const Navbar = ({ socket }) => {
                 {notifications.length > 0 ? (
                   <>
                     {notifications.map((n, index) => (
-                      <span key={index} className="notification">{n}</span>
+                      <span key={index} className="notification">{n.userName || n}</span>
                     ))}
                     <button className="notButton" onClick={handleClear}>Clear</button>
                   </>

@@ -627,18 +627,34 @@ export const deleteMemberGroup = async (req, res, next) => {
   try {
     const { groupId, userId } = req.params;
 
-    // Rechercher et mettre à jour le groupe
-    // const group = await Group.findById(groupId);
-    // group.members.pull(userId);
-    // await group.save();
+    // Vérifier si le groupe existe
+    const group = await Group.findById(groupId);
+    if (!group) {
+      return res.status(404).json({ message: "Groupe introuvable" });
+    }
+    console.log(group);
+
+    // Vérifier si l'utilisateur fait partie des membres en comparant avec l'_id des objets membres
+    const isMember = group.members.some(member => member._id.toString() === userId);
+    console.log(userId);
+    console.log(isMember);
+
+    if (!isMember) {
+      return res.status(404).json({ message: `L'utilisateur ne fait pas partie du groupe ${group.groupName}` });
+    }
+
     // Retirer le membre du groupe
-    await Group.findByIdAndUpdate(
+    const updatedGroup = await Group.findByIdAndUpdate(
       groupId,
-      { $pull: { members: userId } },
+      { $pull: { members:userId  } },
       { new: true }
     );
 
-    res.status(200).json({ message: "Membre supprimé du groupe" });
+    if (!updatedGroup) {
+      return res.status(500).json({ message: "Erreur lors de la suppression du membre" });
+    }
+
+    res.status(200).json({ message: "Membre supprimé du groupe",userId, updatedGroup });
   } catch (err) {
     next(err);
   }

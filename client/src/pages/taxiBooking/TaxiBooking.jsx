@@ -93,11 +93,11 @@ const TaxiBooking = ({socket}) => {
 
       if (error) {
         console.error('Payment error:', error);
-        setButtonDisabled(false);  // Réactiver le bouton en cas d'erreur
-        return; // Arrêtez l'exécution si une erreur de paiement se produit
+        setButtonDisabled(false);  // Réactive le bouton en cas d'erreur
+        return; // Arrête l'exécution si une erreur de paiement se produit
       }
 
-      // Enregistrez la réservation après la réussite du paiement
+      // Enregistre la réservation après la réussite du paiement
       const response = await fetch(`/api/payment/taxi`, {
         method: 'POST',
         headers: {

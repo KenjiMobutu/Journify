@@ -8,13 +8,11 @@ import emojiIcon from '../../assets/emoji.png';
 import ChatContext from "../../context/ChatContext";
 import { useDispatch } from "react-redux";
 import { addNotification, incrementQuantity, decrementQuantity, setNotif, clearNotif, clearNotifications } from "../../redux/notifRedux.js";
-
 import axios from "axios";
 import avatar from '../../assets/nobody.png';
 
 const FriendChat = ({ socket }) => {
   const { user } = useContext(AuthenticationContext);
-
   const [friend, setFriend] = useState(null);
   const [chat, setChat] = useState({ messages: [] });
   const [text, setText] = useState("");
@@ -33,10 +31,11 @@ const FriendChat = ({ socket }) => {
   console.log('selectedChat:', selectedChat);
   console.log("chatType:", chatType);
   const endRef = useRef(null);
+  console.log('FRIENd:', friend);
 
   useEffect(() => {
     if (chatId) {
-      socket?.emit('joinChat', { chatId, userId: user._id });
+      socket?.emit('joinChat', { chatId, userId: user._id, userName: user.userName });
 
       socket?.on('receiveMessage', (newMessage) => {
         setChat((prevChat) => ({
@@ -138,6 +137,26 @@ const FriendChat = ({ socket }) => {
       setIsReceiverBlocked(user.blockedUsers?.includes(friend._id));
     }
   }, [user, friend]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("statusChange", (data) => {
+        console.log("Status change data:", data);
+        if (data.userId === friendId) {
+          setFriend((prev) => ({ ...prev, status: data.status }));
+        }
+      });
+
+      // Nettoyage de l'écouteur lors du démontage du composant
+      return () => {
+        if (socket) {
+          socket.off("statusChange");
+        }
+      };
+    } else {
+      console.warn("Socket not initialized yet.");
+    }
+  }, [friendId, socket]);
 
   const handleSend = async () => {
     if (text.trim() === "") return;
@@ -258,7 +277,7 @@ const FriendChat = ({ socket }) => {
       socket.on('notification', (data) => {
         console.log('Received notification:', data);
         dis(addNotification(data));
-        //dis(incrementQuantity()); // Incrémente le compteur de notifications
+        dis(incrementQuantity()); // Incrémente le compteur de notifications
       });
     }
 

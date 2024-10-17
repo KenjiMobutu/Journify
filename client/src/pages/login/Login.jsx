@@ -45,7 +45,7 @@ export default function Login({ socket }) {
   };
 
   const handleTogglePasswordVisibility = () => {
-    setShowPassword(!showPassword); // Inverser l'état d'affichage du mot de passe
+    setShowPassword(!showPassword); // Inverse l'état d'affichage du mot de passe
   };
 
   return (
@@ -67,7 +67,7 @@ export default function Login({ socket }) {
           />
           <div className="passwordField">
             <input
-              type={showPassword ? "text" : "password"} // Basculer entre texte et mot de passe
+              type={showPassword ? "text" : "password"} // Bascule entre texte et mot de passe
               placeholder="Password"
               id="password"
               value={credentials.password}

@@ -352,7 +352,7 @@ const Cart = ({ socket }) => {
           </div>
         </div>
       </div>
-      {openPayment && <Payment setOpenPayment={setOpenPayment} totalPrice={Math.round(calculateTotal())} cart={cart} />}
+      {openPayment && <Payment setOpenPayment={setOpenPayment} totalPrice={Math.round(calculateTotal()) } socket={socket} cart={cart} />}
     </div>
   );
 };

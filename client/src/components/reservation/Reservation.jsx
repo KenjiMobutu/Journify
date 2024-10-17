@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 
-function Reservation({ setOpen, hotelId, hotel, nbRooms, addedAttractions, attractionPrice, selectedFlight }) {
+function Reservation({ setOpen, hotelId, hotel, nbRooms, addedAttractions, attractionPrice, selectedFlight, selectedTaxi}) {
   // Define the PropTypes for the Reservation component
   // Add prop type validation
   Reservation.propTypes = {
@@ -106,6 +106,7 @@ function Reservation({ setOpen, hotelId, hotel, nbRooms, addedAttractions, attra
       addedAttractions: addedAttractions,
       attractionPrice: attractionPrice,
       selectedFlight: selectedFlight,
+      selectedTaxi: selectedTaxi,
     };
 
     setOpen(false);

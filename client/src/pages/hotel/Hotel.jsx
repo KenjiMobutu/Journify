@@ -556,6 +556,7 @@ const Hotel = ({ socket }) => {
           addedAttractions={addedAttractions}
           attractionPrice={totalPrice}
           selectedFlight={selectedFlight}
+          selectedTaxi={selectedTaxi}
         />
       }
       {openMoreBooking && <MoreBookings setOpen={setOpenMoreBooking} setOpenPayment={setOpenPayment} onConfirm={handleMoreBookingsConfirm} />}

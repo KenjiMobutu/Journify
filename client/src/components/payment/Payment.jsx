@@ -8,7 +8,7 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useDispatch } from "react-redux";
 import { resetCart } from "../../redux/cartRedux.js";
 
-const Payment = ({ setOpenPayment, totalPrice, cart }) => {
+const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
 
   const token = localStorage.getItem('access_token');
   const { user } = useContext(AuthenticationContext);
@@ -135,6 +135,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart }) => {
       // Payment success actions
       setPaymentSuccess(true);
       setButtonText('Paid');
+      socket?.emit("notificationBooking", { userName: user.userName, userId: user._id });
       setShowConfirmation(true);
       dispatch(resetCart(cart));
       setTimeout(() => setShowConfirmation(false), 5000);

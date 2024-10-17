@@ -10,8 +10,8 @@
 
 
 .iaChat{
-  position: fixed; /* Fixe le chat à une position spécifique sur la page */
-  bottom: 11rem; /* Distance du bas de la page */
+  position: fixed;
+  bottom: 11rem;
   right: 20px;
   z-index: 1000;
 }

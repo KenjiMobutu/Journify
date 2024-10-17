@@ -11,7 +11,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      const newSocket = io('http://localhost:3000'); // Remplacez par votre URL de serveur
+      const newSocket = io('http://localhost:3000');
       setSocket(newSocket);
 
       // Émettre l'événement loginUser après la connexion du socket
@@ -29,7 +29,7 @@ export const SocketProvider = ({ children }) => {
         setSocket(null);
       }
     }
-  }, [ user]);
+  }, [user]);
 
   return (
     <SocketContext.Provider value={socket}>

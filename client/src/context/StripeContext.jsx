@@ -3,8 +3,7 @@ import { createContext } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
-
-// Utilisez le bon préfixe pour les variables d'environnement
+// Clé publique de Stripe
 const STRIPE_PUBLIC_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY || "";
 
 // Charger Stripe avec la clé publique

@@ -277,8 +277,16 @@ input[type="text"]:read-only {
   padding: 20px;
   border-radius: 10px;
 }
+.addedTaxis {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+}
 
 .addedFlightsList {
+  margin-top: 10px;
+}
+.addedTaxisList {
   margin-top: 10px;
 }
 
@@ -289,7 +297,13 @@ input[type="text"]:read-only {
   margin-bottom: 15px;
   text-align: center;
 }
-
+.addedTaxisTitle{
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
 .addedFlightsItem {
   display: flex;
   justify-content: space-between;
@@ -300,27 +314,54 @@ input[type="text"]:read-only {
   margin-bottom: 10px;
   transition: background-color 0.3s ease;
 }
-
-.addedFlightsItem:hover {
+.addedTaxisItem{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #e9f1f7;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+.addedFlightsItem:hover{
   background-color: #d1e9f5;
 }
-
+.addedTaxisItem:hover{
+  background-color: #d1e9f5;
+}
 .addedFlightDetails {
   display: flex;
   flex-direction: column;
 }
-
+.addedTaxiDetails{
+  display: flex;
+  flex-direction: column;
+}
 .addedFlightDetails span {
   font-size: 16px;
   color: #555;
 }
-
+.addedTaxiDetails span {
+  font-size: 16px;
+  color: #555;
+}
 .addedFlightDetails span:first-child {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.addedTaxiDetails span:first-child {
   font-weight: bold;
   margin-bottom: 5px;
 }
 
 .addedFlightsPrice {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff5c5c;
+  text-align: right;
+}
+.addedTaxiPrice {
   font-size: 18px;
   font-weight: bold;
   color: #ff5c5c;
