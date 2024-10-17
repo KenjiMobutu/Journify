@@ -33,8 +33,8 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ["https://journify.fun", "https://tfe2024-29js.onrender.com"],
-    methods: ["GET", "POST"],
+    origin: ["https://journify-9zve.onrender.com", "https://tfe2024-29js.onrender.com"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   },
 });
@@ -71,24 +71,20 @@ mongoose.connection.on("connected", () => {
 connectToMongo();
 
 // Middlewares
-app.use(cors()); // Autorise toutes les origines
+//app.use(cors()); // Autorise toutes les origines
 
-// // Ou pour une origine spécifique :
-app.use(
-  cors({
-    origin: "http://localhost:5000", // Adresse de l'application cliente
-    methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
-    credentials: true,
-  })
-);
+// Middlewares
+app.use(cors({
+  origin: ["https://journify-9zve.onrender.com", "https://tfe2024-29js.onrender.com"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+}));
 
-app.options(
-  "*",
-  cors({
-    origin: "https://journify-9zve.onrender.com",
-    credentials: true,
-  })
-);
+// Gestion des requêtes prévol
+app.options("*", cors({
+  origin: ["https://journify-9zve.onrender.com", "https://tfe2024-29js.onrender.com"],
+  credentials: true,
+}));
 
 app.use(cookieParser());
 app.use(express.json());
