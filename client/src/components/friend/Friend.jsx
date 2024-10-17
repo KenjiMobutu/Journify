@@ -122,8 +122,15 @@ const Friend = ({ socket }) => {
 
   useEffect(() => {
     const fetchUserFriends = async () => {
+      if (!user || !user._id) {
+        return; // Si user ou user._id est absent, on quitte la fonction
+      }
+
       try {
         const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch user friends");
+        }
         const data = await response.json();
         console.log(data);
         setUserFriends(data);
@@ -131,11 +138,10 @@ const Friend = ({ socket }) => {
         console.error("Erreur lors du chargement des amis:", err);
       }
     };
-    if (user) {
-      fetchUserFriends();
-    }
 
-  }, [user._id, user]);
+    fetchUserFriends();
+
+  }, [user, apiUrl]);
 
   // Fonction pour gérer la suppression d'un ami
   const handleDeleteFriend = async (friendId) => {
