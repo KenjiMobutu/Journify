@@ -27,7 +27,10 @@ function App() {
   const { user } = useContext(AuthenticationContext);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:3000");
+    const newSocket = io('https://tfe2024.onrender.com', {
+      withCredentials: true,
+      transports: ['websocket', 'polling'], // Optionnel: garantir que le transport websocket est utilisé
+    });
     setSocket(newSocket);
 
     return () => newSocket.close();

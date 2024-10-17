@@ -6,6 +6,7 @@ import Markdown from "react-markdown";
 import { useQuery } from '@tanstack/react-query';
 
 const Chat = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const { user } = useContext(AuthenticationContext);
   const userId = user._id;
   const token = localStorage.getItem('access_token');
