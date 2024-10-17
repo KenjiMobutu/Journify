@@ -361,7 +361,7 @@ io.on("connection", (socket) => {
 });
 
 // Écoute du serveur sur le port 3000
-const PORT = "https://tfe2024.onrender.com" || 3000;
+const PORT = process.env.PORT || 3000;
 httpServer.listen(PORT, () => {
   console.log('Express server listening on port "http://localhost:3000"');
 });

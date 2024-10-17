@@ -32,6 +32,10 @@ function App() {
       transports: ['websocket', 'polling'], // Optionnel: garantir que le transport websocket est utilisé
     });
     setSocket(newSocket);
+    // Assurez-vous de gérer les événements correctement
+    socket.on("connection", () => {
+      console.log("Connected to the server");
+    });
 
     return () => newSocket.close();
   }, []);
@@ -44,19 +48,19 @@ function App() {
         <Route path="/login" element={<Login socket={socket} />} />
         <Route path="/register" element={<Register socket={socket} />} />
         <Route path="/register/:id" element={<Register socket={socket} />} />
-        <Route path="/hotels" element={<List socket={socket}/>} />
-        <Route path="/hotels/:id" element={<Hotel socket={socket}/>} />
-        <Route path="/hotel" element={<Hotel socket={socket}/>} />
+        <Route path="/hotels" element={<List socket={socket} />} />
+        <Route path="/hotels/:id" element={<Hotel socket={socket} />} />
+        <Route path="/hotel" element={<Hotel socket={socket} />} />
         <Route path="/hotels/:id/booking" element={<Booking socket={socket} />} />
-        <Route path="/myBookings" element={<MyBookings socket={socket}/>} />
-        <Route path="/profile/:id" element={<Profile socket={socket}/>} />
-        <Route path="/attractions" element={<Attractions socket={socket}/>} />
+        <Route path="/myBookings" element={<MyBookings socket={socket} />} />
+        <Route path="/profile/:id" element={<Profile socket={socket} />} />
+        <Route path="/attractions" element={<Attractions socket={socket} />} />
         <Route path="/attractions/booking" element={<AttractionBooking socket={socket} />} />
-        <Route path="/car" element={<CarRental socket={socket}/>} />
-        <Route path="/flights" element={<Flights socket={socket}/>} />
+        <Route path="/car" element={<CarRental socket={socket} />} />
+        <Route path="/flights" element={<Flights socket={socket} />} />
         <Route path="/flights/booking" element={<FlightBooking socket={socket} />} />
         <Route path="/payment" />
-        <Route path="/taxi" element={<Taxi socket={socket}/>} />
+        <Route path="/taxi" element={<Taxi socket={socket} />} />
         <Route path="/taxi/booking" element={<TaxiBooking socket={socket} />} />
         <Route path="/cart" element={<Cart socket={socket} />} />
         <Route path="/friends" element={<Friend socket={socket} />} />
