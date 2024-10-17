@@ -36,6 +36,12 @@ const MyBookings = ({socket}) => {
     },
     withCredentials: true,
   });
+  const { data: attractionData, loading: attractionLoading, error: attractionError } = useFetch(`${apiUrl}/api/users/${user?._id}/attractionBookings`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    withCredentials: true,
+  });
 
   // const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`/api/users/${user?._id}/bookings`);
   // const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`/api/users/${user?._id}/flightBookings`);
