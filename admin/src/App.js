@@ -7,13 +7,25 @@ import NewRoom from "./pages/newRoom/NewRoom";
 import Single from "./pages/single/Single";
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import "./style/dark.scss";
+import { io } from "socket.io-client";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthenticationContext } from "./context/AuthenticationContext";
 import { hotelColumns, roomColumns, userColumns, bookingsColumns } from "./dataTableSource";
 import { userInputs, hotelInputs, roomInputs } from "./formSource";
+import { useState, useEffect } from "react";
 
 function App() {
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:3000", { transports: ['websocket'] });
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect(); // Déconnecter le socket lors du démontage du composant
+    };
+  }, []);
 
   const { darkMode } = useContext(DarkModeContext);
 
@@ -41,17 +53,17 @@ function App() {
               <Route index element={<ProtectedRoute><List columns={ userColumns} title="Users"/></ProtectedRoute>}/>
               <Route path="new" element={<ProtectedRoute><New inputs={userInputs} title="Add New User"/></ProtectedRoute>}/>
               <Route path="new/:id" element={<ProtectedRoute><New inputs={userInputs} title="Update User"/></ProtectedRoute>}/>
-              <Route path=":id" element={<ProtectedRoute><Single/></ProtectedRoute>}/>
+              <Route path=":id" element={<ProtectedRoute><Single socket={socket} /></ProtectedRoute>}/>
             </Route>
             <Route path="hotels">
               <Route index element={<ProtectedRoute><List columns={hotelColumns} title="Hotels"/></ProtectedRoute>}/>
               <Route path="new" element={<ProtectedRoute><NewHotel inputs={hotelInputs} title="Add New Hotel"/></ProtectedRoute>}/>
-              <Route path=":id" element={<ProtectedRoute><Single/></ProtectedRoute>}/>
+              <Route path=":id" element={<ProtectedRoute><Single socket={socket} /></ProtectedRoute>}/>
             </Route>
             <Route path="rooms">
               <Route index element={<ProtectedRoute><List columns={roomColumns} title="Rooms"/></ProtectedRoute>}/>
               <Route path="new" element={<ProtectedRoute><NewRoom inputs={roomInputs}  title="Add New Room"/></ProtectedRoute>}/>
-              <Route path=":id" element={<ProtectedRoute><Single/></ProtectedRoute>}/>
+              <Route path=":id" element={<ProtectedRoute><Single socket={socket} /></ProtectedRoute>}/>
             </Route>
           </Route>
         </Routes>

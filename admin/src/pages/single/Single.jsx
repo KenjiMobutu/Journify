@@ -10,7 +10,7 @@ import axios from 'axios'
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const Single = () => {
+const Single = ({socket}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname.split("/")[2];
