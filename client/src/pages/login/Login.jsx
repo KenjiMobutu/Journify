@@ -28,7 +28,8 @@ export default function Login({ socket }) {
     dispatch({ type: "LOGIN_START" });
     dis(loginStart());
     try {
-      const res = await axios.post(`/api/auth/login`, credentials, { withCredentials: true });
+      //const res = await axios.post(`/api/auth/login`, credentials, { withCredentials: true });
+      const res = await axios.post(`${apiUrl}/api/auth/login`, credentials, {withCredentials: true});
       const userId = res.data.details._id;
       localStorage.setItem('userId', userId);
       setupStore(userId);

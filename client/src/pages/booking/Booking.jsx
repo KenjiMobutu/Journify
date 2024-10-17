@@ -55,7 +55,7 @@ const Booking = ({ socket }) => {
       setButtonDisabled(true);
 
       // Fetch payment intent
-      const paymentIntentRes = await fetch(`/api/hotels/create-payment-intent`, {
+      const paymentIntentRes = await fetch(`${apiUrl}/api/hotels/create-payment-intent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ const Booking = ({ socket }) => {
       setPaymentIntentId(paymentIntent.id);
 
       // Send booking details after payment success
-      const bookingResponse = await fetch(`/api/hotels/${hotel.hotel_id}/bookings`, {
+      const bookingResponse = await fetch(`${apiUrl}/api/hotels/${hotel.hotel_id}/bookings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ const Booking = ({ socket }) => {
   const handleExtraPayments = async (paymentIntentId, token, user, addedAttractions, selectedFlight, selectedTaxi) => {
     try {
       for (const attraction of addedAttractions) {
-        const attractionResponse = await fetch(`/api/payment/attraction`, {
+        const attractionResponse = await fetch(`${apiUrl}/api/payment/attraction`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ const Booking = ({ socket }) => {
       }
 
       for (const flight of selectedFlight) {
-        const flightResponse = await fetch(`/api/payment/bookings`, {
+        const flightResponse = await fetch(`${apiUrl}/api/payment/bookings`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ const Booking = ({ socket }) => {
       }
 
       for (const taxi of selectedTaxi) {
-        const taxiResponse = await fetch(`/api/payment/taxi`, {
+        const taxiResponse = await fetch(`${apiUrl}/api/payment/taxi`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -324,7 +324,7 @@ const Booking = ({ socket }) => {
                       <div key={index} className="addedTaxisItem">
                         <div className="addedTaxiDetails">
                           <span>{taxi.supplierName} - {taxi.category}</span>
-                          
+
                         </div>
                         <div className="addedTaxiPrice">
                           <span>{taxi.price.amount}€</span>

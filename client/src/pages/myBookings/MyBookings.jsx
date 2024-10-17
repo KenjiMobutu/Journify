@@ -18,29 +18,29 @@ const MyBookings = ({socket}) => {
   const [attractions, setAttractions] = useState([]);
   const { user } = useContext(AuthenticationContext);
 
-  // const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`${apiUrl}/api/users/${user?._id}/bookings`,{
-  //   headers: {
-  //     Authorization: `Bearer ${token}`
-  //   },
-  //   withCredentials: true,
-  // });
-  // const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`${apiUrl}/api/users/${user?._id}/flightBookings`,{
-  //   headers: {
-  //     Authorization: `Bearer ${token}`
-  //   },
-  //   withCredentials: true,
-  // });
-  // const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`${apiUrl}/api/users/${user?._id}/taxiBookings`,{
-  //   headers: {
-  //     Authorization: `Bearer ${token}`
-  //   },
-  //   withCredentials: true,
-  // });
+  const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`${apiUrl}/api/users/${user?._id}/bookings`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    withCredentials: true,
+  });
+  const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`${apiUrl}/api/users/${user?._id}/flightBookings`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    withCredentials: true,
+  });
+  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`${apiUrl}/api/users/${user?._id}/taxiBookings`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    withCredentials: true,
+  });
 
-  const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`/api/users/${user?._id}/bookings`);
-  const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`/api/users/${user?._id}/flightBookings`);
-  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`/api/users/${user?._id}/taxiBookings`);
-  const { data: attractionData, loading: attractionLoading, error: attractionError } = useFetch(`/api/users/${user?._id}/attractionBookings`);
+  // const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`/api/users/${user?._id}/bookings`);
+  // const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`/api/users/${user?._id}/flightBookings`);
+  // const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`/api/users/${user?._id}/taxiBookings`);
+  // const { data: attractionData, loading: attractionLoading, error: attractionError } = useFetch(`/api/users/${user?._id}/attractionBookings`);
 
   useEffect(() => {
     if (hotelData) {

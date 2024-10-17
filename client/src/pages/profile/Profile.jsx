@@ -11,7 +11,7 @@ const Profile = ({socket}) => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
   const path = location.pathname.split("/")[2];
-  const { data } = useFetch(`/api/users/${path}`,{
+  const { data } = useFetch(`${apiUrl}/api/users/${path}`,{
     headers: {
       Authorization: `Bearer ${token}`
     },

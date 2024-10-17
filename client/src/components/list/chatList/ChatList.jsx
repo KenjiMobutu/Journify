@@ -18,6 +18,7 @@ import { selectGroup } from "../../../redux/chatRedux.js";
 
 
 const ChatList = ({ userFriends, fetchUserFriends, groups, socket }) => {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const dispatch = useDispatch();
   const [input, setInput] = useState("");
   const [addMode, setAddMode] = useState(false);
@@ -39,9 +40,9 @@ const ChatList = ({ userFriends, fetchUserFriends, groups, socket }) => {
       const promises = items?.map(async (item) => {
         console.log("Item:", item);
         const friendId = item?.friend?._id;
-        const userResponse = await fetch(`/api/users/${friendId}`);
+        const userResponse = await fetch(`${apiUrl}/api/users/${friendId}`);
         const usr = await userResponse.json();
-        const messagesResponse = await axios.get(`/api/users/findUserChat/${user._id}/${friendId}`);
+        const messagesResponse = await axios.get(`${apiUrl}/api/users/findUserChat/${user._id}/${friendId}`);
         const messages = messagesResponse.data.messages;
         const lastMessage = messages.length > 0 ? messages[messages.length - 1] : { content: "Aucun message", createdAt: 0 };
         return { ...item, friend: usr, lastMessage: lastMessage.content, lastMessageTime: lastMessage.createdAt };
@@ -89,7 +90,7 @@ const ChatList = ({ userFriends, fetchUserFriends, groups, socket }) => {
 
     try {
       // Récupérer les détails du groupe avec les membres
-      const response = await axios.get(`/api/users/groups/${group._id}`);
+      const response = await axios.get(`${apiUrl}/api/users/groups/${group._id}`);
       const groupDetails = response.data;
       console.log(groupDetails.chat._id);
       console.log('user:', user);

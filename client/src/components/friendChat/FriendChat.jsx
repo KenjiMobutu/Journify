@@ -12,6 +12,7 @@ import axios from "axios";
 import avatar from '../../assets/nobody.png';
 
 const FriendChat = ({ socket }) => {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const { user } = useContext(AuthenticationContext);
   const [friend, setFriend] = useState(null);
   const [chat, setChat] = useState({ messages: [] });
@@ -83,7 +84,7 @@ const FriendChat = ({ socket }) => {
   useEffect(() => {
     const fetchFriendData = async () => {
       try {
-        const response = await axios.get(`/api/users/${friendId}`);
+        const response = await axios.get(`${apiUrl}/api/users/${friendId}`);
         setFriend(response.data);
       } catch (error) {
         console.error('Erreur lors de la récupération des données de l\'ami :', error);
@@ -109,7 +110,7 @@ const FriendChat = ({ socket }) => {
     const fetchChat = async () => {
       try {
         if (!selectedChat.isGroup) {
-          const response = await axios.get(`api/users/findUserChat/${user._id}/${friendId}`);
+          const response = await axios.get(`${apiUrl}/api/users/findUserChat/${user._id}/${friendId}`);
           setChat(response.data);
           setMessages(response.data.messages);
 
@@ -182,7 +183,7 @@ const FriendChat = ({ socket }) => {
         chatType: chatType,
       };
 
-      const msg = await axios.post(`/api/users/messages`, messageData);
+      const msg = await axios.post(`${apiUrl}/api/users/messages`, messageData);
       const savedMessage = msg.data;
       console.log('Saved message:', savedMessage);
       socket?.emit("sendMessage", savedMessage);
@@ -246,7 +247,7 @@ const FriendChat = ({ socket }) => {
       // Si c'est un groupe, récupérer les messages du groupe
       const fetchGroupChat = async () => {
         try {
-          const response = await axios.get(`/api/users/findGroupChat/${selectedChat._id}`);
+          const response = await axios.get(`${apiUrl}/api/users/findGroupChat/${selectedChat._id}`);
           console.log('Group chat response:', response.data);
 
           setChat(response.data);

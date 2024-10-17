@@ -46,8 +46,8 @@ export const login = async (req, res, next) => {
     res
       .cookie("access_token", token, {
         httpOnly: true,
-        // secure: true,
-        // sameSite: "None",  // For production
+        secure: true,
+        sameSite: "None",  // For production
       })
       .status(200)
       .json({ details: { ...others }, isAdmin });

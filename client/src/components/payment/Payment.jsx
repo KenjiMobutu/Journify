@@ -19,7 +19,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [paymentError, setPaymentError] = useState('');
   const dispatch = useDispatch();
-
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const hotels = cart.products;
   const attractions = cart.attractions;
   const flights = cart.flights;
@@ -46,7 +46,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
       setButtonDisabled(true);
 
       // Fetch payment intent
-      const paymentIntentRes = await fetch(`/api/hotels/create-payment-intent`, {
+      const paymentIntentRes = await fetch(`${apiUrl}/api/hotels/create-payment-intent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
         // Arrondir pour éviter les résultats avec des fractions
         const roundedNumberOfNights = Math.round(numberOfNights);
 
-        const bookingResponse = await fetch(`/api/hotels/${hotel.hotel_id}/bookings`, {
+        const bookingResponse = await fetch(`${apiUrl}/api/hotels/${hotel.hotel_id}/bookings`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -150,7 +150,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
   const handleExtraPayments = async (paymentIntentId, token, user, attractions, flights, taxis) => {
     try {
       for (const attraction of attractions) {
-        const attractionResponse = await fetch(`/api/payment/attraction`, {
+        const attractionResponse = await fetch(`${apiUrl}/api/payment/attraction`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -184,7 +184,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
         const time = requestedPickupDateTime.toTimeString().split(' ')[0].slice(0, 5);
 
         // Préparation du corps de la requête pour la réservation du taxi
-        const taxiResponse = await fetch(`/api/payment/taxi`, {
+        const taxiResponse = await fetch(`${apiUrl}/api/payment/taxi`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -220,7 +220,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
           continue; // Skip this flight if the data is incomplete
         }
         console.log("Flight: ", flight);
-        const flightResponse = await fetch(`/api/payment/bookings`, {
+        const flightResponse = await fetch(`${apiUrl}/api/payment/bookings`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

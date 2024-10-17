@@ -18,7 +18,7 @@ const Chat = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ['repoData'],
     queryFn: () =>
-      fetch(`/api/chat/userChat/${userId}`, { credentials: 'include' })
+      fetch(`${apiUrl}/api/chat/userChat/${userId}`, { credentials: 'include' })
         .then((res) => res.json()),
   });
 
@@ -43,7 +43,7 @@ const Chat = () => {
       const responseAi = await result.response.text();
 
       // Send message to the backend
-      await fetch(`/api/chat`, {
+      await fetch(`${apiUrl}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

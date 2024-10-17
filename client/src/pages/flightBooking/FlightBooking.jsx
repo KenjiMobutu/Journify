@@ -21,6 +21,7 @@ const FlightBooking = ({socket}) => {
   console.log("OPTIONS:", options);
   console.log("FLIGHT:", flight);
   console.log("USER:", user);
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
   // const startDate = new Date(params.get('startDate')); // Utiliser le constructeur Date pour les dates
   // const endDate = new Date(params.get('endDate'))
@@ -59,7 +60,7 @@ const FlightBooking = ({socket}) => {
       setButtonDisabled(true);
       setButtonText('Processing...');
 
-      const paymentIntentRes = await fetch('/api/payment/create-payment-intent', {
+      const paymentIntentRes = await fetch(`${apiUrl}/api/payment/create-payment-intent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: totalCost }),
@@ -93,7 +94,7 @@ const FlightBooking = ({socket}) => {
       }
 
       // Enregistrez la réservation après la réussite du paiement
-      const response = await fetch(`/api/payment/bookings`, {
+      const response = await fetch(`${apiUrl}/api/payment/bookings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

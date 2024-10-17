@@ -76,7 +76,7 @@ const Navbar = ({ socket }) => {
   useEffect(() => {
     const fetchAdminStatus = async () => {
       try {
-        const response = await axios.get(`/api/users/${user._id}`);
+        const response = await axios.get(`${apiUrl}/api/users/${user._id}`);
         setIsAdmin(response.data.isAdmin);
       } catch (error) {
         console.error("Failed to fetch admin status:", error);

@@ -5,9 +5,8 @@ import Booking from "../models/Booking.js";
 import User from "../models/User.js";
 import Stripe from "stripe";
 import dotenv from "dotenv";
-const stripe = new Stripe(
-  "sk_test_51Ppa9LP9VBJhBODfMnEkzEzH3DmyxzKqPSr71VXvXsHQIAKwnYHsnup6qVFB0bA1ROuS9IzCF1dkWRfWlBBzSa8U00sr19lFAb"
-);
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Create Hotel
 export const createHotel = async (req, res, next) => {

@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 const AttractionBooking = ({ socket }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const { attraction, startDate, endDate } = location.state || {};
   const [paymentSuccess, setPaymentSuccess] = useState(false);  // État pour le succès du paiement
   const [showConfirmation, setShowConfirmation] = useState(false);  // État pour afficher la confirmation
@@ -46,7 +47,7 @@ const AttractionBooking = ({ socket }) => {
       setButtonDisabled(true);
       setButtonText('Processing...');
 
-      const paymentIntentRes = await fetch('/api/payment/create-payment-intent', {
+      const paymentIntentRes = await fetch(`${apiUrl}/api/payment/create-payment-intent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: priceInCents }),
@@ -80,7 +81,7 @@ const AttractionBooking = ({ socket }) => {
       }
 
       // Enregistrez la réservation après la réussite du paiement
-      const response = await fetch(`/api/payment/attraction`, {
+      const response = await fetch(`${apiUrl}/api/payment/attraction`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

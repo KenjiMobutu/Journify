@@ -4,6 +4,7 @@ import { AuthenticationContext } from "../../../../context/AuthenticationContext
 import axios from "axios";
 
 const AddUser = ({ onFriendAdded }) => {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const [searchInput, setSearchInput] = useState(""); // Pour stocker l'input de recherche
   const [findUser, setFindUser] = useState(null); // Pour stocker l'utilisateur trouvé
   const [error, setError] = useState(null); // Pour gérer les erreurs
@@ -15,7 +16,7 @@ const AddUser = ({ onFriendAdded }) => {
 
     try {
       // Requête pour rechercher un utilisateur par nom d'utilisateur
-      const res = await axios.get(`/api/users/search/${searchInput}`);
+      const res = await axios.get(`${apiUrl}/api/users/search/${searchInput}`);
       console.log(res.data);
       if (res.data) {
         setFindUser(res.data);
@@ -35,7 +36,7 @@ const AddUser = ({ onFriendAdded }) => {
     console.log(findUser);
     try {
       // Requête pour ajouter l'utilisateur trouvé en tant qu'ami
-      await axios.post(`/api/users/friends/add`, {
+      await axios.post(`${apiUrl}/api/users/friends/add`, {
         user: user._id,
         friend: findUser._id,
       });

@@ -24,6 +24,7 @@ import Alert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check';
 
 const Friend = ({ socket }) => {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const { user } = useContext(AuthenticationContext);
   const { setSelectedChat } = useContext(ChatContext);
   const [userFriends, setUserFriends] = useState([]);
@@ -43,7 +44,7 @@ const Friend = ({ socket }) => {
   const fetchUserGroups = useCallback(async () => {
     try {
       // Requête pour récupérer les groupes utilisateur
-      const response = await axios.get(`/api/users/userGroups/${user._id}`);
+      const response = await axios.get(`${apiUrl}/api/users/userGroups/${user._id}`);
       console.log(response.data);
       setGroups(response.data); // Mettre à jour l'état avec les groupes récupérés
     } catch (err) {
@@ -58,7 +59,7 @@ const Friend = ({ socket }) => {
   // Fonction pour récupérer la liste des amis
   const fetchUserFriends = async () => {
     try {
-      const response = await fetch(`/api/users/userFriends/${user._id}`);
+      const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`);
       const data = await response.json();
       setUserFriends(data);
     } catch (err) {
@@ -73,7 +74,7 @@ const Friend = ({ socket }) => {
 
     try {
       // Requête pour rechercher un utilisateur par nom d'utilisateur
-      const res = await axios.get(`/api/users/search/${searchInput}`);
+      const res = await axios.get(`${apiUrl}/api/users/search/${searchInput}`);
       console.log(res.data);
       if (res.data) {
         setFindUser(res.data);
@@ -93,7 +94,7 @@ const Friend = ({ socket }) => {
     console.log(findUser);
     try {
       // Requête pour ajouter l'utilisateur trouvé en tant qu'ami
-      await axios.post(`/api/users/friends/add`, {
+      await axios.post(`${apiUrl}/api/users/friends/add`, {
         user: user._id,
         friend: findUser._id,
       });
@@ -122,7 +123,7 @@ const Friend = ({ socket }) => {
   useEffect(() => {
     const fetchUserFriends = async () => {
       try {
-        const response = await fetch(`/api/users/userFriends/${user._id}`);
+        const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`);
         const data = await response.json();
         console.log(data);
         setUserFriends(data);
@@ -162,9 +163,9 @@ const Friend = ({ socket }) => {
   const deleteFriend = async (friendId) => {
     try {
       // Requête pour supprimer l'ami
-      await axios.delete(`/api/users/friends/delete/${user._id}/${friendId}`);
+      await axios.delete(`${apiUrl}/api/users/friends/delete/${user._id}/${friendId}`);
       // supprimer le chat
-      await axios.delete(`/api/users/deleteUserChat/${user._id}/${friendId}`);
+      await axios.delete(`${apiUrl}/api/users/deleteUserChat/${user._id}/${friendId}`);
 
       // Récupérer les groupes où l'ami est membre
       const groupsWithFriend = groups.filter((group) =>
@@ -176,7 +177,7 @@ const Friend = ({ socket }) => {
       // Pour chaque groupe, supprimer l'ami
       await Promise.all(
         groupsWithFriend.map(async (group) => {
-          const res = await axios.delete(`/api/users/groups/delete/${group._id}/${friendId}`, {
+          const res = await axios.delete(`${apiUrl}/api/users/groups/delete/${group._id}/${friendId}`, {
             data: { groupId: group._id, userId: friendId },
           });
           console.log("Deleted from group:", res.data); // Vérifier les réponses
@@ -218,7 +219,7 @@ const Friend = ({ socket }) => {
 
     try {
       // Requête pour créer un groupe avec le nom et les amis sélectionnés
-      await axios.post(`/api/users/groups/create`, {
+      await axios.post(`${apiUrl}/api/users/groups/create`, {
         groupName,
         members: groupMembers, // Ajouter les membres du groupe
         creatorId: user._id,
@@ -256,7 +257,7 @@ const Friend = ({ socket }) => {
   const deleteGroup = async (groupId) => {
     try {
       // Requête pour supprimer le groupe
-      await axios.delete(`/api/users/groups/delete/${groupId}`);
+      await axios.delete(`${apiUrl}/api/users/groups/delete/${groupId}`);
       fetchUserGroups(); // Rafraîchir la liste des groupes
     } catch (err) {
       console.error("An error occurred while deleting the group:", err);
@@ -282,7 +283,7 @@ const Friend = ({ socket }) => {
 
     try {
       // Envoyer une requête DELETE à votre API pour supprimer le membre
-      await axios.delete(`/api/users/groups/delete/${groupId}/${memberId}`);
+      await axios.delete(`${apiUrl}/api/users/groups/delete/${groupId}/${memberId}`);
 
       // Mettre à jour l'état local pour refléter la suppression
       setGroups((prevGroups) =>
