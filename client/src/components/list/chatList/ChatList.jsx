@@ -47,7 +47,7 @@ const ChatList = ({ userFriends, fetchUserFriends, groups, socket }) => {
           },
           withCredentials: true,
         });
-        const usr = await userResponse.json();
+        const usr = await userResponse.data;
         const messagesResponse = await axios.get(`${apiUrl}/api/users/findUserChat/${user._id}/${friendId}`, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -64,7 +64,7 @@ const ChatList = ({ userFriends, fetchUserFriends, groups, socket }) => {
     } catch (err) {
       console.error("Erreur lors du chargement des chats:", err);
     }
-  }, [user._id, userFriends, setChats]);
+  }, [userFriends, setChats, apiUrl, token, user._id]);
 
   useEffect(() => {
     fetchChats();
