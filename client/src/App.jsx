@@ -33,12 +33,12 @@ function App() {
     });
     setSocket(newSocket);
     // Assurez-vous de gérer les événements correctement
-    socket.on("connection", () => {
+    socket.emit("connection", () => {
       console.log("Connected to the server");
     });
 
     return () => newSocket.close();
-  }, []);
+  }, [socket]);
 
 
   return (
