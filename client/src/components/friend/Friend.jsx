@@ -45,7 +45,7 @@ const Friend = ({ socket }) => {
   const fetchUserGroups = useCallback(async () => {
     try {
       // Requête pour récupérer les groupes utilisateur
-      const response = await axios.get(`${apiUrl}/api/users/userGroups/${user._id}`,{
+      const response = await axios.get(`${apiUrl}/api/users/userGroups/${user._id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         },
@@ -110,7 +110,7 @@ const Friend = ({ socket }) => {
       await axios.post(`${apiUrl}/api/users/friends/add`, {
         user: user._id,
         friend: findUser._id,
-      },{
+      }, {
         headers: {
           Authorization: `Bearer ${token}`
         },
@@ -138,33 +138,33 @@ const Friend = ({ socket }) => {
     setFindUser(null);
   };
 
-  // useEffect(() => {
-  //   const fetchUserFriends = async () => {
-  //     if (!user || !user._id) {
-  //       return; // Si user ou user._id est absent, on quitte la fonction
-  //     }
+  useEffect(() => {
+    const fetchUserFriends = async () => {
+      if (!user || !user._id) {
+        return; // Si user ou user._id est absent, on quitte la fonction
+      }
 
-  //     try {
-  //       const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`,{
-  //         headers: {
-  //           Authorization: `Bearer ${token}`
-  //         },
-  //         withCredentials: true,
-  //       });
-  //       if (!response.ok) {
-  //         throw new Error("Failed to fetch user friends");
-  //       }
-  //       const data = await response.json();
-  //       console.log(data);
-  //       setUserFriends(data);
-  //     } catch (err) {
-  //       console.error("Erreur lors du chargement des amis:", err);
-  //     }
-  //   };
+      try {
+        const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          withCredentials: true,
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch user friends");
+        }
+        const data = await response.json();
+        console.log(data);
+        setUserFriends(data);
+      } catch (err) {
+        console.error("Erreur lors du chargement des amis:", err);
+      }
+    };
 
-  //   fetchUserFriends();
+    fetchUserFriends();
 
-  // }, [user, apiUrl, token]);
+  }, [user, apiUrl, token]);
 
   // Fonction pour gérer la suppression d'un ami
   const handleDeleteFriend = async (friendId) => {
@@ -192,14 +192,14 @@ const Friend = ({ socket }) => {
   const deleteFriend = async (friendId) => {
     try {
       // Requête pour supprimer l'ami
-      await axios.delete(`${apiUrl}/api/users/friends/delete/${user._id}/${friendId}`,{
+      await axios.delete(`${apiUrl}/api/users/friends/delete/${user._id}/${friendId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         },
         withCredentials: true,
       });
       // supprimer le chat
-      await axios.delete(`${apiUrl}/api/users/deleteUserChat/${user._id}/${friendId}`,{
+      await axios.delete(`${apiUrl}/api/users/deleteUserChat/${user._id}/${friendId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         },
@@ -218,7 +218,7 @@ const Friend = ({ socket }) => {
         groupsWithFriend.map(async (group) => {
           const res = await axios.delete(`${apiUrl}/api/users/groups/delete/${group._id}/${friendId}`, {
             data: { groupId: group._id, userId: friendId },
-          },{
+          }, {
             headers: {
               Authorization: `Bearer ${token}`
             },
@@ -267,7 +267,7 @@ const Friend = ({ socket }) => {
         groupName,
         members: groupMembers, // Ajouter les membres du groupe
         creatorId: user._id,
-      },{
+      }, {
         headers: {
           Authorization: `Bearer ${token}`
         },
@@ -306,7 +306,7 @@ const Friend = ({ socket }) => {
   const deleteGroup = async (groupId) => {
     try {
       // Requête pour supprimer le groupe
-      await axios.delete(`${apiUrl}/api/users/groups/delete/${groupId}`,{
+      await axios.delete(`${apiUrl}/api/users/groups/delete/${groupId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         },
@@ -337,7 +337,7 @@ const Friend = ({ socket }) => {
 
     try {
       // Envoyer une requête DELETE à votre API pour supprimer le membre
-      await axios.delete(`${apiUrl}/api/users/groups/delete/${groupId}/${memberId}`,{
+      await axios.delete(`${apiUrl}/api/users/groups/delete/${groupId}/${memberId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         },
@@ -492,7 +492,7 @@ const Friend = ({ socket }) => {
         {confirmationVisible && (
           <div className="confirmationVisibility">
             <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
-            Your friend has been added successfully.
+              Your friend has been added successfully.
             </Alert>
           </div>
         )}
