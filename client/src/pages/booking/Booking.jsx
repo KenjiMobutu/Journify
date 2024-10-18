@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from "../../components/navbar/Navbar";
 import { format } from "date-fns";
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
+import axios from 'axios';
 
 
 const Booking = ({ socket }) => {
@@ -55,14 +56,19 @@ const Booking = ({ socket }) => {
       setButtonDisabled(true);
 
       // Fetch payment intent
-      const paymentIntentRes = await fetch(`${apiUrl}/api/hotels/create-payment-intent`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+      const paymentIntentRes = await axios.post(
+        `${apiUrl}/api/hotels/create-payment-intent`,
+        {
+          amount: validatedAttractionPrice * 100, // Passer les données dans le corps de la requête
         },
-        body: JSON.stringify({ amount: validatedAttractionPrice * 100 })
-      });
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Ajouter l'autorisation si nécessaire
+          },
+          withCredentials: true, // Si vous gérez les cookies ou l'authentification
+        }
+      );
 
       if (!paymentIntentRes.ok) {
         throw new Error(`Failed to create payment intent: ${paymentIntentRes.statusText}`);
@@ -145,32 +151,29 @@ const Booking = ({ socket }) => {
   const handleExtraPayments = async (paymentIntentId, token, user, addedAttractions, selectedFlight, selectedTaxi) => {
     try {
       for (const attraction of addedAttractions) {
-        const attractionResponse = await fetch(`${apiUrl}/api/payment/attraction`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
+        const attractionResponse = await axios.post(`${apiUrl}/api/payment/attraction`,
+          {
             paymentIntentId,
             _id: user._id,
             userName: user.userName,
             userEmail: user.email,
             ...attraction,
-          }),
-        });
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
         socket?.emit("notificationAttractionBooking", { userName: user.userName, userId: user._id });
         if (!attractionResponse.ok) throw new Error('Payment failed for attraction');
       }
 
       for (const flight of selectedFlight) {
-        const flightResponse = await fetch(`${apiUrl}/api/payment/bookings`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
+        const flightResponse = await axios.post(`${apiUrl}/api/payment/bookings`,
+          {
             paymentIntentId,
             _id: user._id,
             userName: user.userName,
@@ -183,20 +186,22 @@ const Booking = ({ socket }) => {
             childrenCount: children,
             cabinClass: flight.segments[0].legs[0].cabinClass,
             totalCost: flight.priceBreakdown.total.units,
-          }),
-        });
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
         socket?.emit("notificationFlightBooking", { userName: user.userName, userId: user._id });
         if (!flightResponse.ok) throw new Error('Payment failed for flight');
       }
 
       for (const taxi of selectedTaxi) {
-        const taxiResponse = await fetch(`${apiUrl}/api/payment/taxi`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
+        const taxiResponse = await axios.post(`${apiUrl}/api/payment/taxi`,
+          {
             paymentIntentId,
             _id: user._id,
             userName: user.userName,
@@ -210,9 +215,15 @@ const Booking = ({ socket }) => {
             time: taxi.journeys[0].pickupTime,
             arrival: taxi.journeys[0].dropOffLocation.name,
             distance: taxi.drivingDistance,
-
-          }),
-        });
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
         socket?.emit("notificationTaxiBooking", { userName: user.userName, userId: user._id });
         if (!taxiResponse.ok) throw new Error('Payment failed for taxi');
       }
