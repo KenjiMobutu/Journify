@@ -65,16 +65,15 @@ const Friend = ({ socket }) => {
   // Fonction pour récupérer la liste des amis
   const fetchUserFriends = useCallback(async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`,
-        {
+      const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`,{
           headers: {
             Authorization: `Bearer ${token}`
           },
           withCredentials: true,
         }
       );
-      const data = await response.json();
-      setUserFriends(data);
+
+      setUserFriends(response.data);
     } catch (err) {
       console.error("Erreur lors du chargement des amis:", err);
     }
