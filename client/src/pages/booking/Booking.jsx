@@ -127,7 +127,7 @@ const Booking = ({ socket }) => {
         throw new Error(`Failed to book: ${bookingResponse.statusText}`);
       }
 
-      await bookingResponse.json();
+      await bookingResponse;
 
       // Handle payment for attractions and flights
       await handleExtraPayments(paymentIntent.id, token, user, addedAttractions, selectedFlight, selectedTaxi);
