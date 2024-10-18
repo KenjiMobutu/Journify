@@ -63,7 +63,7 @@ const Friend = ({ socket }) => {
   }, [fetchUserGroups]);
 
   // Fonction pour récupérer la liste des amis
-  const fetchUserFriends = async () => {
+  const fetchUserFriends = useCallback(async () => {
     try {
       const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`,
         {
@@ -78,7 +78,11 @@ const Friend = ({ socket }) => {
     } catch (err) {
       console.error("Erreur lors du chargement des amis:", err);
     }
-  };
+  }, [apiUrl, token, user._id]);
+
+  useEffect(() => {
+    fetchUserFriends();
+  }, [fetchUserFriends]);
 
   // Fonction pour gérer la recherche de l'utilisateur
   const handleSearch = async (e) => {
@@ -87,7 +91,12 @@ const Friend = ({ socket }) => {
 
     try {
       // Requête pour rechercher un utilisateur par nom d'utilisateur
-      const res = await axios.get(`${apiUrl}/api/users/search/${searchInput}`);
+      const res = await axios.get(`${apiUrl}/api/users/search/${searchInput}`,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
       console.log(res.data);
       if (res.data) {
         setFindUser(res.data);
@@ -138,33 +147,33 @@ const Friend = ({ socket }) => {
     setFindUser(null);
   };
 
-  useEffect(() => {
-    const fetchUserFriends = async () => {
-      if (!user || !user._id) {
-        return; // Si user ou user._id est absent, on quitte la fonction
-      }
+  // useEffect(() => {
+  //   const fetchUserFriends = async () => {
+  //     if (!user || !user._id) {
+  //       return; // Si user ou user._id est absent, on quitte la fonction
+  //     }
 
-      try {
-        const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          withCredentials: true,
-        });
-        if (!response.ok) {
-          throw new Error("Failed to fetch user friends");
-        }
-        const data = await response.json();
-        console.log(data);
-        setUserFriends(data);
-      } catch (err) {
-        console.error("Erreur lors du chargement des amis:", err);
-      }
-    };
+  //     try {
+  //       const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`
+  //         },
+  //         withCredentials: true,
+  //       });
+  //       if (!response.ok) {
+  //         throw new Error("Failed to fetch user friends");
+  //       }
+  //       const data = await response.json();
+  //       console.log(data);
+  //       setUserFriends(data);
+  //     } catch (err) {
+  //       console.error("Erreur lors du chargement des amis:", err);
+  //     }
+  //   };
 
-    fetchUserFriends();
+  //   fetchUserFriends();
 
-  }, [user, apiUrl, token]);
+  // }, [user, apiUrl, token]);
 
   // Fonction pour gérer la suppression d'un ami
   const handleDeleteFriend = async (friendId) => {
