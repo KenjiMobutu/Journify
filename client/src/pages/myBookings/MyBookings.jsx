@@ -110,7 +110,7 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`/api/payment/bookings/${id}`,
+              await axios.put(`${apiUrl}/api/payment/bookings/${id}`,
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`/api/payment/attraction/${id}`,
+              await axios.put(`${apiUrl}/api/payment/attraction/${id}`,
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -183,7 +183,7 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`/api/payment/taxi/${id}`,
+              await axios.put(`${apiUrl}/api/payment/taxi/${id}`,
                 {
                   headers: {
                     'Content-Type': 'application/json',
