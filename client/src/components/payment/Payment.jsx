@@ -140,7 +140,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
           throw new Error(`Failed to book: ${bookingResponse.statusText}`);
         }
 
-        await bookingResponse.json();
+        await bookingResponse;
       }
 
       // Handle payment for attractions and flights
