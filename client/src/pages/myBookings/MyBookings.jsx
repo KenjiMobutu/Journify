@@ -75,13 +75,17 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${apiUrl}/api/users/${user._id}/bookings/${id}`,{
+              await axios.put(
+                `${apiUrl}/api/users/${user._id}/bookings/${id}`,
+                {},
+                {
                   headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                   },
                   withCredentials: true,
-                });
+                }
+              );
               setBookings((prev) => prev.filter((booking) => booking._id !== id));
               const booking = {
                 userId: user._id,
@@ -110,7 +114,7 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${apiUrl}/api/payment/bookings/${id}`,
+              await axios.put(`${apiUrl}/api/payment/bookings/${id}`,{},
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -146,7 +150,7 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${apiUrl}/api/payment/attraction/${id}`,
+              await axios.put(`${apiUrl}/api/payment/attraction/${id}`,{},
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -183,7 +187,7 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${apiUrl}/api/payment/taxi/${id}`,
+              await axios.put(`${apiUrl}/api/payment/taxi/${id}`,{},
                 {
                   headers: {
                     'Content-Type': 'application/json',
