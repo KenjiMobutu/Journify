@@ -75,7 +75,12 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`/api/users/${user._id}/bookings/${id}`);
+              await axios.put(`${apiUrl}/api/users/${user._id}/bookings/${id}`,{
+                headers: {
+                  Authorization: `Bearer ${token}`
+                },
+                withCredentials: true,
+              });
               setBookings((prev) => prev.filter((booking) => booking._id !== id));
               const booking = {
                 userId: user._id,
@@ -104,7 +109,12 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`/api/payment/bookings/${id}`);
+              await axios.put(`/api/payment/bookings/${id}`,{
+                headers: {
+                  Authorization: `Bearer ${token}`
+                },
+                withCredentials: true,
+              });
               setFlights((prev) => prev.filter((flight) => flight._id !== id));
               const booking = {
                 userId: user._id,
@@ -133,7 +143,12 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`/api/payment/attraction/${id}`);
+              await axios.put(`/api/payment/attraction/${id}`,{
+                headers: {
+                  Authorization: `Bearer ${token}`
+                },
+                withCredentials: true,
+              });
               setAttractions((prev) => prev.filter((attraction) => attraction._id !== id));
               const booking = {
                 userId: user._id,
@@ -163,7 +178,12 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`/api/payment/taxi/${id}`);
+              await axios.put(`/api/payment/taxi/${id}`,{
+                headers: {
+                  Authorization: `Bearer ${token}`
+                },
+                withCredentials: true,
+              });
               setTaxis((prev) => prev.filter((taxi) => taxi._id !== id));
               const booking = {
                 userId: user._id,
