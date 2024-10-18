@@ -65,7 +65,7 @@ const Friend = ({ socket }) => {
   // Fonction pour récupérer la liste des amis
   const fetchUserFriends = useCallback(async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/users/userFriends/${user._id}`,{
+      const response = await axios.get(`${apiUrl}/api/users/userFriends/${user._id}`,{
           headers: {
             Authorization: `Bearer ${token}`
           },
