@@ -74,7 +74,7 @@ const Booking = ({ socket }) => {
         throw new Error(`Failed to create payment intent: ${paymentIntentRes.statusText}`);
       }
 
-      const paymentIntentData = await paymentIntentRes.json();
+      const paymentIntentData = await paymentIntentRes.data;
       if (!paymentIntentData.clientSecret) {
         throw new Error("Failed to retrieve client secret from payment intent response.");
       }
@@ -127,7 +127,7 @@ const Booking = ({ socket }) => {
         throw new Error(`Failed to book: ${bookingResponse.statusText}`);
       }
 
-      await bookingResponse;
+      await bookingResponse.data;
 
       // Handle payment for attractions and flights
       await handleExtraPayments(paymentIntent.id, token, user, addedAttractions, selectedFlight, selectedTaxi);
