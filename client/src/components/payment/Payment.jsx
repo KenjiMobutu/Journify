@@ -67,7 +67,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
         }
       );
 
-      if (!paymentIntentRes.ok) {
+      if (paymentIntentRes.status !== 200) {
         throw new Error(`Failed to create payment intent: ${paymentIntentRes.statusText}`);
       }
 
@@ -136,7 +136,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
           }
         );
 
-        if (!bookingResponse.ok) {
+        if (bookingResponse.status !== 200) {
           throw new Error(`Failed to book: ${bookingResponse.statusText}`);
         }
 
@@ -231,13 +231,10 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
 
         // Vérification de la réponse
         if (taxiResponse.status !== 200) {
-          throw new Error('Payment failed for taxi');
-        }
-
-        if (!taxiResponse.ok) {
           console.error('Failed to save taxi booking:', taxiResponse.statusText);
           throw new Error('Payment failed for taxi');
         }
+
       }
 
       for (const flight of flights) {
@@ -269,7 +266,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
             withCredentials: true, // Si vous avez besoin d'envoyer des cookies
           }
         );
-        if (!flightResponse.ok) {
+        if (flightResponse.status !== 200) {
           console.error('Failed to save flight booking:', flightResponse.statusText);
           throw new Error('Payment failed for flight');
         }

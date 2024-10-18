@@ -59,18 +59,18 @@ const Booking = ({ socket }) => {
       const paymentIntentRes = await axios.post(
         `${apiUrl}/api/hotels/create-payment-intent`,
         {
-          amount: validatedAttractionPrice * 100, // Passer les données dans le corps de la requête
+          amount: validatedAttractionPrice * 100,
         },
         {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Ajouter l'autorisation si nécessaire
+            Authorization: `Bearer ${token}`,
           },
-          withCredentials: true, // Si vous gérez les cookies ou l'authentification
+          withCredentials: true,
         }
       );
 
-      if (!paymentIntentRes.ok) {
+      if (paymentIntentRes.status !== 200) {
         throw new Error(`Failed to create payment intent: ${paymentIntentRes.statusText}`);
       }
 
@@ -97,34 +97,33 @@ const Booking = ({ socket }) => {
       setPaymentIntentId(paymentIntent.id);
 
       // Send booking details after payment success
-      const bookingResponse = await fetch(`${apiUrl}/api/hotels/${hotel.hotel_id}/bookings`, {
-        method: 'POST',
+      const bookingResponse = await axios.post(`${apiUrl}/api/hotels/${hotel.hotel_id}/bookings`, {
+        paymentIntentId: paymentIntent.id,
+        _id: user._id,
+        userName: user.userName,
+        userEmail: user.email,
+        hotelName: hotel.hotel_name,
+        checkIn: startDate,
+        checkOut: endDate,
+        adultsCount: adults,
+        childrenCount: children,
+        rooms: rooms || 1,
+        hotel: hotel._id,
+        totalCost: price,
+        numberOfNights: Math.round(numberOfNights),
+        address: hotel.address,
+        zip: hotel.zip || '',
+        city: hotel.city_trans,
+        country: hotel.country_trans,
+      }, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          paymentIntentId: paymentIntent.id,
-          _id: user._id,
-          userName: user.userName,
-          userEmail: user.email,
-          hotelName: hotel.hotel_name,
-          checkIn: startDate,
-          checkOut: endDate,
-          adultsCount: adults,
-          childrenCount: children,
-          rooms: rooms || 1,
-          hotel: hotel._id,
-          totalCost: price,
-          numberOfNights: Math.round(numberOfNights),
-          address: hotel.address,
-          zip: hotel.zip || '',
-          city: hotel.city_trans,
-          country: hotel.country_trans,
-        }),
+        withCredentials: true
       });
 
-      if (!bookingResponse.ok) {
+      if (bookingResponse.status !== 200) {
         throw new Error(`Failed to book: ${bookingResponse.statusText}`);
       }
 
@@ -168,7 +167,7 @@ const Booking = ({ socket }) => {
           }
         );
         socket?.emit("notificationAttractionBooking", { userName: user.userName, userId: user._id });
-        if (!attractionResponse.ok) throw new Error('Payment failed for attraction');
+        if (attractionResponse.status !== 200) throw new Error('Payment failed for attraction');
       }
 
       for (const flight of selectedFlight) {
@@ -196,7 +195,8 @@ const Booking = ({ socket }) => {
           }
         );
         socket?.emit("notificationFlightBooking", { userName: user.userName, userId: user._id });
-        if (!flightResponse.ok) throw new Error('Payment failed for flight');
+        if (flightResponse.status !== 200)
+          throw new Error('Payment failed for flight');
       }
 
       for (const taxi of selectedTaxi) {
@@ -225,7 +225,7 @@ const Booking = ({ socket }) => {
           }
         );
         socket?.emit("notificationTaxiBooking", { userName: user.userName, userId: user._id });
-        if (!taxiResponse.ok) throw new Error('Payment failed for taxi');
+        if (taxiResponse.status !== 200) throw new Error('Payment failed for taxi');
       }
     } catch (error) {
       console.error(error.message);
