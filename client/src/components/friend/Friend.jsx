@@ -225,8 +225,6 @@ const Friend = ({ socket }) => {
       await Promise.all(
         groupsWithFriend.map(async (group) => {
           const res = await axios.delete(`${apiUrl}/api/users/groups/delete/${group._id}/${friendId}`, {
-            data: { groupId: group._id, userId: friendId },
-          }, {
             headers: {
               Authorization: `Bearer ${token}`
             },
