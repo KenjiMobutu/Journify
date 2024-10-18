@@ -7,6 +7,7 @@ import { AuthenticationContext } from "../../context/AuthenticationContext";
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useDispatch } from "react-redux";
 import { resetCart } from "../../redux/cartRedux.js";
+import axios from "axios";
 
 const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
 
@@ -45,15 +46,26 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
     try {
       setButtonDisabled(true);
 
+      // // Fetch payment intent
+      // const paymentIntentRes = await fetch(`${apiUrl}/api/hotels/create-payment-intent`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Authorization: `Bearer ${token}`
+      //   },
+      //   body: JSON.stringify({ amount: totalPrice * 100 })
+      // });
       // Fetch payment intent
-      const paymentIntentRes = await fetch(`${apiUrl}/api/hotels/create-payment-intent`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ amount: totalPrice * 100 })
-      });
+      const paymentIntentRes = await axios.post(`${apiUrl}/api/hotels/create-payment-intent`,
+        { amount: totalPrice * 100 },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          withCredentials: true,
+        }
+      );
 
       if (!paymentIntentRes.ok) {
         throw new Error(`Failed to create payment intent: ${paymentIntentRes.statusText}`);
@@ -95,13 +107,8 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
         // Arrondir pour éviter les résultats avec des fractions
         const roundedNumberOfNights = Math.round(numberOfNights);
 
-        const bookingResponse = await fetch(`${apiUrl}/api/hotels/${hotel.hotel_id}/bookings`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
+        const bookingResponse = await axios.post(`${apiUrl}/api/hotels/${hotel.hotel_id}/bookings`,
+          {
             paymentIntentId: paymentIntent.id,
             _id: user._id,
             userName: user.userName,
@@ -118,9 +125,16 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
             address: hotel.address || 'Unknown',
             zip: hotel.zip || '',
             city: hotel.city_trans,
-            country: hotel.country_trans,
-          }),
-        });
+            country: hotel.country_trans
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true, // Si vous avez besoin d'envoyer des cookies avec la requête
+          }
+        );
 
         if (!bookingResponse.ok) {
           throw new Error(`Failed to book: ${bookingResponse.statusText}`);
@@ -150,21 +164,26 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
   const handleExtraPayments = async (paymentIntentId, token, user, attractions, flights, taxis) => {
     try {
       for (const attraction of attractions) {
-        const attractionResponse = await fetch(`${apiUrl}/api/payment/attraction`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
+        const attractionResponse = await axios.post(`${apiUrl}/api/payment/attraction`,
+          {
             paymentIntentId,
             _id: user._id,
             userName: user.userName,
             userEmail: user.email,
             ...attraction,
-          }),
-        });
-        if (!attractionResponse.ok) throw new Error('Payment failed for attraction');
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
+
+        if (attractionResponse.status !== 200) {
+          throw new Error('Payment failed for attraction');
+        }
       }
 
       for (const taxi of taxis) {
@@ -184,13 +203,8 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
         const time = requestedPickupDateTime.toTimeString().split(' ')[0].slice(0, 5);
 
         // Préparation du corps de la requête pour la réservation du taxi
-        const taxiResponse = await fetch(`${apiUrl}/api/payment/taxi`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
+        const taxiResponse = await axios.post(`${apiUrl}/api/payment/taxi`,
+          {
             paymentIntentId,
             _id: user._id,
             userName: user.userName,
@@ -205,8 +219,20 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
             arrival: taxi.journeys[0].dropOffLocation.name,
             distance: taxi?.taxi?.drivingDistance || taxi.drivingDistance,
             photos: taxi?.taxi?.imageUrl || taxi.imageUrl,
-          }),
-        });
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true, // Si vous avez besoin d'envoyer des cookies avec la requête
+          }
+        );
+
+        // Vérification de la réponse
+        if (taxiResponse.status !== 200) {
+          throw new Error('Payment failed for taxi');
+        }
 
         if (!taxiResponse.ok) {
           console.error('Failed to save taxi booking:', taxiResponse.statusText);
@@ -220,13 +246,8 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
           continue; // Skip this flight if the data is incomplete
         }
         console.log("Flight: ", flight);
-        const flightResponse = await fetch(`${apiUrl}/api/payment/bookings`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
+        const flightResponse = await axios.post(`${apiUrl}/api/payment/bookings`,
+          {
             paymentIntentId,
             _id: user._id,
             userName: user.userName,
@@ -239,8 +260,15 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
             // childrenCount: children,
             cabinClass: flight.segments[0].legs[0].cabinClass,
             totalCost: flight.priceBreakdown.total.units,
-          }),
-        });
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true, // Si vous avez besoin d'envoyer des cookies
+          }
+        );
         if (!flightResponse.ok) {
           console.error('Failed to save flight booking:', flightResponse.statusText);
           throw new Error('Payment failed for flight');
