@@ -33,6 +33,7 @@ import { useCallback } from "react";
 
 const Navbar = ({ socket }) => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
+  const apiAdminUrl = import.meta.env.VITE_ADMIN_URL;
   const navigate = useNavigate();
   const persistor = usePersistor();
   const { user, dispatch } = useContext(AuthenticationContext);
@@ -213,7 +214,7 @@ const Navbar = ({ socket }) => {
                 </MenuItem>
                 <Divider />
                 {isAdmin && (
-                  <MenuItem onClick={() => window.location.href = 'http://localhost:8000'}  >
+                  <MenuItem onClick={() => window.location.href = `${apiAdminUrl}`}  >
                     <Settings className="bookingTickets" />
                     Admin
                   </MenuItem>
