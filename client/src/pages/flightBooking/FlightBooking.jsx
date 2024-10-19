@@ -138,7 +138,7 @@ const FlightBooking = ({socket}) => {
         throw new Error(`Failed to book: ${response.statusText}`);
       }
 
-      await response.json();
+      await response.data;
 
       if (response.status === 200) {
         setPaymentSuccess(true);
