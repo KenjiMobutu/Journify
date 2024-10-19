@@ -133,14 +133,14 @@ const FlightBooking = ({socket}) => {
           withCredentials: true,
         }
       );
-      
-      if (!response.ok) {
+
+      if (response.status !== 200) {
         throw new Error(`Failed to book: ${response.statusText}`);
       }
 
       await response.json();
 
-      if (response.ok) {
+      if (response.status === 200) {
         setPaymentSuccess(true);
         setShowConfirmation(true);
         setButtonText('Paid');
