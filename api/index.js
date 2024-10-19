@@ -33,7 +33,7 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ["https://www.journify.fun", "https://tfe2024-29js.onrender.com","https://tfe2024.onrender.com"],
+    origin: ["https://www.journify.fun", "https://admin-journify.onrender.com","https://tfe2024.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   },
@@ -75,14 +75,14 @@ connectToMongo();
 
 // Middlewares
 app.use(cors({
-  origin: ["https://www.journify.fun", "https://tfe2024-29js.onrender.com"],
+  origin: ["https://www.journify.fun", "https://admin-journify.onrender.com"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
 
 // Gestion des requêtes prévol
 app.options("*", cors({
-  origin: ["https://www.journify.fun", "https://tfe2024-29js.onrender.com"],
+  origin: ["https://www.journify.fun", "https://admin-journify.onrender.com"],
   credentials: true,
 }));
 
