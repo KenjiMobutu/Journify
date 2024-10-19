@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Login() {
-  const backendUrl = process.env.BACKEND_URL;
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [credentials, setCredentials] = useState({ username: "", password: "" });
   const {loading, error, dispatch } = useContext(AuthenticationContext);
   const navigate = useNavigate();
