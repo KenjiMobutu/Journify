@@ -85,7 +85,7 @@ const FlightBooking = ({socket}) => {
         throw new Error(`Failed to create payment intent: ${paymentIntentRes.statusText}`);
       }
 
-      const paymentIntentData = await paymentIntentRes.json();
+      const paymentIntentData = await paymentIntentRes.data;
 
       // Vérification du client_secret
       if (!paymentIntentData.clientSecret) {
