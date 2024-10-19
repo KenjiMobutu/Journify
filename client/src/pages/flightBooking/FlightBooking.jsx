@@ -6,8 +6,10 @@ import { format } from 'date-fns';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import Navbar from "../../components/navbar/Navbar";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const FlightBooking = ({socket}) => {
+  const token = localStorage.getItem('access_token');
   const location = useLocation();
   const navigate = useNavigate();
   const { flight, options } = location.state || {};// Récupération du flight depuis le state
@@ -60,11 +62,24 @@ const FlightBooking = ({socket}) => {
       setButtonDisabled(true);
       setButtonText('Processing...');
 
-      const paymentIntentRes = await fetch(`${apiUrl}/api/payment/create-payment-intent`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: totalCost }),
-      });
+      // const paymentIntentRes = await fetch(`${apiUrl}/api/payment/create-payment-intent`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ amount: totalCost }),
+      // });
+      const paymentIntentRes = await axios.post(
+        `${apiUrl}/api/hotels/create-payment-intent`,
+        {
+          amount: totalCost,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
 
       if (!paymentIntentRes.ok) {
         throw new Error(`Failed to create payment intent: ${paymentIntentRes.statusText}`);
@@ -94,12 +109,8 @@ const FlightBooking = ({socket}) => {
       }
 
       // Enregistrez la réservation après la réussite du paiement
-      const response = await fetch(`${apiUrl}/api/payment/bookings`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const response = await axios.post(`${apiUrl}/api/payment/bookings`,
+        {
           paymentIntentId: paymentIntent.id,
           flightId: flight._id,
           _id: user._id,
@@ -113,9 +124,16 @@ const FlightBooking = ({socket}) => {
           childrenCount: childrenCount,
           cabinClass: cabinClass,
           totalCost: totalCost,
-        }),
-      });
-
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      
       if (!response.ok) {
         throw new Error(`Failed to book: ${response.statusText}`);
       }
