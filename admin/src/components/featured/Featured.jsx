@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Featured = () => {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [percentage, setPercentage] = useState(0);
   const [amount, setAmount] = useState(0);
   const [previousAmount, setPreviousAmount] = useState(0);
@@ -16,11 +17,11 @@ const Featured = () => {
     const fetchData = async () => {
       try {
         // Récupérer les ventes d'aujourd'hui
-        const { data: todaySales } = await axios.get("/api/hotels/todaySales");
+        const { data: todaySales } = await axios.get(`${backendUrl}/api/hotels/todaySales`);
         console.log("Today sales: ", todaySales);
 
         // Récupérer les ventes de la période précédente
-        const { data: previousSales } = await axios.get("/api/hotels/previousSales");
+        const { data: previousSales } = await axios.get(`${backendUrl}/api/hotels/previousSales`);
         console.log("Previous sales: ", previousSales);
 
         // Mettre à jour les montants

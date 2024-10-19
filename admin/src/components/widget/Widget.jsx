@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 
 const Widget = ({ type }) => {
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const token = localStorage.getItem('access_token');
   const [users, setUsers] = useState(0);
   const [nights, setNights] = useState(0);
   const [rooms, setRooms] = useState(0);
@@ -25,7 +26,13 @@ const Widget = ({ type }) => {
       let previousValue = 0;
 
       if (type === "user") {
-        const response = await axios.get(`${backendUrl}/api/users`);
+        const response = await axios.get(`${backendUrl}/api/users`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true
+        });
         currentValue = response.data.length;
         previousValue = await getPreviousValue(`${backendUrl}/api/users`, "user");
         setUsers(currentValue);

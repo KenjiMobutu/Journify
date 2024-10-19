@@ -10,11 +10,12 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 
 const Datatable = ({ columns, title }) => {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   console.log("TITLE", title);
   const location = useLocation();
   const path = location.pathname.split("/")[1] || "hotels/bookings";
   const [list, setList] = useState();
-  const { data } = useFetch(`/api/${path}`);
+  const { data } = useFetch(`${backendUrl}/api/${path}`);
   console.log("DATA", data);
   useEffect(() => {
     setList(data);
@@ -29,7 +30,7 @@ const Datatable = ({ columns, title }) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.delete(`/api/${path}/${id}`);
+              await axios.delete(`${backendUrl}/api/${path}/${id}`);
               setList(list.filter((item) => item._id !== id));
             } catch (err) { }
           }
@@ -76,7 +77,7 @@ const Datatable = ({ columns, title }) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.delete(`/api/hotels/bookings/${id}`);
+              await axios.delete(`${backendUrl}/api/hotels/bookings/${id}`);
               setList(list.filter((item) => item._id !== id));
             } catch (err) { }
           }

@@ -5,11 +5,12 @@ import axios from 'axios';
 
 const Chart = ({ aspect, title }) => {
   const [data, setData] = useState([]);
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/hotels/last6Months");
+        const response = await axios.get(`${backendUrl}/api/hotels/last6Months`);
         console.log("Last 6 months revenue :", response.data);
         setData(response.data); // Récupérer les données de revenus des 6 derniers mois
       } catch (error) {
