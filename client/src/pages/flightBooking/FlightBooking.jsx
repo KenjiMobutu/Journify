@@ -144,7 +144,7 @@ const FlightBooking = ({socket}) => {
         setPaymentSuccess(true);
         setShowConfirmation(true);
         setButtonText('Paid');
-        socket?.emit("notificationFlightBooking", user.userName + " booked a new flight.");
+        socket?.emit("notificationFlightBooking", { userName: user.userName, userId: user._id });
         setTimeout(() => {
           setShowConfirmation(false);
         }, 5000);

@@ -6,8 +6,10 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
 import Navbar from "../../components/navbar/Navbar";
 import { format } from 'date-fns';
+import axios from 'axios';
 
 const AttractionBooking = ({ socket }) => {
+  const token = localStorage.getItem('access_token');
   const location = useLocation();
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -47,17 +49,30 @@ const AttractionBooking = ({ socket }) => {
       setButtonDisabled(true);
       setButtonText('Processing...');
 
-      const paymentIntentRes = await fetch(`${apiUrl}/api/payment/create-payment-intent`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: priceInCents }),
-      });
+      // const paymentIntentRes = await fetch(`${apiUrl}/api/payment/create-payment-intent`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ amount: priceInCents }),
+      // });
+      const paymentIntentRes = await axios.post(
+        `${apiUrl}/api/payment/create-payment-intent`,
+        {
+          amount: priceInCents,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
 
-      if (!paymentIntentRes.ok) {
+      if (paymentIntentRes.status !== 200) {
         throw new Error(`Failed to create payment intent: ${paymentIntentRes.statusText}`);
       }
 
-      const paymentIntentData = await paymentIntentRes.json();
+      const paymentIntentData = await paymentIntentRes.data;
 
       // Vérification du client_secret
       if (!paymentIntentData.clientSecret) {
@@ -81,12 +96,7 @@ const AttractionBooking = ({ socket }) => {
       }
 
       // Enregistrez la réservation après la réussite du paiement
-      const response = await fetch(`${apiUrl}/api/payment/attraction`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const response = await axios.post(`${apiUrl}/api/payment/attraction`, {
           paymentIntentId: paymentIntent.id,
           attractionId: attraction._id,
           _id: user._id,
@@ -99,20 +109,27 @@ const AttractionBooking = ({ socket }) => {
           startDate: startDate.$d,
           endDate: endDate.$d,
           photos: photos,
-        }),
-      });
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error(`Failed to book: ${response.statusText}`);
       }
 
-      await response.json();
+      await response.data;
 
-      if (response.ok) {
+      if (response.status === 200) {
         setPaymentSuccess(true);
         setButtonText('Paid');
         setShowConfirmation(true);
-        socket?.emit("notificationAttractionBooking", user.userName + " booked an attraction.");
+        socket?.emit("notificationAttractionBooking", { userName: user.userName, userId: user._id });
         setTimeout(() => {
           setShowConfirmation(false);
         }, 5000);
