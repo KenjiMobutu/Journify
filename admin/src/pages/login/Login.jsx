@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Login() {
+  const backendUrl = process.env.BACKEND_URL;
   const [credentials, setCredentials] = useState({ username: "", password: "" });
   const {loading, error, dispatch } = useContext(AuthenticationContext);
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function Login() {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
     try {
-      const res = await axios.post("/api/auth/login", credentials);
+      const res = await axios.post(`${backendUrl}/api/auth/login`, credentials);
 
       if (res.data.isAdmin){
         dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
