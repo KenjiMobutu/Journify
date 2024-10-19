@@ -81,7 +81,7 @@ const FlightBooking = ({socket}) => {
         }
       );
 
-      if (!paymentIntentRes.ok) {
+      if (paymentIntentRes.status !== 200) {
         throw new Error(`Failed to create payment intent: ${paymentIntentRes.statusText}`);
       }
 
