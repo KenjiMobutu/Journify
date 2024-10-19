@@ -8,7 +8,7 @@ import axios from 'axios';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const MyBookings = ({socket}) => {
+const MyBookings = ({ socket }) => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem('access_token');
   const [bookings, setBookings] = useState([]);
@@ -18,25 +18,25 @@ const MyBookings = ({socket}) => {
   const [attractions, setAttractions] = useState([]);
   const { user } = useContext(AuthenticationContext);
 
-  const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`${apiUrl}/api/users/${user?._id}/bookings`,{
+  const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`${apiUrl}/api/users/${user?._id}/bookings`, {
     headers: {
       Authorization: `Bearer ${token}`
     },
     withCredentials: true,
   });
-  const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`${apiUrl}/api/users/${user?._id}/flightBookings`,{
+  const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`${apiUrl}/api/users/${user?._id}/flightBookings`, {
     headers: {
       Authorization: `Bearer ${token}`
     },
     withCredentials: true,
   });
-  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`${apiUrl}/api/users/${user?._id}/taxiBookings`,{
+  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`${apiUrl}/api/users/${user?._id}/taxiBookings`, {
     headers: {
       Authorization: `Bearer ${token}`
     },
     withCredentials: true,
   });
-  const { data: attractionData, loading: attractionLoading, error: attractionError } = useFetch(`${apiUrl}/api/users/${user?._id}/attractionBookings`,{
+  const { data: attractionData, loading: attractionLoading, error: attractionError } = useFetch(`${apiUrl}/api/users/${user?._id}/attractionBookings`, {
     headers: {
       Authorization: `Bearer ${token}`
     },
@@ -99,7 +99,7 @@ const MyBookings = ({socket}) => {
         },
         {
           label: 'No',
-          onClick: () => {}
+          onClick: () => { }
         }
       ]
     });
@@ -114,7 +114,7 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${apiUrl}/api/payment/bookings/${id}`,{},
+              await axios.put(`${apiUrl}/api/payment/bookings/${id}`, {},
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ const MyBookings = ({socket}) => {
         },
         {
           label: 'No',
-          onClick: () => {}
+          onClick: () => { }
         }
       ]
     });
@@ -150,7 +150,7 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${apiUrl}/api/payment/attraction/${id}`,{},
+              await axios.put(`${apiUrl}/api/payment/attraction/${id}`, {},
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -171,7 +171,7 @@ const MyBookings = ({socket}) => {
         },
         {
           label: 'No',
-          onClick: () => {}
+          onClick: () => { }
         }
       ]
     });
@@ -187,7 +187,7 @@ const MyBookings = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${apiUrl}/api/payment/taxi/${id}`,{},
+              await axios.put(`${apiUrl}/api/payment/taxi/${id}`, {},
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ const MyBookings = ({socket}) => {
         },
         {
           label: 'No',
-          onClick: () => {}
+          onClick: () => { }
         }
       ]
     });
@@ -231,7 +231,7 @@ const MyBookings = ({socket}) => {
 
   return (
     <>
-      <Navbar socket={socket}/>
+      <Navbar socket={socket} />
       <div className="myBookings">
         <div className="bookings">
           <div className="bookingsTitle">My Bookings</div>
