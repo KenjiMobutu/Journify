@@ -11,10 +11,11 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Single = ({socket}) => {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname.split("/")[2];
-  const { data } = useFetch(`/api/users/${path}`);
+  const { data } = useFetch(`${backendUrl}/api/users/${path}`);
 
   const [bookings, setBookings] = useState([]);
   const [flights, setFlights] = useState([]);
@@ -23,9 +24,9 @@ const Single = ({socket}) => {
   console.log("FLIGHTS:", flights);
   console.log("BOOKINGS:", bookings);
 
-  const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`/api/users/${path}/bookings`);
-  const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`/api/users/${path}/flightBookings`);
-  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`/api/users/${path}/taxiBookings`);
+  const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`${backendUrl}/api/users/${path}/bookings`);
+  const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`${backendUrl}/api/users/${path}/flightBookings`);
+  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`${backendUrl}/api/users/${path}/taxiBookings`);
 
   const handleEdit = () => {
     navigate(`/users/new/${path}`);
@@ -62,7 +63,7 @@ const Single = ({socket}) => {
           onClick: async () => {
             try {
               // Faire une requête pour annuler la réservation
-              await axios.delete(`/api/users/${data._id}/bookings/${bookingId}`);
+              await axios.delete(`${backendUrl}/api/users/${data._id}/bookings/${bookingId}`);
               // Mettre à jour l'état des réservations
               setBookings(prev => prev.filter(booking => booking._id !== bookingId));
             } catch (error) {
@@ -88,7 +89,7 @@ const Single = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`/api/users/${data._id}/bookings/${id}`);
+              await axios.put(`${backendUrl}/api/users/${data._id}/bookings/${id}`);
               setBookings((prev) => prev.filter((booking) => booking._id !== id));
               const booking = {
                 userId: data._id,
@@ -118,7 +119,7 @@ const Single = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`/api/payment/bookings/${flightId}`);
+              await axios.put(`${backendUrl}/api/payment/bookings/${flightId}`);
               setFlights(prev => prev.filter(flight => flight._id !== flightId));
             } catch (error) {
               console.error('Error cancelling the flight:', error);
@@ -143,7 +144,7 @@ const Single = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`/api/payment/taxi/${id}`);
+              await axios.put(`${backendUrl}/api/payment/taxi/${id}`);
               setTaxis((prev) => prev.filter((taxi) => taxi._id !== id));
               const booking = {
                 userId: data._id,

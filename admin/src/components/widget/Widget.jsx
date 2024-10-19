@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 
 const Widget = ({ type }) => {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [users, setUsers] = useState(0);
   const [nights, setNights] = useState(0);
   const [rooms, setRooms] = useState(0);
@@ -24,14 +25,14 @@ const Widget = ({ type }) => {
       let previousValue = 0;
 
       if (type === "user") {
-        const response = await axios.get("/api/users");
+        const response = await axios.get(`${backendUrl}/api/users`);
         currentValue = response.data.length;
-        previousValue = await getPreviousValue("/api/users", "user");
+        previousValue = await getPreviousValue(`${backendUrl}/api/users`, "user");
         setUsers(currentValue);
       }
 
       if (type === "night") {
-        const response = await axios.get("/api/hotels/bookings");
+        const response = await axios.get(`${backendUrl}/api/hotels/bookings`);
         currentValue = response.data.reduce((acc, booking) => {
           const checkInDate = new Date(booking.checkIn);
           const checkOutDate = new Date(booking.checkOut);
@@ -39,29 +40,29 @@ const Widget = ({ type }) => {
           const nights = timeDifference / (1000 * 3600 * 24);
           return acc + nights;
         }, 0);
-        previousValue = await getPreviousValue("/api/hotels/bookings", "night");
+        previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "night");
         setNights((currentValue).toFixed(0));
       }
 
       if (type === "room") {
-        const response = await axios.get("/api/hotels/bookings");
+        const response = await axios.get(`${backendUrl}/api/hotels/bookings`);
         currentValue = response.data.reduce((acc, booking) => acc + booking.rooms, 0);
-        previousValue = await getPreviousValue("/api/hotels/bookings", "room");
+        previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "room");
         setRooms(currentValue);
       }
 
       if (type === "booking") {
-        const response = await axios.get("/api/hotels/bookings");
+        const response = await axios.get(`${backendUrl}/api/hotels/bookings`);
         currentValue = response.data.length;
-        previousValue = await getPreviousValue("/api/hotels/bookings", "booking");
+        previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "booking");
         setBookings(currentValue);
       }
 
       if (type === "balance") {
-        const response = await axios.get("/api/hotels/bookings");
+        const response = await axios.get(`${backendUrl}/api/hotels/bookings`);
         console.log("Balance :", response.data);
         currentValue = response.data.reduce((acc, booking) => acc + booking.totalCost, 0);
-        previousValue = await getPreviousValue("/api/hotels/bookings", "balance");
+        previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "balance");
         setAmount(currentValue);
       }
 
