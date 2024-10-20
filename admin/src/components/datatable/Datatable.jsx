@@ -1,23 +1,20 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
-
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import useFetch from "../../hooks/useFetch";
 import axios from "axios";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-
-const Datatable = async ({ columns, title}) => {
-  console.log("COLUMNS", columns);
+const Datatable = ({ columns, title }) => {
   const token = localStorage.getItem("access_token");
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
   console.log("TITLE", title);
   const location = useLocation();
   const path = location.pathname.split("/")[1] || "hotels/bookings";
-  const [list, setList] = useState();
-  
+  const [list, setList] = useState([]);
+
+  // Utiliser useEffect pour récupérer les données
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,17 +42,47 @@ const Datatable = async ({ columns, title}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.delete(`${backendUrl}/api/${path}/${id}`,
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                  },
-                  withCredentials: true
-                }
-              );
-              setList(list.filter((item) => item._id !== id));
-            } catch (err) { }
+              await axios.delete(`${backendUrl}/api/${path}/${id}`, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true
+              });
+              setList((prev) => prev.filter((item) => item._id !== id));
+            } catch (err) {
+              console.error("Erreur lors de la suppression :", err);
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => { }
+        }
+      ]
+    });
+  };
+
+  const handleDeleteBooking = async (id) => {
+    confirmAlert({
+      title: 'Delete Booking',
+      message: 'Are you sure to delete this booking.',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.delete(`${backendUrl}/api/hotels/bookings/${id}`, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true
+              });
+              setList((prev) => prev.filter((item) => item._id !== id));
+            } catch (err) {
+              console.error("Erreur lors de la suppression de la réservation :", err);
+            }
           }
         },
         {
@@ -72,7 +99,7 @@ const Datatable = async ({ columns, title}) => {
       headerName: "Action",
       width: 180,
       headerAlign: 'center',  // Centrer le titre
-    align: 'center',
+      align: 'center',
       renderCell: (params) => {
         return (
           <div className="cellAction">
@@ -91,44 +118,13 @@ const Datatable = async ({ columns, title}) => {
     },
   ];
 
-  const handleDeleteBooking = async (id) => {
-    confirmAlert({
-      title: 'Delete Booking',
-      message: 'Are you sure to delete this booking.',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: async () => {
-            try {
-              await axios.delete(`${backendUrl}/api/hotels/bookings/${id}`,
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                  },
-                  withCredentials: true
-                }
-              );
-              setList(list.filter((item) => item._id !== id));
-            } catch (err) { }
-          }
-        },
-        {
-          label: 'No',
-          onClick: () => { }
-        }
-      ]
-    });
-  };
-
-
   const actionBookingColumn = [
     {
       field: "action",
       headerName: "Action",
       width: 180,
-      headerAlign: 'center',  // Centrer le titre
-    align: 'center',
+      headerAlign: 'center',
+      align: 'center',
       renderCell: (params) => {
         return (
           <div className="cellAction">
@@ -144,9 +140,7 @@ const Datatable = async ({ columns, title}) => {
     },
   ];
 
-
-
-  const finalColumns = path === "hotels/bookings" ? columns?.concat(actionBookingColumn) : columns.concat(actionColumn);
+  const finalColumns = path === "hotels/bookings" ? columns.concat(actionBookingColumn) : columns.concat(actionColumn);
 
   return (
     <div className="datatable">
@@ -174,7 +168,6 @@ const Datatable = async ({ columns, title}) => {
         </button>
       )}
     </div>
-
   );
 };
 
