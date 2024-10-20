@@ -83,6 +83,7 @@ app.use(cors({
 // Gestion des requêtes prévol
 app.options("*", cors({
   origin: ["https://www.journify.fun", "https://admin-journify.onrender.com"],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 }));
 

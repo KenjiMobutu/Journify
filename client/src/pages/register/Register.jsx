@@ -95,27 +95,20 @@ const Register = ({ socket }) => {
 
     setLoading(true);
     try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      };
       if (id) {
         // Mise à jour de l'utilisateur existant
-        await axios.put(`${apiUrl}/api/users/${id}`, user,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          });
+        await axios.put(`${apiUrl}/api/users/${id}`, user, config);
         socket?.emit("notificationUpdate", user.userName);
       } else {
         // Création d'un nouvel utilisateur
-        await axios.post(`${apiUrl}/api/auth/register`, user,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          });
+        await axios.post(`${apiUrl}/api/auth/register`, user, config);
         socket?.emit("notificationRegister", user.userName);
       }
       navigate('/'); // Redirige vers la page d'accueil après l'inscription
