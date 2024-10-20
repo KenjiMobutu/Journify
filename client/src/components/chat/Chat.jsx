@@ -19,7 +19,14 @@ const Chat = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ['repoData'],
     queryFn: () =>
-      fetch(`${apiUrl}/api/chat/userChat/${userId}`, { credentials: 'include' })
+      fetch(`${apiUrl}/api/chat/userChat/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      )
         .then((res) => res.json()),
   });
 
