@@ -11,14 +11,14 @@ const Datatable = ({ columns, title }) => {
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
   console.log("TITLE", title);
   const location = useLocation();
-  const path = `api/${location.pathname.split("/")[1] || "hotels/bookings"}`;
+  const path = location.pathname.split("/")[1] || "hotels/bookings";
   const [list, setList] = useState([]);
 
   // Utiliser useEffect pour récupérer les données
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fullPath = `${backendUrl}/${path}`;
+        const fullPath = `${backendUrl}/api/${path}`;
         console.log("Requesting data from:", fullPath);
         const { data } = await axios.get(fullPath, {
           headers: {
