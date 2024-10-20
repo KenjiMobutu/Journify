@@ -1,242 +1,179 @@
-import './single.scss'
-import Sidebar from '../../components/sidebar/Sidebar'
-import Navbar from '../../components/navbar/Navbar'
-import useFetch from '../../hooks/useFetch'
-import { useLocation } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import { useEffect } from 'react'
-import axios from 'axios'
+import './single.scss';
+import Sidebar from '../../components/sidebar/Sidebar';
+import Navbar from '../../components/navbar/Navbar';
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const Single = async ({socket}) => {
+const Single = ({ socket }) => {
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname.split("/")[2];
-  const { data } =  await axios.get(`${backendUrl}/api/users/${path}`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-      },
-      withCredentials: true
-    }
-  );
 
+  const [data, setData] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [flights, setFlights] = useState([]);
   const [taxis, setTaxis] = useState([]);
-  console.log("TAXI:", taxis);
-  console.log("FLIGHTS:", flights);
-  console.log("BOOKINGS:", bookings);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const { data: hotelData, loading: hotelLoading, error: hotelError } = await axios.get(`${backendUrl}/api/users/${path}/bookings`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-      },
-      withCredentials: true
-    }
-  );
-  const { data: flightData, loading: flightLoading, error: flightError } = await axios.get(`${backendUrl}/api/users/${path}/flightBookings`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-      },
-      withCredentials: true
-    }
-  );
-  const { data: taxiData, loading: taxiLoading, error: taxiError } = await axios.get(`${backendUrl}/api/users/${path}/taxiBookings`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-      },
-      withCredentials: true
-    }
-  );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userResponse = await axios.get(`${backendUrl}/api/users/${path}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+          withCredentials: true,
+        });
+        setData(userResponse.data);
+
+        const hotelResponse = await axios.get(`${backendUrl}/api/users/${path}/bookings`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+          withCredentials: true,
+        });
+        setBookings(hotelResponse.data);
+
+        const flightResponse = await axios.get(`${backendUrl}/api/users/${path}/flightBookings`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+          withCredentials: true,
+        });
+        setFlights(flightResponse.data);
+
+        const taxiResponse = await axios.get(`${backendUrl}/api/users/${path}/taxiBookings`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+          withCredentials: true,
+        });
+        setTaxis(taxiResponse.data);
+
+        setLoading(false);
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [backendUrl, path]);
 
   const handleEdit = () => {
     navigate(`/users/new/${path}`);
   };
 
-  useEffect(() => {
-    if (hotelData) {
-      setBookings(hotelData);
-    }
-    if (flightData) {
-      setFlights(flightData);
-    }
-    if (taxiData) {
-      setTaxis(taxiData);
-    }
-  }, [hotelData, flightData, taxiData]);
-
-  if (!data) {
-    return <div>Loading...</div>;
-  }
-
-  if (hotelLoading || flightLoading || taxiLoading) return <div>Loading your bookings...</div>;
-  if (hotelError) return <div>Error loading hotel bookings: {hotelError.message}</div>;
-  if (flightError) return <div>Error loading flight bookings: {flightError.message}</div>;
-  if (taxiError) return <div>Error loading taxi bookings: {taxiError.message}</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   const handleDeleteBooking = async (bookingId) => {
     confirmAlert({
       title: 'Confirm deletion',
-      message: 'Do you really want to delete this booking ?',
+      message: 'Do you really want to delete this booking?',
       buttons: [
         {
           label: 'Yes',
           onClick: async () => {
             try {
-              // Faire une requête pour annuler la réservation
-              await axios.delete(`${backendUrl}/api/users/${data._id}/bookings/${bookingId}`,
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-                  },
-                  withCredentials: true
-                }
-              );
-              // Mettre à jour l'état des réservations
-              setBookings(prev => prev.filter(booking => booking._id !== bookingId));
+              await axios.delete(`${backendUrl}/api/users/${data._id}/bookings/${bookingId}`, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                },
+                withCredentials: true,
+              });
+              setBookings((prev) => prev.filter((booking) => booking._id !== bookingId));
             } catch (error) {
               console.error("Failed to cancel booking", error);
             }
-          }
+          },
         },
         {
           label: 'No',
-          onClick: () => { }
-        }
-      ]
+          onClick: () => { },
+        },
+      ],
     });
   };
 
   const handleCancelBooking = async (id) => {
-    console.log("BOOKING ID:", id);
     confirmAlert({
       title: 'Confirm cancellation',
-      message: 'Do you really want to cancel your booking ?',
+      message: 'Do you really want to cancel your booking?',
       buttons: [
         {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${backendUrl}/api/users/${data._id}/bookings/${id}`,
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-                  },
-                  withCredentials: true
-                }
-              );
+              await axios.put(`${backendUrl}/api/users/${data._id}/bookings/${id}`, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                },
+                withCredentials: true,
+              });
               setBookings((prev) => prev.filter((booking) => booking._id !== id));
-              const booking = {
-                userId: data._id,
-                bookingId: id,
-              }
-              socket?.emit("cancelBooking", booking);
+              socket?.emit("cancelBooking", { userId: data._id, bookingId: id });
             } catch (error) {
               console.error('Error cancelling the booking:', error);
             }
-          }
+          },
         },
         {
           label: 'No',
-          onClick: () => { }
-        }
-      ]
+          onClick: () => { },
+        },
+      ],
     });
   };
 
   const handleCancelFlight = async (flightId) => {
-    console.log("FLIGHT ID:", flightId);
     confirmAlert({
       title: 'Confirm cancellation',
-      message: 'Do you really want to cancel your booking ?',
+      message: 'Do you really want to cancel your flight booking?',
       buttons: [
         {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${backendUrl}/api/payment/bookings/${flightId}`,
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-                  },
-                  withCredentials: true
-                }
-              );
-              setFlights(prev => prev.filter(flight => flight._id !== flightId));
+              await axios.put(`${backendUrl}/api/payment/bookings/${flightId}`, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                },
+                withCredentials: true,
+              });
+              setFlights((prev) => prev.filter((flight) => flight._id !== flightId));
             } catch (error) {
               console.error('Error cancelling the flight:', error);
             }
-          }
+          },
         },
         {
           label: 'No',
-          onClick: () => { }
-        }
-      ]
-    });
-  };
-
-  const handleTaxiCancel = async (id) => {
-    console.log("TAXI ID:", id);
-    confirmAlert({
-      title: 'Confirm cancellation',
-      message: 'Do you really want to cancel your booking ?',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: async () => {
-            try {
-              await axios.put(`${backendUrl}/api/payment/taxi/${id}`,
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-                  },
-                  withCredentials: true
-                }
-              );
-              setTaxis((prev) => prev.filter((taxi) => taxi._id !== id));
-              const booking = {
-                userId: data._id,
-                bookingId: id,
-              }
-              socket?.emit("cancelBooking", booking);
-            } catch (error) {
-              console.error('Error cancelling the taxi:', error);
-            }
-          }
+          onClick: () => { },
         },
-        {
-          label: 'No',
-          onClick: () => { }
-        }
-      ]
+      ],
     });
   };
 
   const isCancelable = (date) => {
-    console.log(date);
     const today = new Date();
     const checkDate = new Date(date);
     const differenceInTime = checkDate.getTime() - today.getTime();
     const differenceInDays = differenceInTime / (1000 * 3600 * 24);
     return differenceInDays >= 3;
   };
-
 
   return (
     <div className='single'>
@@ -248,14 +185,9 @@ const Single = async ({socket}) => {
             <div className="editButton" onClick={handleEdit}>Edit</div>
             <h1 className="title">Informations</h1>
             <div className="item">
-              <img src={data.img || "https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
-                alt=""
-                className="itemImg"
-              />
+              <img src={data.img || "https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg"} alt="" className="itemImg" />
               <div className="details">
-                <h1 className="itemTitle">
-                  {data.userName || "John Doe"}
-                </h1>
+                <h1 className="itemTitle">{data.userName || "John Doe"}</h1>
                 <div className="detailItem">
                   <span className="detailKey">ID:</span>
                   <span className="detailValue">{data._id}</span>
@@ -279,7 +211,7 @@ const Single = async ({socket}) => {
             <div className="bottomBookingsContainer">
               <div className="bookingsContainer">
                 {bookings.length === 0 && flights.length === 0 && taxis.length === 0 ? (
-                  <div>Have no bookings yet.</div>
+                  <div>No bookings yet.</div>
                 ) : (
                   <>
                     {/* Hotel Bookings */}
@@ -311,18 +243,8 @@ const Single = async ({socket}) => {
                                 <span>{booking.rooms}</span>
                               </div>
                               <div className="bookingDetail">
-                                <label>Number of Guests</label>
-                                <span>{booking.adultsCount + booking.childrenCount}</span>
-                              </div>
-                              <div className="bookingDetail">
                                 <label>Total Cost</label>
                                 <span>{booking.totalCost} €</span>
-                              </div>
-                              <div className="bookingDetail">
-                                <div className="bookingDetail">
-                                  <label>Canceled Status</label>
-                                  <span>{booking.isCanceled ? "Canceled" : "Not Canceled"}</span>
-                                </div>
                               </div>
                               <div className="adminButtons">
                                 <div className="bookingDetail">
@@ -338,7 +260,6 @@ const Single = async ({socket}) => {
                                   </button>
                                 </div>
                               </div>
-
                             </div>
                           </div>
                         ))}
@@ -364,10 +285,6 @@ const Single = async ({socket}) => {
                               <div className="bookingDetail">
                                 <label>Departure</label>
                                 <span>{new Date(flight.departureDate).toLocaleDateString()}</span>
-                              </div>
-                              <div className="bookingDetail">
-                                <label>Arrival</label>
-                                <span>{new Date(flight.arrivalDate).toLocaleDateString()}</span>
                               </div>
                               <div className="bookingDetail">
                                 <label>Cabin Class</label>
@@ -432,10 +349,7 @@ const Single = async ({socket}) => {
                               <div className="adminButtons">
                                 <div className="bookingDetail">
                                   {isCancelable(taxi.date) && (
-                                    <button
-                                      className="cancelButton"
-                                      onClick={() => handleTaxiCancel(taxi._id, 'taxi')}
-                                    >
+                                    <button className="cancelButton" onClick={() => handleTaxiCancel(taxi._id)}>
                                       Cancel Ride
                                     </button>
                                   )}
@@ -452,10 +366,9 @@ const Single = async ({socket}) => {
             </div>
           </div>
         </div>
-
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Single;

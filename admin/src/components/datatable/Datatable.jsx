@@ -16,6 +16,7 @@ const Datatable = ({ columns, title }) => {
 
   // Utiliser useEffect pour récupérer les données
   useEffect(() => {
+    console.log("location.pathname:", location.pathname);
     const fetchData = async () => {
       try {
         const fullPath = `${backendUrl}/api/${path}`;
