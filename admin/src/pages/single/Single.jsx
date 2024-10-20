@@ -129,7 +129,7 @@ const Single = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${backendUrl}/api/users/${data._id}/bookings/${id}`,
+              await axios.put(`${backendUrl}/api/users/${data._id}/bookings/${id}`,{},
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ const Single = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${backendUrl}/api/payment/bookings/${flightId}`,
+              await axios.put(`${backendUrl}/api/payment/bookings/${flightId}`,{},
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -200,7 +200,7 @@ const Single = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${backendUrl}/api/payment/taxi/${id}`,
+              await axios.put(`${backendUrl}/api/payment/taxi/${id}`,{},
                 {
                   headers: {
                     'Content-Type': 'application/json',
