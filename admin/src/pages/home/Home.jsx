@@ -10,6 +10,7 @@ import Datatable from "../../components/datatable/Datatable";
 import "./home.scss";
 
 const Home = ({ columns, title }) => {
+  const token = localStorage.getItem('access_token');
   const { user } = useContext(AuthenticationContext);
   const [socket, setSocket] = useState(null);
 
@@ -32,21 +33,21 @@ const Home = ({ columns, title }) => {
     <div className="home">
       <Sidebar className="sideHome"/>
       <div className="homeContainer">
-        <Navbar socket={socket} />
+        <Navbar socket={socket} token={token}/>
         <div className="widgets">
-          <Widget type="user" />
-          <Widget type="night" />
-          <Widget type="room" />
-          <Widget type="booking" />
-          <Widget type="balance" />
+          <Widget type="user" token={token}/>
+          <Widget type="night" token={token}/>
+          <Widget type="room" token={token}/>
+          <Widget type="booking" token={token}/>
+          <Widget type="balance" token={token}/>
         </div>
         <div className="charts">
-          <Featured />
-          <Chart />
+          <Featured token={token}/>
+          <Chart token={token}/>
         </div>
         <div className="listContainer">
           <div className="listTitle">Bookings</div>
-          <Datatable columns={columns} title={title} />
+          <Datatable columns={columns} title={title} token={token}/>
         </div>
       </div>
     </div>

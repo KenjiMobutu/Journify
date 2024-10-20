@@ -15,7 +15,15 @@ const Single = ({socket}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname.split("/")[2];
-  const { data } = useFetch(`${backendUrl}/api/users/${path}`);
+  const { data } = useFetch(`${backendUrl}/api/users/${path}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+      withCredentials: true
+    }
+  );
 
   const [bookings, setBookings] = useState([]);
   const [flights, setFlights] = useState([]);
@@ -24,9 +32,33 @@ const Single = ({socket}) => {
   console.log("FLIGHTS:", flights);
   console.log("BOOKINGS:", bookings);
 
-  const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`${backendUrl}/api/users/${path}/bookings`);
-  const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`${backendUrl}/api/users/${path}/flightBookings`);
-  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`${backendUrl}/api/users/${path}/taxiBookings`);
+  const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`${backendUrl}/api/users/${path}/bookings`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+      withCredentials: true
+    }
+  );
+  const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`${backendUrl}/api/users/${path}/flightBookings`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+      withCredentials: true
+    }
+  );
+  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`${backendUrl}/api/users/${path}/taxiBookings`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+      withCredentials: true
+    }
+  );
 
   const handleEdit = () => {
     navigate(`/users/new/${path}`);
@@ -63,7 +95,15 @@ const Single = ({socket}) => {
           onClick: async () => {
             try {
               // Faire une requête pour annuler la réservation
-              await axios.delete(`${backendUrl}/api/users/${data._id}/bookings/${bookingId}`);
+              await axios.delete(`${backendUrl}/api/users/${data._id}/bookings/${bookingId}`,
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                  },
+                  withCredentials: true
+                }
+              );
               // Mettre à jour l'état des réservations
               setBookings(prev => prev.filter(booking => booking._id !== bookingId));
             } catch (error) {
@@ -89,7 +129,15 @@ const Single = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${backendUrl}/api/users/${data._id}/bookings/${id}`);
+              await axios.put(`${backendUrl}/api/users/${data._id}/bookings/${id}`,
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                  },
+                  withCredentials: true
+                }
+              );
               setBookings((prev) => prev.filter((booking) => booking._id !== id));
               const booking = {
                 userId: data._id,
@@ -119,7 +167,15 @@ const Single = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${backendUrl}/api/payment/bookings/${flightId}`);
+              await axios.put(`${backendUrl}/api/payment/bookings/${flightId}`,
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                  },
+                  withCredentials: true
+                }
+              );
               setFlights(prev => prev.filter(flight => flight._id !== flightId));
             } catch (error) {
               console.error('Error cancelling the flight:', error);
@@ -144,7 +200,15 @@ const Single = ({socket}) => {
           label: 'Yes',
           onClick: async () => {
             try {
-              await axios.put(`${backendUrl}/api/payment/taxi/${id}`);
+              await axios.put(`${backendUrl}/api/payment/taxi/${id}`,
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                  },
+                  withCredentials: true
+                }
+              );
               setTaxis((prev) => prev.filter((taxi) => taxi._id !== id));
               const booking = {
                 userId: data._id,

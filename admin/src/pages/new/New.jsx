@@ -7,6 +7,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router";
 
 const New = ({ inputs, title }) => {
+  const token = localStorage.getItem('access_token');
   const navigate = useNavigate();
   const { id } = useParams(); // Récupération de l'ID depuis l'URL
   const [file, setFile] = useState("");
@@ -18,7 +19,15 @@ const New = ({ inputs, title }) => {
     if (id) {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`/api/users/${id}`);
+          const response = await axios.get(`/api/users/${id}`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              withCredentials: true,
+            }
+          );
           setInfo(response.data);
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -26,7 +35,7 @@ const New = ({ inputs, title }) => {
       };
       fetchData();
     }
-  }, [id]);
+  }, [id, token]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -55,10 +64,26 @@ const New = ({ inputs, title }) => {
     try {
       if (id) {
         // Si un ID est présent, c'est une mise à jour
-        await axios.put(`/api/users/${id}`, user);
+        await axios.put(`/api/users/${id}`, user,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
       } else {
         // Sinon, c'est une création
-        await axios.post("/api/auth/register", user);
+        await axios.post("/api/auth/register", user,
+          {
+            headers: {
+              'Content-Type': 'application/json',     
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
       }
       navigate("/users");
     } catch (error) {

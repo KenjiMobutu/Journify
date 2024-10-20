@@ -10,7 +10,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 
-const Widget = ({ type }) => {
+const Widget = ({ type}) => {
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const token = localStorage.getItem('access_token');
   const [users, setUsers] = useState(0);
@@ -34,12 +34,28 @@ const Widget = ({ type }) => {
           withCredentials: true
         });
         currentValue = response.data.length;
-        previousValue = await getPreviousValue(`${backendUrl}/api/users`, "user");
+        previousValue = await getPreviousValue(`${backendUrl}/api/users`, "user",
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          }
+        );
         setUsers(currentValue);
       }
 
       if (type === "night") {
-        const response = await axios.get(`${backendUrl}/api/hotels/bookings`);
+        const response = await axios.get(`${backendUrl}/api/hotels/bookings`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          }
+        );
         currentValue = response.data.reduce((acc, booking) => {
           const checkInDate = new Date(booking.checkIn);
           const checkOutDate = new Date(booking.checkOut);
@@ -47,29 +63,77 @@ const Widget = ({ type }) => {
           const nights = timeDifference / (1000 * 3600 * 24);
           return acc + nights;
         }, 0);
-        previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "night");
+        previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "night",
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          }
+        );
         setNights((currentValue).toFixed(0));
       }
 
       if (type === "room") {
         const response = await axios.get(`${backendUrl}/api/hotels/bookings`);
         currentValue = response.data.reduce((acc, booking) => acc + booking.rooms, 0);
-        previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "room");
+        previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "room",
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          }
+        );
         setRooms(currentValue);
       }
 
       if (type === "booking") {
-        const response = await axios.get(`${backendUrl}/api/hotels/bookings`);
+        const response = await axios.get(`${backendUrl}/api/hotels/bookings`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          }
+        );
         currentValue = response.data.length;
-        previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "booking");
+        previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "booking",
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          }
+        );
         setBookings(currentValue);
       }
 
       if (type === "balance") {
-        const response = await axios.get(`${backendUrl}/api/hotels/bookings`);
+        const response = await axios.get(`${backendUrl}/api/hotels/bookings`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          }
+        );
         console.log("Balance :", response.data);
         currentValue = response.data.reduce((acc, booking) => acc + booking.totalCost, 0);
-        previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "balance");
+        previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "balance",
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          }
+        );
         setAmount(currentValue);
       }
 
@@ -79,7 +143,7 @@ const Widget = ({ type }) => {
     };
 
     fetchData();
-  }, [type]);
+  }, [backendUrl, token, type]);
 
   // Simule la récupération des valeurs précédentes (peut être une API réelle)
   const getPreviousValue = async (url, type) => {
