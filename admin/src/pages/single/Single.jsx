@@ -10,12 +10,12 @@ import axios from 'axios'
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const Single = ({socket}) => {
+const Single = async ({socket}) => {
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname.split("/")[2];
-  const { data } = useFetch(`${backendUrl}/api/users/${path}`,
+  const { data } =  await axios.get(`${backendUrl}/api/users/${path}`,
     {
       headers: {
         'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ const Single = ({socket}) => {
   console.log("FLIGHTS:", flights);
   console.log("BOOKINGS:", bookings);
 
-  const { data: hotelData, loading: hotelLoading, error: hotelError } = useFetch(`${backendUrl}/api/users/${path}/bookings`,
+  const { data: hotelData, loading: hotelLoading, error: hotelError } = await axios.get(`${backendUrl}/api/users/${path}/bookings`,
     {
       headers: {
         'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ const Single = ({socket}) => {
       withCredentials: true
     }
   );
-  const { data: flightData, loading: flightLoading, error: flightError } = useFetch(`${backendUrl}/api/users/${path}/flightBookings`,
+  const { data: flightData, loading: flightLoading, error: flightError } = await axios.get(`${backendUrl}/api/users/${path}/flightBookings`,
     {
       headers: {
         'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ const Single = ({socket}) => {
       withCredentials: true
     }
   );
-  const { data: taxiData, loading: taxiLoading, error: taxiError } = useFetch(`${backendUrl}/api/users/${path}/taxiBookings`,
+  const { data: taxiData, loading: taxiLoading, error: taxiError } = await axios.get(`${backendUrl}/api/users/${path}/taxiBookings`,
     {
       headers: {
         'Content-Type': 'application/json',

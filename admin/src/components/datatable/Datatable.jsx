@@ -9,14 +9,14 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 
-const Datatable = ({ columns, title}) => {
+const Datatable = async ({ columns, title}) => {
   const token = localStorage.getItem("access_token");
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
   console.log("TITLE", title);
   const location = useLocation();
   const path = location.pathname.split("/")[1] || "hotels/bookings";
   const [list, setList] = useState();
-  const { data } = useFetch(`${backendUrl}/api/${path}`,
+  const { data } = await axios.get(`${backendUrl}/api/${path}`,
     {
       headers: {
         'Content-Type': 'application/json',

@@ -56,7 +56,7 @@ const Featured = () => {
     };
 
     fetchData();
-  }, []);
+  }, [backendUrl, token]);
 
   return (
     <div className="featured">
