@@ -167,6 +167,35 @@ const Single = ({ socket }) => {
     });
   };
 
+  const handleTaxiCancel = async (taxiId) => {
+    confirmAlert({
+      title: 'Confirm cancellation',
+      message: 'Do you really want to cancel your taxi booking?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.put(`${backendUrl}/api/taxis/${taxiId}`, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                },
+                withCredentials: true,
+              });
+              setTaxis((prev) => prev.filter((taxi) => taxi._id !== taxiId));
+            } catch (error) {
+              console.error('Error cancelling the taxi:', error);
+            }
+          },
+        },
+        {
+          label: 'No',
+          onClick: () => { },
+        },
+      ],
+    });
+
   const isCancelable = (date) => {
     const today = new Date();
     const checkDate = new Date(date);
