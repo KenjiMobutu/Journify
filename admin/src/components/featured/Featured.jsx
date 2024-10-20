@@ -7,7 +7,8 @@ import ArrowOutwardOutlinedIcon from '@mui/icons-material/ArrowOutwardOutlined';
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const Featured = ({token}) => {
+const Featured = () => {
+  const token = localStorage.getItem('access_token');
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [percentage, setPercentage] = useState(0);
   const [amount, setAmount] = useState(0);
@@ -36,7 +37,7 @@ const Featured = ({token}) => {
               Authorization: `Bearer ${token}`,
             },
             withCredentials: true
-          } 
+          }
         );
         console.log("Previous sales: ", previousSales);
 

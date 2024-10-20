@@ -3,8 +3,9 @@ import { AreaChart, Area, XAxis, CartesianGrid, Tooltip, ResponsiveContainer } f
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Chart = ({ aspect, title, token }) => {
+const Chart = ({ aspect, title }) => {
   const [data, setData] = useState([]);
+  const token = localStorage.getItem('access_token');
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {

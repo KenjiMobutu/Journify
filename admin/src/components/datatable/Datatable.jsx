@@ -9,7 +9,8 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 
-const Datatable = ({ columns, title, token}) => {
+const Datatable = ({ columns, title}) => {
+  const token = localStorage.getItem("access_token");
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
   console.log("TITLE", title);
   const location = useLocation();
@@ -100,7 +101,7 @@ const Datatable = ({ columns, title, token}) => {
                     Authorization: `Bearer ${token}`,
                   },
                   withCredentials: true
-                } 
+                }
               );
               setList(list.filter((item) => item._id !== id));
             } catch (err) { }

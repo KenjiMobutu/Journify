@@ -8,7 +8,7 @@ import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import { AuthenticationContext } from '../../context/AuthenticationContext';
 import { useNavigate } from "react-router";
 
-const Navbar = ({ socket, token }) => {
+const Navbar = ({ socket }) => {
   const navigate = useNavigate();
   const { darkMode, dispatch } = useContext(DarkModeContext);
   const { user } = useContext(AuthenticationContext);

@@ -33,21 +33,21 @@ const Home = ({ columns, title }) => {
     <div className="home">
       <Sidebar className="sideHome"/>
       <div className="homeContainer">
-        <Navbar socket={socket} token={token}/>
+        <Navbar socket={socket}/>
         <div className="widgets">
-          <Widget type="user" token={token}/>
-          <Widget type="night" token={token}/>
-          <Widget type="room" token={token}/>
-          <Widget type="booking" token={token}/>
-          <Widget type="balance" token={token}/>
+          <Widget type="user" />
+          <Widget type="night"/>
+          <Widget type="room" />
+          <Widget type="booking"/>
+          <Widget type="balance"/>
         </div>
         <div className="charts">
-          <Featured token={token}/>
-          <Chart token={token}/>
+          <Featured/>
+          <Chart/>
         </div>
         <div className="listContainer">
           <div className="listTitle">Bookings</div>
-          <Datatable columns={columns} title={title} token={token}/>
+          <Datatable columns={columns} title={title}/>
         </div>
       </div>
     </div>
