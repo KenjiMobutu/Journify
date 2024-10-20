@@ -1,18 +1,18 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const AttractionSchema = new Schema({
   userName: {
     type: String,
-    required: true
+    required: true,
   },
   userEmail: {
     type: String,
-    required: true
+    required: true,
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   description: {
     type: String,
@@ -28,21 +28,19 @@ const AttractionSchema = new Schema({
   },
   price: {
     type: Number,
-    required: true
+    required: true,
   },
   ticketCount: {
     type: Number,
-    required: true
   },
   paid: {
     type: Boolean,
-    default: false
+    default: false,
   },
   canceled: {
     type: Boolean,
-    default: false
+    default: false,
   },
-
 });
 
-export default mongoose.model('Attraction', AttractionSchema);
+export default mongoose.model("Attraction", AttractionSchema);
