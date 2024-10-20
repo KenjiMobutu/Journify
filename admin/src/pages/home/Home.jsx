@@ -10,7 +10,6 @@ import Datatable from "../../components/datatable/Datatable";
 import "./home.scss";
 
 const Home = ({ columns, title }) => {
-  const token = localStorage.getItem('access_token');
   const { user } = useContext(AuthenticationContext);
   const [socket, setSocket] = useState(null);
 
