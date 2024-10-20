@@ -399,5 +399,6 @@ const Single = ({ socket }) => {
     </div>
   );
 };
+}
 
 export default Single;
