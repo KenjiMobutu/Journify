@@ -17,11 +17,27 @@ const Featured = ({token}) => {
     const fetchData = async () => {
       try {
         // Récupérer les ventes d'aujourd'hui
-        const { data: todaySales } = await axios.get(`${backendUrl}/api/hotels/todaySales`);
+        const { data: todaySales } = await axios.get(`${backendUrl}/api/hotels/todaySales`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          }
+        );
         console.log("Today sales: ", todaySales);
 
         // Récupérer les ventes de la période précédente
-        const { data: previousSales } = await axios.get(`${backendUrl}/api/hotels/previousSales`);
+        const { data: previousSales } = await axios.get(`${backendUrl}/api/hotels/previousSales`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          } 
+        );
         console.log("Previous sales: ", previousSales);
 
         // Mettre à jour les montants

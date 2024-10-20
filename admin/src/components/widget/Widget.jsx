@@ -76,7 +76,15 @@ const Widget = ({ type}) => {
       }
 
       if (type === "room") {
-        const response = await axios.get(`${backendUrl}/api/hotels/bookings`);
+        const response = await axios.get(`${backendUrl}/api/hotels/bookings`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          }
+        );
         currentValue = response.data.reduce((acc, booking) => acc + booking.rooms, 0);
         previousValue = await getPreviousValue(`${backendUrl}/api/hotels/bookings`, "room",
           {
