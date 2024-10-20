@@ -10,25 +10,31 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 
 const Datatable = async ({ columns, title}) => {
+  console.log("COLUMNS", columns);
   const token = localStorage.getItem("access_token");
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
   console.log("TITLE", title);
   const location = useLocation();
   const path = location.pathname.split("/")[1] || "hotels/bookings";
   const [list, setList] = useState();
-  const { data } = await axios.get(`${backendUrl}/api/${path}`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      withCredentials: true
-    }
-  );
-  console.log("DATA", data);
+  
   useEffect(() => {
-    setList(data);
-  }, [data]);
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(`${backendUrl}/api/${path}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true
+        });
+        setList(data);
+      } catch (err) {
+        console.error("Erreur lors du chargement des données :", err);
+      }
+    };
+    fetchData();
+  }, [path, token, backendUrl]);
 
   const handleDelete = async (id) => {
     confirmAlert({
@@ -140,7 +146,7 @@ const Datatable = async ({ columns, title}) => {
 
 
 
-  const finalColumns = path === "hotels/bookings" ? columns.concat(actionBookingColumn) : columns.concat(actionColumn);
+  const finalColumns = path === "hotels/bookings" ? columns?.concat(actionBookingColumn) : columns.concat(actionColumn);
 
   return (
     <div className="datatable">
