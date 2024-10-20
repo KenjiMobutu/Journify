@@ -71,7 +71,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
         throw new Error(`Failed to create payment intent: ${paymentIntentRes.statusText}`);
       }
 
-      const paymentIntentData = await paymentIntentRes.json();
+      const paymentIntentData = await paymentIntentRes.data;
       if (!paymentIntentData.clientSecret) {
         throw new Error("Failed to retrieve client secret from payment intent response.");
       }
@@ -140,7 +140,7 @@ const Payment = ({ setOpenPayment, totalPrice, cart, socket }) => {
           throw new Error(`Failed to book: ${bookingResponse.statusText}`);
         }
 
-        await bookingResponse;
+        //await bookingResponse;
       }
 
       // Handle payment for attractions and flights
