@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useContext } from "react";
 import { AuthenticationContext } from '../../context/AuthenticationContext';
 import Markdown from "react-markdown";
 import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 const Chat = () => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -51,14 +52,19 @@ const Chat = () => {
       const responseAi = await result.response.text();
 
       // Send message to the backend
-      await fetch(`${apiUrl}/api/chat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      await axios.post(`${apiUrl}/api/chat`,
+        {
+          userId,
+          text
         },
-        body: JSON.stringify({ userId, text }),
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true
+        }
+      );
 
       // Add AI response
       addMessage(responseAi, "bot");
