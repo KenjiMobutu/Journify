@@ -18,7 +18,9 @@ const Datatable = ({ columns, title }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${backendUrl}/api/${path}`, {
+        const fullPath = `${backendUrl}/api/${path}`;
+        console.log("Requesting data from:", fullPath);
+        const { data } = await axios.get(fullPath, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
