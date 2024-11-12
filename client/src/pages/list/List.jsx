@@ -39,7 +39,7 @@ const List = () => {
       const response = await axios.get('https://booking-com15.p.rapidapi.com/api/v1/attraction/searchLocation', {
         params: { query: destination },
         headers: {
-          'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+          'x-rapidapi-key': '',
           'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
         }
       });
@@ -62,7 +62,7 @@ const List = () => {
           languagecode: 'en-us',
         },
         headers: {
-          'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+          'x-rapidapi-key': '',
           'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
         }
       });
@@ -80,7 +80,7 @@ const List = () => {
       const response = await axios.get('https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination', {
         params: { query: destination },
         headers: {
-          'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+          'x-rapidapi-key': '',
           'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
         }
       });
@@ -100,7 +100,7 @@ const List = () => {
               price_max: max || '9999',
             },
             headers: {
-              'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+              'x-rapidapi-key': '',
               'x-rapidapi-host': 'booking-com15.p.rapidapi.com',
             }
           });
