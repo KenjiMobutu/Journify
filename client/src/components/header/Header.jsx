@@ -21,7 +21,7 @@ import { AuthenticationContext } from '../../context/AuthenticationContext.jsx';
 import videoSrc from '../../assets/home_page_bg_video2.mp4';
 
 // Clé API Google Maps
-const GOOGLE_MAPS_API_KEY = "AIzaSyCZoVUq46vX7FuZjAh2l3h2dVZVb_ZMr6w";
+const GOOGLE_MAPS_API_KEY = "";
 
 function loadScript(src, position, id) {
   if (!position) {
