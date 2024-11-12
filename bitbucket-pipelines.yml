@@ -1,0 +1,11 @@
+pipelines:
+  default:
+   - step:
+      name: Sync GitHub Mirror 
+      image: alpine/git:latest 
+      clone:
+        enabled: false 
+      script:
+        - git clone --bare git@bitbucket.org:kenjimobutu/tfe2024.git
+        - cd tfe2024.git
+        - git push --mirror git@github.com:KenjiMobutu/journify.git
