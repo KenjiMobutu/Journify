@@ -236,7 +236,7 @@ function Header({ type }) {
             departure_date: format(dates[0].endDate, "yyyy-MM-dd")   // Date de départ formatée
           },
           headers: {
-            'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+            'x-rapidapi-key': '',
             'x-rapidapi-host': 'booking-com15.p.rapidapi.com'
           }
         };
