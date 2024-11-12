@@ -210,7 +210,7 @@ function Header({ type }) {
       url: 'https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination',
       params: { query: destination },
       headers: {
-        'x-rapidapi-key': '107940df2amsh06485f68eef98b0p18f196jsnbd5d1d92b1c0',
+        'x-rapidapi-key': '',
         'x-rapidapi-host': 'booking-com15.p.rapidapi.com'
       }
     };
