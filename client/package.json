@@ -23,7 +23,7 @@
     "@stripe/react-stripe-js": "^2.8.0",
     "@stripe/stripe-js": "^4.3.0",
     "autosuggest-highlight": "^3.3.4",
-    "axios": "^1.7.3",
+    "axios": "^1.20.0",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
     "prop-types": "^15.8.1",
